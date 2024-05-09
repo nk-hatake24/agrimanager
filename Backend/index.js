@@ -3,7 +3,7 @@ require('dotenv').config()
 const {dbConnection} =require('./src/config/dbConfig')
 const cors =require('cors')
 const morgan = require('morgan')
-const cookieParser = require('cookies-parser')
+// const cookieParser = require('cookies-parser')
 
 
 
@@ -16,9 +16,9 @@ const transactionRoute = require('./src/route/transactionRoute')
 
 
 const app = express()
-const port = 3500
+const port = 3500 || Env.process.PORT
 
-// ********middlewares
+// ******** middlewares *****************
 app
 .use(express.json())
 .use(cors({
@@ -26,7 +26,7 @@ app
     credentials: true,
 }))
 // .options('*', cors())
-.use(cookieParser())
+// .use(cookieParser())
 .use(morgan("dev"))
 
 // ************ db connection****************

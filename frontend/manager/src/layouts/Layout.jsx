@@ -13,11 +13,7 @@ import Transaction from './pages/Transaction'
 const Layout = () => {
   return (
     <>
-        <NavLink><Budget /></NavLink>
-        <NavLink>< /></NavLink>
-        <NavLink><Budget /></NavLink>
-        <NavLink><Budget /></NavLink>
-        <NavLink><Budget /></NavLink>
+      <p>ta qui</p>
 
         <Outlet/>
     </>

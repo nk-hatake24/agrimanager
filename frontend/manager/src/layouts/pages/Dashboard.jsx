@@ -1,8 +1,9 @@
 import React from 'react'
+import SideBar from '../../componenet/SideBar'
 
 const Dashboard = () => {
   return (
-    <div>Dashboard</div>
+    <div><SideBar /></div>
   )
 }
 
