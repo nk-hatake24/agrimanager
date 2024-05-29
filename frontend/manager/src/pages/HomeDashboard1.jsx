@@ -1,7 +1,10 @@
 import React from 'react'
+import Dashboard from '../layouts/Dashboard'
 
 export const HomeDashboard1 = () => {
   return (
-    <div>HomeDashboard1</div>
+    <Dashboard>
+        home dashboard
+    </Dashboard>
   )
 }

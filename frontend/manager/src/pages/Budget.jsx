@@ -1,7 +1,10 @@
 import React from 'react'
+import Dashboard from '../layouts/Dashboard'
 
 export const Budget = () => {
   return (
-    <div>Budget</div>
+    <Dashboard>
+        budget
+    </Dashboard>
   )
 }

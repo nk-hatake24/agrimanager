@@ -15,10 +15,10 @@ const SideNav = () => {
           <div  className='flex justify-center'>username</div>
         </div>
         <div className='flex flex-col p-4 text-md md:text-lg'>
-          <NavLink to="/home" className={'navitems hover:bg-gray-200 dark:focus:bg-gray-700 dark:hover:bg-gray-700'}><FaHome /> Home</NavLink>
+          <NavLink to="/homedash" className={'navitems hover:bg-gray-200 dark:focus:bg-gray-700 dark:hover:bg-gray-700'}><FaHome /> Home</NavLink>
           <NavLink to="/Budget" className={'navitems hover:bg-gray-200 dark:focus:bg-gray-700 dark:hover:bg-gray-700'}><FaDollarSign /> Budget</NavLink>
           <NavLink to="/employee" className={'navitems  hover:bg-gray-200 dark:focus:bg-gray-700 dark:hover:bg-gray-700  '}><MdGroups />Employee</NavLink>
-          <NavLink to="/resources" className='navitems  hover:bg-gray-200 dark:focus:bg-gray-700 dark:hover:bg-gray-700  '><GrResources />Resources</NavLink>
+          <NavLink to="/resource" className='navitems  hover:bg-gray-200 dark:focus:bg-gray-700 dark:hover:bg-gray-700  '><GrResources />Resources</NavLink>
           <NavLink to="/stock" className='navitems   hover:bg-gray-200 dark:focus:bg-gray-700 dark:hover:bg-gray-700  '><FaWarehouse />Stocks</NavLink>
           <NavLink to="/transaction" className='navitems  hover:bg-gray-200 dark:focus:bg-gray-700 dark:hover:bg-gray-700  '><GrTransaction />Transactions</NavLink>
 
