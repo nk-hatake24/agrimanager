@@ -7,47 +7,61 @@ import Home from "./pages/Home";
 import { Stock } from "./pages/Stock";
 import { Transaction } from "./pages/Transaction";
 import { NoPages } from "./pages/NoPages";
-
+import { Detail } from "./pages/Detail";
+import Login from "./pages/Login";
+import Register from "./pages/Register"
 
 function App() {
   const router = createBrowserRouter([
     {
       path: '/',
-      element: <Home/>,
-    },  
+      element: <Home />,
+    },
     {
       path: '/homedash',
-      element: <HomeDashboard1/>,
-    },  
+      element: <HomeDashboard1 />,
+    },
     {
       path: '/budget',
-      element: <Budget/>,
-    },  
-    {
-      path: '/resource',
-      element: <Resource/>,
-    },  
+      element: <Budget />,
+    },
     {
       path: '/employee',
-      element: <Employee/>,
-    },  
-    {
-      path: '/stock',
-      element: <Stock/>,
-    },  
+      element: <Employee />,
+    },
     {
       path: '/transaction',
-      element: <Transaction/>,
+      element: <Transaction />,
+    },
+    {
+      path: '/resource',
+      element: <Resource />,
+      children: [
+        {
+          path: 'detail',
+          element: <Detail />,
+        },
+        {
+          path: 'stock',
+          element: <Stock />,
+        },
+      ],
+    },
+    {
+      path: '/login',
+      element: <Login />,
+    },
+    {
+      path: '/register',
+      element: <Register />,
     },
     {
       path: '*',
-      element: <NoPages/>,
-    },    
-  ])
+      element: <NoPages />,
+    },
+  ]);
 
-  return (
-    <RouterProvider router = {router}/>
-  )
+  return <RouterProvider router={router} />;
 }
 
-export default App
+export default App;

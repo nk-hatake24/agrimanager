@@ -1,13 +1,13 @@
 const route = require('express').Router()
-const {employeeRegister, searchAllEmployee, searchOneEmployee, updateEmployee, deleteEmployee, login} = require('../controller/employeeController')
+const {authenticateJWT, authorizeRoles} = require('../config/auth')
+const {employeeRegister, searchAllEmployee, searchOneEmployee, updateEmployee, deleteEmployee, login, test} = require('../controller/employeeController')
 
 
-route.post("/", employeeRegister)
+route.post("/register", employeeRegister)
 route.get("/", searchAllEmployee)
-route.get("/:email", searchOneEmployee)
-route.put('/:email', updateEmployee)
-route.delete('/:email', deleteEmployee)
+route.get("/:id", searchOneEmployee)
+route.put('/:id', updateEmployee)
+route.delete('/:id', deleteEmployee)
 route.post('/login', login)
-
 
 module.exports = route

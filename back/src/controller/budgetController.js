@@ -3,13 +3,12 @@ const Budget = require("../model/budgetModel");
 // **************************
 const addBudget = async (req, res) => {
   try {
-    const { id_budget, previsions, real_budget, period } = req.body;
+    const { previsions, real_budget, period } = req.body;
     if (!previsions || !real_budget || !period) {
       return res.status(400).json({ message: "All fields must be filled" });
     }
 
     const newBudget = new Budget({
-      id_budget,
       previsions,
       real_budget,
       period,
@@ -27,12 +26,12 @@ const addBudget = async (req, res) => {
 
 // ********************** update Budget************************
 const updateBudget = async (req, res) => {
-  const { id_budget } = req.params;
+  const { id } = req.params;
   const { previsions, real_budget, period } = req.body;
 
   try {
     const updatedBudget = await Budget.findOneAndUpdate(
-      { id_budget: id_budget },
+      { id },
       { $set: { previsions, real_budget, period } },
       { new: true, runValidators: true }
     );
@@ -52,10 +51,10 @@ const updateBudget = async (req, res) => {
 
 //********************delete budget******************** */
 const deleteBudget = async (req, res) => {
-  const { id_budget } = req.params;
+  const { id } = req.params;
 
   try {
-    const deletedBudget = await Budget.findByIdAndDelete(id_budget);
+    const deletedBudget = await Budget.findByIdAndDelete(id);
     if (!deletedBudget) {
       return res.status(404).json({
         message:

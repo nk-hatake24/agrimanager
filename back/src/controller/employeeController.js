@@ -1,5 +1,6 @@
 const Employee = require("../model/employeeModel");
 const jwt = require("jsonwebtoken");
+const bcrypt =require('bcrypt')
 
 // ****************Register an employee*****************************
 const employeeRegister = async (req, res) => {
@@ -71,11 +72,11 @@ const searchOneEmployee = async (req, res) => {
 //***************************employee update******************************* */
 
 const updateEmployee = async (req, res) => {
-  const { email } = req.params;
+  const { id } = req.params;
   const updateData = req.body;
 
   try {
-    const updatedEmployee = await Employee.findOneAndUpdate(email, updateData, {
+    const updatedEmployee = await Employee.findOneAndUpdate(id, updateData, {
       new: true,
       runValidators: true,
     });
@@ -98,10 +99,10 @@ const updateEmployee = async (req, res) => {
 
 // *********************delete an employee****************************
 const deleteEmployee = async (req, res) => {
-  const { email } = req.params;
+  const { id } = req.params;
 
   try {
-    const deletedEmployee = await Employee.findOneAndDelete(email);
+    const deletedEmployee = await Employee.findOneAndDelete(id);
     if (!deletedEmployee) {
       return res
         .status(404)
@@ -134,7 +135,10 @@ const login = async (req, res) => {
     }
 
     // Generate a token (if using JWT)
-    const token = jwt.sign({ id: employee._id }, "yourSecretKey", {
+    const token = jwt.sign({
+      id: employee._id,
+      function_employee: employee.function_employee,
+    }, process.env.JWT_SECRET_KEY, {
       expiresIn: "1h",
     });
 
@@ -149,9 +153,13 @@ const login = async (req, res) => {
       },
     });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(500).json({ message: error.message,});
   }
 };
+
+const ech = (req, res)=>{
+  res.json({message: 'ok'})
+}
 
 module.exports = {
   employeeRegister,
@@ -160,4 +168,5 @@ module.exports = {
   updateEmployee,
   deleteEmployee,
   login,
+  ech
 };

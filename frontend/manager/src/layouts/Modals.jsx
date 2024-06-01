@@ -4,8 +4,8 @@ const Modals = ({ open, onClose, children }) => {
   return (
     <div
         onClick={onClose}
-        className={`fixed h-screen inset-0 flex justify-center items-center transition-all ${
-          open ? " visible bg-black/80 z-10" : "invisible"
+        className={`fixed h-screen inset-0 justify-center items-center transition-all ${
+          open ? " flex  bg-black/80 z-10" : "hidden"
         }`}
       >
         <div onClick={(e) => e.stopPropagation()} className={`bg-white p-6 dark:bg-gray-900 transition-all ${open? 'scale-100 opacity-100':'opacity-0 scale-0' }`}>

@@ -6,6 +6,22 @@ import {GrResources, GrTransaction} from "react-icons/gr"
 import { NavLink } from 'react-router-dom'
 
 const SideNav = () => {
+
+  const CustomNavLink = ({ to, exact, children }) => {
+    return (
+      <NavLink
+        exact={exact}
+        to={to}
+        className={({ isActive }) =>
+          `navitems hover:bg-gray-100  dark:hover:bg-gray-700 ${
+            isActive ? 'dark:bg-gray-700 bg-gray-200 shadow-sm shadow-gray-400 dark:shadow-gray-100' : 'text-black dark:text-white'
+          }`
+        }
+      >
+        {children}
+      </NavLink>
+    );
+  };
   return (
     <div className='flex flex-col w-full'>
         <div className='hidden md:flex flex-col h-40 gap-2 justify-center bg-gray-200 dark:bg-gray-700'>
@@ -15,12 +31,11 @@ const SideNav = () => {
           <div  className='flex justify-center'>username</div>
         </div>
         <div className='flex flex-col p-4 text-md md:text-lg'>
-          <NavLink to="/homedash" className={'navitems hover:bg-gray-200 dark:focus:bg-gray-700 dark:hover:bg-gray-700'}><FaHome /> Home</NavLink>
-          <NavLink to="/Budget" className={'navitems hover:bg-gray-200 dark:focus:bg-gray-700 dark:hover:bg-gray-700'}><FaDollarSign /> Budget</NavLink>
-          <NavLink to="/employee" className={'navitems  hover:bg-gray-200 dark:focus:bg-gray-700 dark:hover:bg-gray-700  '}><MdGroups />Employee</NavLink>
-          <NavLink to="/resource" className='navitems  hover:bg-gray-200 dark:focus:bg-gray-700 dark:hover:bg-gray-700  '><GrResources />Resources</NavLink>
-          <NavLink to="/stock" className='navitems   hover:bg-gray-200 dark:focus:bg-gray-700 dark:hover:bg-gray-700  '><FaWarehouse />Stocks</NavLink>
-          <NavLink to="/transaction" className='navitems  hover:bg-gray-200 dark:focus:bg-gray-700 dark:hover:bg-gray-700  '><GrTransaction />Transactions</NavLink>
+          <CustomNavLink to="/homedash" ><FaHome /> Home</CustomNavLink>
+          <CustomNavLink to="/Budget"><FaDollarSign /> Budget</CustomNavLink>
+          <CustomNavLink to="/employee"   ><MdGroups />Employee</CustomNavLink>
+          <CustomNavLink to="/resource/detail"  ><FaWarehouse />Resources</CustomNavLink>
+          <CustomNavLink to="/transaction"  ><GrTransaction />Transactions</CustomNavLink>
 
         </div>
     </div>

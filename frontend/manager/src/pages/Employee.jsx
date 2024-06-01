@@ -1,206 +1,240 @@
-import React from 'react'
-import Dashboard from '../layouts/Dashboard'
+import React, { useState } from "react";
+import Dashboard from "../layouts/Dashboard";
+import Modals from "../layouts/Modals";
+import { FaEye, FaPlus, FaTrashAlt } from "react-icons/fa";
+import { employees } from "../mock/Mocks1";
+import { CiSearch } from "react-icons/ci";
 
 export const Employee = () => {
-    const [openAdd, setOpenAdd] = useState(false);
-    const [openListItem, setOpenListItem] = useState(false);
-    const [deleteItemModal, setDeleteItemModal] = useState(false);
-    const [selectedProduct, setSelectedProduct] = useState(null);
-    const [productList, setProductList] = useState(produits);
-    const [onSelectedDelete, setOnSelectedDelete] = useState(null);
-  
-    const onProductClick = (produit) => {
-      {
-        setOpenListItem(true);
-      }
-      setSelectedProduct(produit);
-    };
-  
-    const onDeleteClick = (produit) => {
-      setDeleteItemModal(true);
-      setOnSelectedDelete(produit);
-    };
-    const onFinalDeleteClick = (produit) => {
-      setDeleteItemModal(false);
-      deleteProduct(produit);
-    };
-  
-    const deleteProduct = (productId) => {
-      setDeleteItemModal(false);
-      setProductList(productList.filter((produit) => produit.id !== productId));
-    };
-  
+  const [openAdd, setOpenAdd] = useState(false);
+  const [openListItem, setOpenListItem] = useState(false);
+  const [deleteItemModal, setDeleteItemModal] = useState(false);
+  const [selectedEmployee, setSelectedEmployee] = useState(null);
+  const [EmployeeList, setProductList] = useState(employees);
+  const [searchTerm, setSearchTerm] = useState("");
+  // const [onSelectedDelete, setOnSelectedDelete] = useState(null);
+  const [role, setRole] = useState("employee");
+
+  const onProductClick = (employee) => {
+    {
+      setOpenListItem(true);
+    }
+    setSelectedEmployee(employee);
+  };
+
+  const onDeleteClick = (employee) => {
+    setDeleteItemModal(true);
+    // setOnSelectedDelete(employee);
+    setSelectedEmployee(employee);
+  };
+  const onFinalDeleteClick = (employee) => {
+    setDeleteItemModal(false);
+    deleteEmployee(employee);
+  };
+
+  const deleteEmployee = (employeeId) => {
+    setDeleteItemModal(false);
+    setProductList(
+      EmployeeList.filter((employee) => employee.id_user !== employeeId)
+    );
+  };
+
+  const handleChange = (event) => {
+    setRole(event.target.value);
+  };
+
+  const handleSearch = (event) => {
+    setSearchTerm(event.target.value);
+  };
+
+  const filteredEmployees = EmployeeList.filter((employee) =>
+    employee.name_employee.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   return (
     <Dashboard>
-        
-      {/* ***************************modal pour ajouter un entree**************** */}
-      <Modals open={openAdd} onClose={() => setOpenAdd(false)}>
-        <div className="flex flex-col gap-2 min-w-80">
-          <h1 className="text-2xl mt-2">Ajouter une entree</h1>
-          <label htmlFor="nomProduit">
-            Le nom de produit <span className="text-red-500">*</span>
-          </label>
-          <input
-            type="text"
-            className="p-2 text-gray-900"
-            required
-            placeholder="crypress"
-          />
-          <label htmlFor="id_chauffeur">
-            Id du chauffeur <span className="text-red-500">*</span>
-          </label>
-          <input
-            type="text"
-            className="p-2 text-gray-900"
-            required
-            placeholder="CH025"
-          />
-          <label htmlFor="nom_chauffeur">
-            Nom du chauffeur <span className="text-red-500">*</span>
-          </label>
-          <input
-            type="text"
-            className="p-2 text-gray-900"
-            required
-            placeholder="Durant"
-          />
-          <label htmlFor="volume_entree">
-            Volume sortir <span className="text-red-500">*</span>
-          </label>
-          <input
-            type="text"
-            className="p-2 text-gray-900"
-            required
-            placeholder="52"
-          />
-          <label htmlFor="heure_d'arriver">
-            Heure de debart <span className="text-red-500">*</span>
-          </label>
-          <input
-            type="date"
-            className="p-2 text-gray-900"
-            required
-            placeholder="8:00"
-          />
-          <label htmlFor="type_essence">
-            Type d'essence <span className="text-red-500">*</span>
-          </label>
-          <input
-            type="text"
-            className="p-2 text-gray-900"
-            required
-            placeholder="chain"
-          />
-          <div className="flex flex-row justify-between">
-            <button className="bg-green-400 hover:bg-green-600 p-1">
-              Ajouter
-            </button>
-            <button
-              className="bg-red-400 hover:bg-red-600 p-1"
-              onClick={() => setOpenAdd(false)}
+      <div className="p-2 md:p-8">
+        {/* ***************************modal pour ajouter un entree**************** */}
+        <Modals open={openAdd} onClose={() => setOpenAdd(false)}>
+          <div className="flex flex-col gap-2 min-w-80">
+            <h1 className="text-2xl mt-2">Ajouter une entree</h1>
+            <label htmlFor="nomemployee">
+              Nom <span className="text-red-500">*</span>
+            </label>
+            <input
+              type="text"
+              className="p-2 text-gray-900"
+              required
+              placeholder="john doe"
+            />
+            <label htmlFor="email">
+              Email <span className="text-red-500">*</span>
+            </label>
+            <input
+              type="email"
+              className="p-2 text-gray-900"
+              required
+              placeholder="johndoe@gmail.com"
+            />
+            <label htmlFor="role">
+              Role: <span className="text-red-500">*</span>{" "}
+            </label>
+            <select
+              className="text-gray-800 p-2"
+              id="role"
+              value={role}
+              onChange={handleChange}
             >
-              Annuler
-            </button>
-          </div>
-        </div>
-      </Modals>
-      <Modals
-        open={openListItem}
-        onClose={() => {
-          setOpenListItem(false);
-        }}
-      >
-        {selectedProduct && (
-          <div className="m-8 text-center flex gap-4 flex-col capitalize">
-            <h2 className="text-2xl pb-2 "> {selectedProduct.nom}</h2>
-            <p>id_chauffeur: {selectedProduct.id_chauffeur}</p>
-            <p>nom_chauffeur: {selectedProduct.nom_chauffeur}</p>
-            <p>nom_chauffeur: {selectedProduct.nom_chauffeur}</p>
-            <p>type_essence: {selectedProduct.type_essence}</p>
-            <p>quantite:{selectedProduct.quantite}</p>
-            <p>heure depart:{selectedProduct.heure_arriver}</p>
-            <p></p>
-          </div>
-        )}
-      </Modals>
-      <Modals
-        open={deleteItemModal}
-        onClose={() => {
-          setDeleteItemModal(false);
-        }}
-      >
-        {onSelectedDelete && (
-          <div className="flex flex-col gap-4 min-h-52 min-w-52 justify-center items-center">
-            <FaTrashAlt size={50} className="text-red-600" />
-            <p className="text-2xl">Supprimer</p>
-            <p>{onSelectedDelete.id}</p>
-            <p>{onSelectedDelete.nom}</p>
+              <option value="manager">Manager</option>
+              <option value="employee">Employee</option>
+            </select>
+            <label htmlFor="salary">
+              Salaire(cfa) <span className="text-red-500">*</span>
+            </label>
+            <input
+              type="text"
+              className="p-2 text-gray-900"
+              required
+              placeholder="30000"
+            />
+            <label htmlFor="addresse">
+              Addresse<span className="text-red-500">*</span>
+            </label>
+            <input
+              type="text"
+              className="p-2 text-gray-900"
+              required
+              placeholder="lafe 2 bafoussam"
+            />
 
-            <div className="flex flex-row gap-10 justify-between">
-              <button
-                onClick={() => onFinalDeleteClick(onSelectedDelete.id)}
-                className="p-1 bg-red-400 hover:bg-red-600"
-              >
-                Supprimer
+            <div className="flex flex-row justify-between">
+              <button className="bg-green-400 hover:bg-green-600 p-1">
+                Ajouter
               </button>
               <button
-                onClick={() => setDeleteItemModal(false)}
-                className="p-1  bg-orange-400 hover:bg-orange-600"
+                className="bg-red-400 hover:bg-red-600 p-1"
+                onClick={() => setOpenAdd(false)}
               >
                 Annuler
               </button>
             </div>
           </div>
-        )}
-      </Modals>
-
-      <div className="flex justify-start my-5 flew-row overflow-clip">
-        <div
-          onClick={() => setOpenAdd(true)}
-          className="flex justify-center gap-2"
+        </Modals>
+        <Modals
+          open={openListItem}
+          onClose={() => {
+            setOpenListItem(false);
+          }}
         >
-          <span className="p-1 bg-green-400  hover:bg-green-600 cursor-pointer">
-            <FaPlus />
-          </span>
-          Ajouter
-        </div>
-      </div>
-      <div>
-        <div className="flex flex-row justify-between w py-2 bg-gray-200 dark:bg-gray-700">
-          <p className="w-1/4 justify-center flex">Nom Produit</p>
-          <p className="w-1/4 justify-center flex">Quantite</p>
-          <p className="w-1/4 justify-center flex">Heure depart</p>
-          <p className="w-1/4 justify-center flex"> detail / supprimer</p>
-        </div>
-        <div className="flex flex-col overflow-y-scroll max-h-80 max-w-full relative pb-1 pr-1 h-96">
-          {productList.map((index) => (
-            <div
-              className="flex flex-row justify-between border-y-1 py-2"
-              key={index.id}
-            >
-              <p className="w-1/4 justify-center flex">{index.nom}</p>
-              <p className="w-1/4 justify-center flex">{index.quantite}</p>
-              <p className="w-1/4 justify-center flex">{index.heure_arriver}</p>
-              <div className="w-1/4 justify-center flex flew-row gap-4">
-                <div
-                  className="p-1  bg-orange-400 hover:bg-orange-600 hover:cursor-pointer text-gray-100 "
-                  onClick={() => {
-                    onProductClick(index);
-                  }}
+          {selectedEmployee && (
+            <div className="m-8 text-center flex gap-4 flex-col capitalize">
+              <h2 className="text-2xl pb-2 ">
+                {" "}
+                {selectedEmployee.name_employee}
+              </h2>
+              <p>Nom: {selectedEmployee.name_employee}</p>
+              <p>Fonction: {selectedEmployee.function_employee}</p>
+              <p>Email: {selectedEmployee.email}</p>
+              <p>Addresse: {selectedEmployee.address}</p>
+              <p>Salaire:{selectedEmployee.salary}</p>
+            </div>
+          )}
+        </Modals>
+        <Modals
+          open={deleteItemModal}
+          onClose={() => {
+            setDeleteItemModal(false);
+          }}
+        >
+          {selectedEmployee && (
+            <div className="flex flex-col gap-4  justify-center items-center">
+              <FaTrashAlt size={50} className="text-red-600" />
+              <p className="text-2xl">Supprimer</p>
+              <p className="text-xl">{selectedEmployee.id_user}</p>
+              <p className="text-xl">{selectedEmployee.name_employee}</p>
+
+              <div className="flex flex-row gap-10 justify-between">
+                <button
+                  onClick={() => onFinalDeleteClick(selectedEmployee.id_user)}
+                  className="p-1 bg-red-400 hover:bg-red-600"
                 >
-                  <FaEye />
-                </div>
-                <div
-                  onClick={() => onDeleteClick(index)}
-                  className="p-1 bg-red-400 hover:cursor-pointer hover:bg-red-600 text-gray-100"
+                  Supprimer
+                </button>
+                <button
+                  onClick={() => setDeleteItemModal(false)}
+                  className="p-1  bg-orange-400 hover:bg-orange-600"
                 >
-                  <FaTrashAlt />
-                </div>
+                  Annuler
+                </button>
               </div>
             </div>
-          ))}
+          )}
+        </Modals>
+        <div className="h-screen">
+          <div className="flex justify-between pb-3  flew-row ">
+            <div
+              onClick={() => setOpenAdd(true)}
+              className="flex justify-center gap-2"
+            >
+              <span className="p-1 bg-green-400  hover:bg-green-600 cursor-pointer">
+                <FaPlus />
+              </span>
+              Ajouter
+            </div>
+
+            <div className=" flex flex-row items-center  px-1 gap-1 rounded bg-white dark:bg-gray-600">
+              <CiSearch className="dark:text-gray-50 " />
+              <input
+                type="text"
+                placeholder="search"
+                className="p-1 outline-0 dark:text-gray-50 dark:bg-gray-600"
+                value={searchTerm}
+                onChange={handleSearch}
+              />
+            </div>
+          </div>
+          <div className=" overflow-clip">
+            <div className="flex flex-row justify-between w py-2 bg-gray-200 dark:bg-gray-700">
+              <p className="w-1/4 justify-center flex"> Employé</p>
+              <p className="w-1/4 justify-center flex">Fonction</p>
+              <p className="hidden w-1/4 justify-center md:flex">Salaire (CFA) </p>
+              <p className="w-1/4 justify-center flex"> detail / supprimer</p>
+            </div>
+            <div className="flex flex-col overflow-y-scroll overflow-x-clip pb-3  hal  max-w-full">
+              {filteredEmployees.map((index) => (
+                <div
+                  className="flex flex-row justify-between border-y-1 py-2"
+                  key={index.id_user}
+                >
+                  <p className="w-1/4 justify-center flex">
+                    {index.name_employee}
+                  </p>
+                  <p className="w-1/4 justify-center flex">
+                    {index.function_employee}
+                  </p>
+                  <p className="hidden w-1/4 justify-center md:flex">{index.salary}</p>
+                  <div className="w-1/4 justify-center flex flew-row gap-4">
+                    <div
+                      className="p-1  bg-orange-400 hover:bg-orange-600 hover:cursor-pointer text-gray-100 "
+                      onClick={() => {
+                        onProductClick(index);
+                      }}
+                    >
+                      <FaEye />
+                    </div>
+                    <div
+                      onClick={() => onDeleteClick(index)}
+                      className="p-1 bg-red-400 hover:cursor-pointer hover:bg-red-600 text-gray-100"
+                    >
+                      <FaTrashAlt />
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       </div>
     </Dashboard>
-  )
-}
+  );
+};

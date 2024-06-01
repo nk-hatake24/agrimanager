@@ -8,7 +8,7 @@ import NavBarTop from '../components/NavBarTop'
 const Dashboard = ({children}) => {
   return (
     <LayoutGeneral>
-        <div className='bg-gray-50 flex-row h-screen overflow-clip flex p-4 md:p-12 gap-4 dark:bg-gray-900'>
+        <div className='bg-gray-50 flex-row h-screen overflow-clip flex p-2 md:p-12 gap-4 dark:bg-gray-900'>
             <div className=" rounded hidden md:block shadow-md shadow-gray-200 md:w-1/5 dark:text-gray-50 dark:shadow-gray-700">
                 <SideNav className=''/>
             </div>
@@ -16,7 +16,7 @@ const Dashboard = ({children}) => {
                 <div>
                   <NavBarTop />
                 </div>
-              <section className='h-full w-full p-1 rounded shadow-md shadow-gray-200 dark:text-gray-50 dark:shadow-gray-700'>
+              <section className='h-full overflow-clip rounded shadow-md shadow-gray-200 dark:text-gray-50 dark:shadow-gray-700'>
                   {children}
               </section>
             </div>

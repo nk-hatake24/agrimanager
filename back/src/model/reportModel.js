@@ -12,7 +12,7 @@ const reportSchema = new mongoose.Schema(
       required: [true, "the type of report is required"],
     },
     periode: { type: String, required: true },
-    conten: { type: String, required: true },
+    content: { type: String, required: true },
     // Assuming report is related to a transaction
     transaction: {
       type: mongoose.Schema.Types.ObjectId,
