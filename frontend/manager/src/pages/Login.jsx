@@ -3,6 +3,7 @@ import axios from "axios";
 import LayoutGeneral from "../layouts/LayoutGeneral";
 import { useNavigate } from "react-router-dom";
 import NavBarTop from "../components/NavBarTop";
+import Switcher from "../components/Switcher";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -20,19 +21,22 @@ const Login = () => {
 
   const handleLoginSubmit = async (e) => {
     e.preventDefault();
-    // try {
-    //   const response = await axios.post('http://localhost:3000/login', loginData);
-    //   alert(response.data.message);
-    //   navigate('/home')
-    // } catch (error) {
-    //     alert(error.response.data.error);
-    //   console.error('Error:', error);
-    // }
+    try {
+      const response = await axios.post('http://localhost:3500/api/employee/login', loginData);
+      alert(response.data.message);
+      navigate('/homedash')
+    } catch (error) {
+        alert(error.response.data.error);
+      console.error('Error:', error);
+    }
   };
   return (
     <LayoutGeneral>
       <section className="bg-gray-50 dark:bg-gray-900">
-        <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
+        <div className="absolute top-3 left-3">
+        <Switcher />
+        </div>
+        <div className="flex flex-col items-center justify-center h-screen px-8 ">
           <a
             href="#"
             className="flex items-center mb-6 text-2xl font-semibold text-gray-900 dark:text-white"

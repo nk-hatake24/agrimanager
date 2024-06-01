@@ -26,7 +26,6 @@ const employeeSchema = new mongoose.Schema(
     },
     salary: {
       type: Number,
-      required: [true, "the employee's salary is required"],
     },
     address: {
       type: String,
