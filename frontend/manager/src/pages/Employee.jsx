@@ -305,7 +305,7 @@ export const Employee = () => {
               </p>
               <p className="w-1/4 justify-center flex"> detail / supprimer</p>
             </div>
-            <div className="flex flex-col overflow-y-scroll overflow-x-clip pb-3 p hal px-8 max-w-full">
+            <div className="flex flex-col overflow-y-scroll overflow-x-clip pb-3 p hal px-8 md:px-0 max-w-full">
               {filteredEmployees.map((index) => (
                 <div
                   className="flex flex-row justify-between border-y-1 py-2"

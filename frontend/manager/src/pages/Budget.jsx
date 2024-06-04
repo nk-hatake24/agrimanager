@@ -277,7 +277,7 @@ export const Budget = () => {
               <p className="hidden w-1/4 justify-center md:flex">Budget Réel</p>
               <p className="w-1/4 justify-center flex"> détail / supprimer</p>
             </div>
-            <div className="flex px-8 flex-col overflow-y-scroll overflow-x-clip pb-3  hal  max-w-full">
+            <div className="flex px-8 md:px-0 flex-col overflow-y-scroll overflow-x-clip pb-3  hal  max-w-full">
               {filteredBudgets.map((budget) => (
                 <div
                   className="flex flex-row justify-between border-y-1 py-2"
