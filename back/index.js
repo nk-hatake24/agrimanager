@@ -28,8 +28,6 @@ app
 
 // ************ db connection****************
 dbConnection()
-
-
 // *****************routes******************
 
 app.use("/api/note", noteRoute)
