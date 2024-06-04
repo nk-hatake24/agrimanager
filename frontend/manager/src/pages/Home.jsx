@@ -38,9 +38,7 @@ const Home = () => {
       </div>
 
       <div className="p-20 min-h-screen dark:text-gray-50  dark:bg-gray-800 text-gray-800  flex flex-col justify-center items-center gap-10">
-        <h1 className="text-3xl underline text-center md:text-5xl">
-          Services
-        </h1>
+        <h1 className="text-3xl underline text-center md:text-5xl">Services</h1>
         <div className="flex flex-col  md:flex-row justify-center items-center gap-10 ">
           <div className="fonctionnalite p-4 h-52 md:h-96 shadow-black shadow-sm rounded flex flex-col justify-center text-center ">
             <h3 className="text-xl md:text-3xl  pb-5">Gestion de Stock</h3>
@@ -83,7 +81,7 @@ const Home = () => {
       </div>
 
       <div className="p-20 min-h-screen dark:text-gray-50  dark:bg-gray-800 text-gray-800  flex flex-col justify-center items-center gap-10">
-      <h1 className="text-3xl underline text-center md:text-5xl">
+        <h1 className="text-3xl underline text-center md:text-5xl">
           Pourquoi nous?
         </h1>
         <div className="flex flex-col md:flex-row justify-center items-center gap-10">
@@ -124,19 +122,32 @@ const Home = () => {
           </div>
         </div>
       </div>
-     <footer className="flex flex-col p-20 w-full items-center dark:text-gray-50  dark:bg-gray-800">
+      <footer className="flex flex-col p-20 w-full items-center dark:text-gray-50  dark:bg-gray-800">
+        <div className="dark:text-gray-50  dark:bg-gray-800 dark-gray-800 p-10 flex flex-row items-center justify-center gap-10">
+          <div>
+            <Link to="#">
+              <FaXTwitter size={42} />
+            </Link>
+          </div>
+          <div>
+            <Link to="#">
+              <FaFacebook size={42} />
+            </Link>
+          </div>
+          <div>
+            <Link to="#">
+              <BiLogoGmail size={42} />
+            </Link>
+          </div>
+          <div>
+            <Link to="#">
+              <FaWhatsapp size={42} />
+            </Link>
+          </div>
+        </div>
 
-     <div className="dark:text-gray-50  dark:bg-gray-800 dark-gray-800 p-10 flex flex-row items-center justify-center gap-15">
-        <Link to='#'><FaXTwitter size={42} /></Link>
-        <Link to='#'><FaFacebook size={42}/></Link>
-        <Link to='#'><BiLogoGmail size={42}/></Link>
-        <Link to='#'><FaWhatsapp size={42}/></Link>
-     </div>
-
-     <p>copyright 2024</p>
-
-      </footer> 
-     
+        <p className="pt-12">copyright 2024</p>
+      </footer>
     </div>
   );
 };
