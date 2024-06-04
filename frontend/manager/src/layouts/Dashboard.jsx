@@ -13,7 +13,7 @@ const Dashboard = ({children}) => {
                 <SideNav className=''/>
             </div>
             <div className="flex flex-col w-full md:w-4/5 gap-4">
-                <div>
+                <div className='shadow  shadow-gray-400 dark:shadow-gray-700'>
                   <NavBarTop />
                 </div>
               <section className='h-full overflow-clip rounded shadow-md shadow-gray-200 dark:text-gray-50 dark:shadow-gray-700'>

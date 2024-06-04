@@ -7,7 +7,7 @@ import SideNav from './SideNav';
 const NavBarTop = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   return (
-    <div className="flex flex-row h-12 rounded w-full p-2 items-center justify-between  shadow  shadow-gray-400 dark:shadow-gray-700">
+    <div className="flex flex-row h-12 rounded w-full p-2 items-center justify-between  ">
         {/* <div className='hidden md:flex md:flex-row md:items-center md:px-1 gap-1 rounded bg-white dark:bg-gray-600'>
             <CiSearch className='dark:text-gray-50 '/><input type="text" placeholder='search' className='p-1 outline-0 dark:text-gray-50 dark:bg-gray-600' />
         </div> */}
