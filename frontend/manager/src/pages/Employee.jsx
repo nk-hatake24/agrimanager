@@ -4,12 +4,20 @@ import Modals from "../layouts/Modals";
 import { FaEye, FaPlus, FaTrashAlt } from "react-icons/fa";
 import { employees } from "../mock/Mocks1";
 import { CiSearch } from "react-icons/ci";
+import { HiPencil } from "react-icons/hi2";
 
 export const Employee = () => {
   const [openAdd, setOpenAdd] = useState(false);
   const [openListItem, setOpenListItem] = useState(false);
   const [deleteItemModal, setDeleteItemModal] = useState(false);
+  const [modifyItemModal, setModifyItemModal] = useState(false);
   const [selectedEmployee, setSelectedEmployee] = useState(null);
+  const [selectedModifyEmployee, setModifyEmployee] = useState({
+    name_employee: "",
+    email: "",
+    salary: "",
+    address: "",
+    function_employee: ""});
   const [EmployeeList, setProductList] = useState(employees);
   const [searchTerm, setSearchTerm] = useState("");
   // const [onSelectedDelete, setOnSelectedDelete] = useState(null);
@@ -39,6 +47,30 @@ export const Employee = () => {
     );
   };
 
+  const onModifyEmployee = (employee) => {
+    setModifyItemModal(true);
+    setSelectedEmployee(employee);
+  };
+
+  const handleSaveChanges = () => {
+    const updatedEmployees = EmployeeList.map((employee) =>
+      employee.id_user === selectedModifyEmployee.id_user
+        ? selectedModifyEmployee
+        : employee
+    );
+    setEmployeeList(updatedEmployees);
+    setModifyItemModal(false);
+  };
+
+
+  const handleModify = (e) => {
+    const { name, value } = e.target;
+    setModifyEmployee((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
+  };
+
   const handleChange = (event) => {
     setRole(event.target.value);
   };
@@ -64,7 +96,6 @@ export const Employee = () => {
             <input
               type="text"
               className="p-2 text-gray-900"
-              required
               placeholder="john doe"
             />
             <label htmlFor="email">
@@ -73,7 +104,6 @@ export const Employee = () => {
             <input
               type="email"
               className="p-2 text-gray-900"
-              required
               placeholder="johndoe@gmail.com"
             />
             <label htmlFor="role">
@@ -94,7 +124,6 @@ export const Employee = () => {
             <input
               type="text"
               className="p-2 text-gray-900"
-              required
               placeholder="30000"
             />
             <label htmlFor="addresse">
@@ -103,7 +132,6 @@ export const Employee = () => {
             <input
               type="text"
               className="p-2 text-gray-900"
-              required
               placeholder="lafe 2 bafoussam"
             />
 
@@ -120,6 +148,7 @@ export const Employee = () => {
             </div>
           </div>
         </Modals>
+
         <Modals
           open={openListItem}
           onClose={() => {
@@ -140,6 +169,7 @@ export const Employee = () => {
             </div>
           )}
         </Modals>
+
         <Modals
           open={deleteItemModal}
           onClose={() => {
@@ -170,6 +200,78 @@ export const Employee = () => {
             </div>
           )}
         </Modals>
+
+        <Modals
+          open={modifyItemModal}
+          onClose={() => setModifyItemModal(false)}
+        >
+          {selectedModifyEmployee && (
+            <div className="flex flex-col gap-2 min-w-80">
+              <h1 className="text-2xl mt-2">Modifier une entrée</h1>
+              <label htmlFor="name_employee">Nom</label>
+              <input
+                type="text"
+                name="name_employee"
+                className="p-2 text-gray-900"
+                onChange={handleModify}
+                placeholder="john doe"
+                value={selectedModifyEmployee.name_employee}
+              />
+              <label htmlFor="email">Email</label>
+              <input
+                type="email"
+                name="email"
+                className="p-2 text-gray-900"
+                onChange={handleModify}
+                placeholder="johndoe@gmail.com"
+                value={selectedModifyEmployee.email}
+              />
+              <label htmlFor="role">Role:</label>
+              <select
+                className="text-gray-800 p-2"
+                name="function_employee"
+                value={selectedModifyEmployee.function_employee}
+                onChange={handleModify}
+              >
+                <option value="manager">Manager</option>
+                <option value="employee">Employee</option>
+              </select>
+              <label htmlFor="salary">Salaire (cfa)</label>
+              <input
+                type="text"
+                name="salary"
+                className="p-2 text-gray-900"
+                onChange={handleModify}
+                placeholder="30000"
+                value={selectedModifyEmployee.salary}
+              />
+              <label htmlFor="address">Addresse</label>
+              <input
+                type="text"
+                name="address"
+                className="p-2 text-gray-900"
+                onChange={handleModify}
+                placeholder="lafe 2 bafoussam"
+                value={selectedModifyEmployee.address}
+              />
+              <div className="flex flex-row justify-between">
+                <button
+                  className="bg-green-400 hover:bg-green-600 p-1"
+                  onClick={handleSaveChanges}
+                >
+                  Sauvegarder
+                </button>
+                <button
+                  className="bg-red-400 hover:bg-red-600 p-1"
+                  onClick={() => setModifyItemModal(false)}
+                >
+                  Annuler
+                </button>
+              </div>
+            </div>
+          )}
+        </Modals>
+
         <div className="h-screen">
           <div className="flex justify-between pb-3  flew-row ">
             <div
@@ -197,7 +299,9 @@ export const Employee = () => {
             <div className="flex flex-row justify-between w py-2 bg-gray-200 dark:bg-gray-700">
               <p className="w-1/4 justify-center flex"> Employé</p>
               <p className="w-1/4 justify-center flex">Fonction</p>
-              <p className="hidden w-1/4 justify-center md:flex">Salaire (CFA) </p>
+              <p className="hidden w-1/4 justify-center md:flex">
+                Salaire (CFA){" "}
+              </p>
               <p className="w-1/4 justify-center flex"> detail / supprimer</p>
             </div>
             <div className="flex flex-col overflow-y-scroll overflow-x-clip pb-3  hal  max-w-full">
@@ -212,7 +316,9 @@ export const Employee = () => {
                   <p className="w-1/4 justify-center flex">
                     {index.function_employee}
                   </p>
-                  <p className="hidden w-1/4 justify-center md:flex">{index.salary}</p>
+                  <p className="hidden w-1/4 justify-center md:flex">
+                    {index.salary}
+                  </p>
                   <div className="w-1/4 justify-center flex flew-row gap-4">
                     <div
                       className="p-1  bg-orange-400 hover:bg-orange-600 hover:cursor-pointer text-gray-100 "
@@ -222,6 +328,16 @@ export const Employee = () => {
                     >
                       <FaEye />
                     </div>
+
+                    <div
+                      className="p-1  bg-yellow-400 hover:bg-yellow-600 hover:cursor-pointer text-gray-100 "
+                      onClick={() => {
+                        onModifyEmployee(index);
+                      }}
+                    >
+                      <HiPencil />
+                    </div>
+
                     <div
                       onClick={() => onDeleteClick(index)}
                       className="p-1 bg-red-400 hover:cursor-pointer hover:bg-red-600 text-gray-100"
