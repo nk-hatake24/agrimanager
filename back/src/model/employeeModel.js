@@ -3,9 +3,7 @@ const bcrypt = require("bcrypt");
 
 const employeeSchema = new mongoose.Schema(
   {
-    id_user: {
-      type: String,
-    },
+   
     name_employee:{
       type: String,
       required: [true, 'name of the employee is required']

@@ -1,10 +1,7 @@
 const mongoose = require("mongoose");
 
 const TransactionSchema = new mongoose.Schema({
-    id_transaction: {
-        type: String, 
-        unique: true
-    },
+    
     date:{
         type: Date,
         required: [true, 'the date of the transaction is required']

@@ -83,6 +83,7 @@ export const Employee = () => {
     employee.name_employee.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+
   return (
     <Dashboard>
       <div className="p-2 md:p-8">

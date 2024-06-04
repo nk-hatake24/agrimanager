@@ -1,8 +1,7 @@
 const mongoose = require("mongoose");
 
 const BudgetSchema = new mongoose.Schema(
-  {
-    id_budget: { type: String },
+  {  
     previsions: {
       type: Number,
       required: [true, "the prevision of the budget are required"],

@@ -2,9 +2,7 @@ const mongoose = require("mongoose");
 
 const ResourceSchema = new mongoose.Schema(
   {
-    id_resource: {
-      type: String,
-    },
+    
     quantity_resource: {
       type: Number,
       required: [true, "the quantity of resource is required"],

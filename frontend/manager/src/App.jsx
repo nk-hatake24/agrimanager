@@ -10,6 +10,8 @@ import { NoPages } from "./pages/NoPages";
 import { Detail } from "./pages/Detail";
 import Login from "./pages/Login";
 import Register from "./pages/Register"
+import { DetailTransaction } from "./pages/DetailTransaction";
+import {Report} from "./pages/Report"
 
 function App() {
   const router = createBrowserRouter([
@@ -32,6 +34,16 @@ function App() {
     {
       path: '/transaction',
       element: <Transaction />,
+      children:[
+        {
+          path: 'detailTransaction',
+          element: <DetailTransaction />
+        },
+        {
+          path: 'report',
+          element: <Report />
+        }
+      ]
     },
     {
       path: '/resource',

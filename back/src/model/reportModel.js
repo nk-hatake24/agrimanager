@@ -2,11 +2,7 @@ const mongoose = require("mongoose");
 
 const reportSchema = new mongoose.Schema(
   {
-    id_report: {
-      type: String,
-      required: [true, "the id of report is required"],
-      unique: true,
-    },
+    
     type_report: {
       type: String,
       required: [true, "the type of report is required"],
