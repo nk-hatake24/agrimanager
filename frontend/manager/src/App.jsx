@@ -48,16 +48,14 @@ function App() {
     {
       path: '/resource',
       element: <Resource />,
-      children: [
-        {
-          path: 'detail',
-          element: <Detail />,
-        },
-        {
-          path: 'stock',
-          element: <Stock />,
-        },
-      ],
+    },
+    {
+      path: 'detail',
+      element: <Detail />,
+    },
+    {
+      path: 'stock',
+      element: <Stock />,
     },
     {
       path: '/login',

@@ -22,9 +22,11 @@ export default function Resource({ children }) {
   return (
     <Dashboard>
       <div className="flex flex-row w-full bg-gray-200 dark:bg-gray-700">
-        <CustomNavLink to='/resource/detail' >Detail</CustomNavLink>
-        <CustomNavLink to='/resource/stock'>Stock</CustomNavLink>
+        <CustomNavLink to='/detail' >Detail</CustomNavLink>
+        <CustomNavLink to='/stock'>Stock</CustomNavLink>
+        <CustomNavLink to='/supplier'>fournisseur</CustomNavLink>
       </div>
+      
       <div>{children}</div>
       
     </Dashboard>

@@ -5,7 +5,7 @@ import Resource from './Resource'
 export const Stock = () => {
   return (
       <Resource>
-          stock
+          stockfev
       </Resource>
   
   )

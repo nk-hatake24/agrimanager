@@ -30,9 +30,9 @@ const Home = () => {
 
           <Link
             to="/homedash"
-            className="p-2 bg-gray-50 text-black transition-all hover:bg-white/10 hover:text-white z-20"
+            className="rounded p-2 bg-gray-50 text-black transition-all hover:bg-white/10 hover:text-white z-20"
           >
-            let go to dashboard!
+            Essayer le dashboard
           </Link>
         </div>
       </div>

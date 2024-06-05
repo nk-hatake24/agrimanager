@@ -34,8 +34,8 @@ const SideNav = () => {
           <CustomNavLink to="/homedash" ><FaHome /> Home</CustomNavLink>
           <CustomNavLink to="/Budget"><FaDollarSign /> Budget</CustomNavLink>
           <CustomNavLink to="/employee"   ><MdGroups />Employee</CustomNavLink>
-          <CustomNavLink to="/resource/detail"  ><FaWarehouse />Resources</CustomNavLink>
-          <CustomNavLink to="/transaction"  ><GrTransaction />Transactions</CustomNavLink>
+          <CustomNavLink to="/detail"  ><FaWarehouse />Resources</CustomNavLink>
+          <CustomNavLink to="/transaction/detailTransaction"  ><GrTransaction />Transactions</CustomNavLink>
 
         </div>
     </div>
