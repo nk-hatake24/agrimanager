@@ -1,68 +1,66 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Dashboard from "../layouts/Dashboard";
 import Modals from "../layouts/Modals";
 import { FaEye, FaPlus, FaTrashAlt } from "react-icons/fa";
-import { resources, suppliers } from "../mock/Mocks1";
+import { notes, employees } from "../mock/Mocks1"; // Assumez que vous avez un mock de notes et employees similaire à suppliers
 import { CiSearch } from "react-icons/ci";
 import { HiPencil } from "react-icons/hi2";
-import Resource from "./Resource";
 
-export const Detail = () => {
+export const Note = () => {
   const [openAdd, setOpenAdd] = useState(false);
   const [openListItem, setOpenListItem] = useState(false);
   const [deleteItemModal, setDeleteItemModal] = useState(false);
   const [modifyItemModal, setModifyItemModal] = useState(false);
-  const [selectedResource, setSelectedResource] = useState(null);
-  const [selectedModifyResource, setModifyResource] = useState({
-    quantity_resource: "",
-    unit_price: "",
-    name_resource: "",
-    supplier: "",
+  const [selectedNote, setSelectedNote] = useState(null);
+  const [selectedModifyNote, setModifyNote] = useState({
+    title: "",
+    description: "",
+    employee: "",
   });
-  const [ResourceList, setResourceList] = useState(resources);
+  const [NoteList, setNoteList] = useState(notes);
   const [searchTerm, setSearchTerm] = useState("");
-  const [SupplierList, setSupplierList] = useState(suppliers);
+  const [EmployeeList, setEmployeeList] = useState(employees);
 
-  const onResourceClick = (resource) => {
+  const onNoteClick = (note) => {
     setOpenListItem(true);
-    setSelectedResource(resource);
+    setSelectedNote(note);
   };
 
-  const onDeleteClick = (resource) => {
+  const onDeleteClick = (note) => {
     setDeleteItemModal(true);
-    setSelectedResource(resource);
+    setSelectedNote(note);
   };
 
-  const onFinalDeleteClick = (resourceId) => {
+  const onFinalDeleteClick = (noteId) => {
     setDeleteItemModal(false);
-    deleteResource(resourceId);
+    deleteNote(noteId);
   };
 
-  const deleteResource = (resourceId) => {
+  const deleteNote = (noteId) => {
     setDeleteItemModal(false);
-    setResourceList(
-      ResourceList.filter((resource) => resource.id !== resourceId)
+    setNoteList(
+      NoteList.filter((note) => note.id !== noteId)
     );
   };
 
-  const onModifyResource = (resource) => {
+  const onModifyNote = (note) => {
     setModifyItemModal(true);
-    setSelectedResource(resource);
+    setSelectedNote(note);
   };
 
   const handleSaveChanges = () => {
-    const updatedResources = ResourceList.map((resource) =>
-      resource.id === selectedModifyResource.id
-        ? selectedModifyResource
-        : resource
+    const updatedNotes = NoteList.map((note) =>
+      note.id === selectedModifyNote.id
+        ? selectedModifyNote
+        : note
     );
-    setResourceList(updatedResources);
+    setNoteList(updatedNotes);
     setModifyItemModal(false);
   };
 
   const handleModify = (e) => {
     const { name, value } = e.target;
-    setModifyResource((prevState) => ({
+    setModifyNote((prevState) => ({
       ...prevState,
       [name]: value,
     }));
@@ -72,79 +70,63 @@ export const Detail = () => {
     setSearchTerm(event.target.value);
   };
 
-  const filteredResources = ResourceList.filter((resource) =>
-    resource.name_resource.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredNotes = NoteList.filter((note) =>
+    note.title.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (
-    <Resource>
+    <Dashboard>
       <div className="p-2 md:p-8">
-        {/* Modal pour ajouter une ressource */}
+        {/* Modal pour ajouter une note */}
         <Modals open={openAdd} onClose={() => setOpenAdd(false)}>
           <div className="flex flex-col gap-2 min-w-80">
-            <h1 className="text-2xl mt-2">Ajouter une ressource</h1>
-            <label htmlFor="quantity_resource">
-              Quantité <span className="text-red-500">*</span>
-            </label>
-            <input
-              type="number"
-              name="quantity_resource"
-              className="p-2 text-gray-900"
-              onChange={(e) =>
-                setModifyResource((prevState) => ({
-                  ...prevState,
-                  quantity_resource: e.target.value,
-                }))
-              }
-              placeholder="100"
-            />
-            <label htmlFor="unit_price">
-              Prix Unitaire <span className="text-red-500">*</span>
-            </label>
-            <input
-              type="number"
-              name="unit_price"
-              className="p-2 text-gray-900"
-              onChange={(e) =>
-                setModifyResource((prevState) => ({
-                  ...prevState,
-                  unit_price: e.target.value,
-                }))
-              }
-              placeholder="500"
-            />
-            <label htmlFor="name_resource">
-              Nom de la Ressource <span className="text-red-500">*</span>
+            <h1 className="text-2xl mt-2">Ajouter une note</h1>
+            <label htmlFor="title">
+              Titre <span className="text-red-500">*</span>
             </label>
             <input
               type="text"
-              name="name_resource"
+              name="title"
               className="p-2 text-gray-900"
               onChange={(e) =>
-                setModifyResource((prevState) => ({
+                setModifyNote((prevState) => ({
                   ...prevState,
-                  name_resource: e.target.value,
+                  title: e.target.value,
                 }))
               }
-              placeholder="Eau"
+              placeholder="Titre de la note"
             />
-            <label htmlFor="supplier">
-              Fournisseur <span className="text-red-500">*</span>
+            <label htmlFor="description">
+              Description <span className="text-red-500">*</span>
             </label>
-            <select
-              name="supplier"
+            <textarea
+              name="description"
               className="p-2 text-gray-900"
               onChange={(e) =>
-                setModifyResource((prevState) => ({
+                setModifyNote((prevState) => ({
                   ...prevState,
-                  supplier: e.target.value,
+                  description: e.target.value,
+                }))
+              }
+              placeholder="Description de la note"
+            />
+            <label htmlFor="employee">
+              Employé <span className="text-red-500">*</span>
+            </label>
+            <select
+              name="employee"
+              className="p-2 text-gray-900"
+              onChange={(e) =>
+                setModifyNote((prevState) => ({
+                  ...prevState,
+                  employee: e.target.value,
                 }))
               }
             >
-              <option value="">Sélectionner un fournisseur</option>
-              {SupplierList.map((supplier) => (
-                <option key={supplier.id} value={supplier.id}>
-                  {supplier.name}
+              <option value="">Sélectionner un employé</option>
+              {EmployeeList.map((employee) => (
+                <option key={employee.id} value={employee.id}>
+                  {employee.name_employee}
                 </option>
               ))}
             </select>
@@ -153,9 +135,9 @@ export const Detail = () => {
               <button
                 className="bg-green-400 hover:bg-green-600 p-1"
                 onClick={() => {
-                  setResourceList([
-                    ...ResourceList,
-                    { ...selectedModifyResource, id: Date.now() },
+                  setNoteList([
+                    ...NoteList,
+                    { ...selectedModifyNote, id: Date.now() },
                   ]);
                   setOpenAdd(false);
                 }}
@@ -178,14 +160,13 @@ export const Detail = () => {
             setOpenListItem(false);
           }}
         >
-          {selectedResource && (
+          {selectedNote && (
             <div className="m-8 text-center flex gap-4 flex-col capitalize">
               <h2 className="text-2xl pb-2 ">
-                Nom: {selectedResource.name_resource}
+                Titre: {selectedNote.title}
               </h2>
-              <p>Quantité: {selectedResource.quantity_resource}</p>
-              <p>Prix Unitaire: {selectedResource.unit_price}</p>
-              <p>Fournisseur: {selectedResource.supplier}</p>
+              <p>Description: {selectedNote.description}</p>
+              <p>Employé: {selectedNote.employee}</p>
             </div>
           )}
         </Modals>
@@ -196,14 +177,14 @@ export const Detail = () => {
             setDeleteItemModal(false);
           }}
         >
-          {selectedResource && (
+          {selectedNote && (
             <div className="flex flex-col gap-4 justify-center items-center">
               <FaTrashAlt size={50} className="text-red-600" />
               <p className="text-2xl">Supprimer</p>
-              <p className="text-xl">{selectedResource.name_resource}</p>
+              <p className="text-xl">{selectedNote.title}</p>
               <div className="flex flex-row gap-10 justify-between">
                 <button
-                  onClick={() => onFinalDeleteClick(selectedResource.id)}
+                  onClick={() => onFinalDeleteClick(selectedNote.id)}
                   className="p-1 bg-red-400 hover:bg-red-600"
                 >
                   Supprimer
@@ -223,47 +204,35 @@ export const Detail = () => {
           open={modifyItemModal}
           onClose={() => setModifyItemModal(false)}
         >
-          {selectedModifyResource && (
+          {selectedModifyNote && (
             <div className="flex flex-col gap-2 min-w-80">
-              <h1 className="text-2xl mt-2">Modifier une ressource</h1>
-              <label htmlFor="quantity_resource">Quantité</label>
-              <input
-                type="number"
-                name="quantity_resource"
-                className="p-2 text-gray-900"
-                onChange={handleModify}
-                placeholder="100"
-                value={selectedModifyResource.quantity_resource}
-              />
-              <label htmlFor="unit_price">Prix Unitaire</label>
-              <input
-                type="number"
-                name="unit_price"
-                className="p-2 text-gray-900"
-                onChange={handleModify}
-                placeholder="500"
-                value={selectedModifyResource.unit_price}
-              />
-              <label htmlFor="name_resource">Nom de la Ressource</label>
+              <h1 className="text-2xl mt-2">Modifier une note</h1>
+              <label htmlFor="title">Titre</label>
               <input
                 type="text"
-                name="name_resource"
+                name="title"
                 className="p-2 text-gray-900"
                 onChange={handleModify}
-                placeholder="Eau"
-                value={selectedModifyResource.name_resource}
+                value={selectedModifyNote.title}
               />
-              <label htmlFor="supplier">Fournisseur</label>
-              <select
-                name="supplier"
+              <label htmlFor="description">Description</label>
+              <textarea
+                name="description"
                 className="p-2 text-gray-900"
                 onChange={handleModify}
-                value={selectedModifyResource.supplier}
+                value={selectedModifyNote.description}
+              />
+              <label htmlFor="employee">Employé</label>
+              <select
+                name="employee"
+                className="p-2 text-gray-900"
+                onChange={handleModify}
+                value={selectedModifyNote.employee}
               >
-                <option value="">Sélectionner un fournisseur</option>
-                {SupplierList.map((supplier) => (
-                  <option key={supplier.id} value={supplier.id}>
-                    {supplier.name}
+                <option value="">Sélectionner un employé</option>
+                {EmployeeList.map((employee) => (
+                  <option key={employee.id} value={employee.id}>
+                    {employee.name_employee}
                   </option>
                 ))}
               </select>
@@ -310,31 +279,31 @@ export const Detail = () => {
           </div>
           <div className=" overflow-clip">
             <div className="flex flex-row justify-between w py-2 bg-gray-200 dark:bg-gray-700">
-              <p className="w-1/4 justify-center flex"> Nom de la Ressource</p>
-              <p className="w-1/4 justify-center flex">Quantité</p>
-              <p className="hidden w-1/4 justify-center md:flex">Prix Unitaire</p>
+              <p className="w-1/4 justify-center flex"> Titre</p>
+              <p className="w-1/4 justify-center flex">Description</p>
+              <p className="hidden w-1/4 justify-center md:flex">Employé</p>
               <p className="w-1/4 justify-center flex"> détail / supprimer</p>
             </div>
-            <div className="flex px-8 md:px-0 flex-col overflow-y-scroll overflow-x-clip pb-3  hal  max-w-full">
-              {filteredResources.map((resource) => (
+            <div className="flex flex-col overflow-y-scroll overflow-x-clip pb-3  hal  max-w-full">
+              {filteredNotes.map((note) => (
                 <div
                   className="flex flex-row justify-between border-y-1 py-2"
-                  key={resource.id}
+                  key={note.id}
                 >
                   <p className="w-1/4 justify-center flex">
-                    {resource.name_resource}
+                    {note.title}
                   </p>
                   <p className="w-1/4 justify-center flex">
-                    {resource.quantity_resource}
+                    {note.description}
                   </p>
                   <p className="hidden w-1/4 justify-center md:flex">
-                    {resource.unit_price}
+                    {note.employee}
                   </p>
                   <div className="w-1/4 justify-center flex flew-row gap-4">
                     <div
                       className="p-1  bg-orange-400 hover:bg-orange-600 hover:cursor-pointer text-gray-100 "
                       onClick={() => {
-                        onResourceClick(resource);
+                        onNoteClick(note);
                       }}
                     >
                       <FaEye />
@@ -343,14 +312,14 @@ export const Detail = () => {
                     <div
                       className="p-1  bg-yellow-400 hover:bg-yellow-600 hover:cursor-pointer text-gray-100 "
                       onClick={() => {
-                        onModifyResource(resource);
+                        onModifyNote(note);
                       }}
                     >
                       <HiPencil />
                     </div>
 
                     <div
-                      onClick={() => onDeleteClick(resource)}
+                      onClick={() => onDeleteClick(note)}
                       className="p-1 bg-red-400 hover:cursor-pointer hover:bg-red-600 text-gray-100"
                     >
                       <FaTrashAlt />
@@ -362,6 +331,6 @@ export const Detail = () => {
           </div>
         </div>
       </div>
-    </Resource>
+    </Dashboard>
   );
 };

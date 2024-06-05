@@ -279,7 +279,7 @@ export const Employee = () => {
               onClick={() => setOpenAdd(true)}
               className="flex justify-center gap-2"
             >
-              <span className="p-1 bg-green-400  hover:bg-green-600 cursor-pointer">
+              <span className="p-1 bg-green-0  hover:bg-green-600 cursor-pointer">
                 <FaPlus />
               </span>
               Ajouter
@@ -322,7 +322,7 @@ export const Employee = () => {
                   </p>
                   <div className="w-1/4 justify-center flex flew-row gap-4">
                     <div
-                      className="p-1  bg-orange-400 hover:bg-orange-600 hover:cursor-pointer text-gray-100 "
+                      className="p-1  bg-orange-0 hover:bg-orange-600 hover:cursor-pointer "
                       onClick={() => {
                         onProductClick(index);
                       }}
@@ -331,7 +331,7 @@ export const Employee = () => {
                     </div>
 
                     <div
-                      className="p-1  bg-yellow-400 hover:bg-yellow-600 hover:cursor-pointer text-gray-100 "
+                      className="p-1  bg-yellow-0 hover:bg-yellow-600 hover:cursor-pointer "
                       onClick={() => {
                         onModifyEmployee(index);
                       }}
@@ -341,7 +341,7 @@ export const Employee = () => {
 
                     <div
                       onClick={() => onDeleteClick(index)}
-                      className="p-1 bg-red-400 hover:cursor-pointer hover:bg-red-600 text-gray-100"
+                      className="p-1 bg-red-0 hover:cursor-pointer hover:bg-red-600 "
                     >
                       <FaTrashAlt />
                     </div>

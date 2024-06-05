@@ -335,7 +335,7 @@ export const employees = [
   ]
 
 
-  
+
 export const resources =
 [
   {
@@ -525,4 +525,174 @@ export const suppliers=
     "address_supplier": "1212 Insulation Rd, Yaoundé, Cameroon"
   }
 ]
+
+
+
+export const transactions= 
+[
+  {
+    "date": "2024-06-01T08:00:00Z",
+    "quantity_resource": 50,
+    "total_price": 2500,
+    "resource": "60d1b2e77e8c9e001c8a4f01",
+    "employee": "60d1b2e77e8c9e001c8a4f10"
+  },
+  {
+    "date": "2024-06-02T09:30:00Z",
+    "quantity_resource": 30,
+    "total_price": 900,
+    "resource": "60d1b2e77e8c9e001c8a4f02",
+    "employee": "60d1b2e77e8c9e001c8a4f11"
+  },
+  {
+    "date": "2024-06-03T10:00:00Z",
+    "quantity_resource": 75,
+    "total_price": 1875,
+    "resource": "60d1b2e77e8c9e001c8a4f03",
+    "employee": "60d1b2e77e8c9e001c8a4f12"
+  },
+  {
+    "date": "2024-06-04T11:45:00Z",
+    "quantity_resource": 60,
+    "total_price": 3600,
+    "resource": "60d1b2e77e8c9e001c8a4f04",
+    "employee": "60d1b2e77e8c9e001c8a4f13"
+  },
+  {
+    "date": "2024-06-05T12:15:00Z",
+    "quantity_resource": 90,
+    "total_price": 2700,
+    "resource": "60d1b2e77e8c9e001c8a4f05",
+    "employee": "60d1b2e77e8c9e001c8a4f14"
+  },
+  {
+    "date": "2024-06-06T14:00:00Z",
+    "quantity_resource": 20,
+    "total_price": 1400,
+    "resource": "60d1b2e77e8c9e001c8a4f06",
+    "employee": "60d1b2e77e8c9e001c8a4f15"
+  },
+  {
+    "date": "2024-06-07T15:30:00Z",
+    "quantity_resource": 40,
+    "total_price": 2800,
+    "resource": "60d1b2e77e8c9e001c8a4f07",
+    "employee": "60d1b2e77e8c9e001c8a4f16"
+  },
+  {
+    "date": "2024-06-08T16:45:00Z",
+    "quantity_resource": 35,
+    "total_price": 1750,
+    "resource": "60d1b2e77e8c9e001c8a4f08",
+    "employee": "60d1b2e77e8c9e001c8a4f17"
+  },
+  {
+    "date": "2024-06-09T17:30:00Z",
+    "quantity_resource": 55,
+    "total_price": 3850,
+    "resource": "60d1b2e77e8c9e001c8a4f09",
+    "employee": "60d1b2e77e8c9e001c8a4f18"
+  },
+  {
+    "date": "2024-06-10T18:15:00Z",
+    "quantity_resource": 80,
+    "total_price": 4000,
+    "resource": "60d1b2e77e8c9e001c8a4f0a",
+    "employee": "60d1b2e77e8c9e001c8a4f19"
+  }
+]
+
+
+export const notes = [
+  {
+    id: 1,
+    title: "Meeting with client",
+    description: "Discuss project requirements and timelines.",
+    employee: "John Doe"
+  },
+  {
+    id: 2,
+    title: "Code Review",
+    description: "Review code for the new feature implementation.",
+    employee: "Jane Smith"
+  },
+  {
+    id: 3,
+    title: "Design Mockup",
+    description: "Create mockups for the new dashboard layout.",
+    employee: "Alice Johnson"
+  },
+  {
+    id: 4,
+    title: "Database Backup",
+    description: "Backup the database before the server maintenance.",
+    employee: "Michael Brown"
+  },
+  {
+    id: 5,
+    title: "Team Meeting",
+    description: "Weekly team meeting to discuss progress.",
+    employee: "Emily Davis"
+  },
+  {
+    id: 6,
+    title: "Bug Fix",
+    description: "Fix the login issue reported by the QA team.",
+    employee: "Chris Wilson"
+  },
+  {
+    id: 7,
+    title: "Client Presentation",
+    description: "Prepare presentation slides for the client meeting.",
+    employee: "Jessica Miller"
+  },
+  {
+    id: 8,
+    title: "Server Update",
+    description: "Update the server to the latest version.",
+    employee: "David Anderson"
+  },
+  {
+    id: 9,
+    title: "Feature Deployment",
+    description: "Deploy the new feature to the production environment.",
+    employee: "Laura Martinez"
+  },
+  {
+    id: 10,
+    title: "User Testing",
+    description: "Conduct user testing for the new UI changes.",
+    employee: "Daniel Thomas"
+  },
+  {
+    id: 11,
+    title: "API Integration",
+    description: "Integrate third-party API for payment processing.",
+    employee: "Sophia Lee"
+  },
+  {
+    id: 12,
+    title: "Documentation",
+    description: "Update the project documentation with the latest changes.",
+    employee: "Ryan Harris"
+  },
+  {
+    id: 13,
+    title: "Security Audit",
+    description: "Perform a security audit on the web application.",
+    employee: "Olivia Martinez"
+  },
+  {
+    id: 14,
+    title: "Data Migration",
+    description: "Migrate data from the old system to the new one.",
+    employee: "James Robinson"
+  },
+  {
+    id: 15,
+    title: "Performance Optimization",
+    description: "Optimize the database queries for better performance.",
+    employee: "Emma Clark"
+  }
+];
 

@@ -1,6 +1,6 @@
 import React from 'react'
 import { IoPersonSharp } from "react-icons/io5";
-import { FaDollarSign, FaHome, FaWarehouse  } from "react-icons/fa";
+import { FaDollarSign, FaHome, FaRegStickyNote, FaWarehouse  } from "react-icons/fa";
 import {MdGroups } from "react-icons/md"
 import {GrResources, GrTransaction} from "react-icons/gr"
 import { NavLink } from 'react-router-dom'
@@ -35,7 +35,10 @@ const SideNav = () => {
           <CustomNavLink to="/Budget"><FaDollarSign /> Budget</CustomNavLink>
           <CustomNavLink to="/employee"   ><MdGroups />Employee</CustomNavLink>
           <CustomNavLink to="/detail"  ><FaWarehouse />Resources</CustomNavLink>
-          <CustomNavLink to="/transaction/detailTransaction"  ><GrTransaction />Transactions</CustomNavLink>
+          <CustomNavLink to="/detailTransaction"  ><GrTransaction />Transactions</CustomNavLink>
+          <CustomNavLink to="/note"  ><FaRegStickyNote />Notes</CustomNavLink>
+
+
 
         </div>
     </div>

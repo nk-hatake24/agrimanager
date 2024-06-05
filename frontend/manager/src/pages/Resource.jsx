@@ -23,7 +23,6 @@ export default function Resource({ children }) {
     <Dashboard>
       <div className="flex flex-row w-full bg-gray-200 dark:bg-gray-700">
         <CustomNavLink to='/detail' >Detail</CustomNavLink>
-        <CustomNavLink to='/stock'>Stock</CustomNavLink>
         <CustomNavLink to='/supplier'>fournisseur</CustomNavLink>
       </div>
       

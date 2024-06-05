@@ -12,6 +12,8 @@ import Login from "./pages/Login";
 import Register from "./pages/Register"
 import { DetailTransaction } from "./pages/DetailTransaction";
 import {Report} from "./pages/Report"
+import { Supplier } from "./pages/Supplier";
+import { Note } from "./pages/Note";
 
 function App() {
   const router = createBrowserRouter([
@@ -34,16 +36,15 @@ function App() {
     {
       path: '/transaction',
       element: <Transaction />,
-      children:[
-        {
-          path: 'detailTransaction',
-          element: <DetailTransaction />
-        },
-        {
-          path: 'report',
-          element: <Report />
-        }
-      ]
+      
+    },
+    {
+      path: 'detailTransaction',
+      element: <DetailTransaction />
+    },
+    {
+      path: 'report',
+      element: <Report />
     },
     {
       path: '/resource',
@@ -65,6 +66,15 @@ function App() {
       path: '/register',
       element: <Register />,
     },
+    {
+      path: '/supplier',
+      element: <Supplier />,
+    },
+    {
+      path: '/note',
+      element: <Note />,
+    },
+
     {
       path: '*',
       element: <NoPages />,

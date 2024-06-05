@@ -10,6 +10,11 @@ const NoteSchema = new mongoose.Schema(
       type: String,
       required: [true, "The description is required"],
     },
+    Employee: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Employee",
+      required: truea,
+    },
   },
   {
     timestamps: true,

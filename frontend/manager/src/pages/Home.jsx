@@ -8,19 +8,25 @@ import { BiLogoGmail } from "react-icons/bi";
 
 const Home = () => {
   return (
-    <div className="relative overflowX-hidden">
-      <div className="fixed top-1 left-0 z-50  w-full">
+    <div className="relative overflow-x-hidden">
+      <div className="flex items-center justify-center w-full fixed top-1 left-0 z-50">
+      <div className=" bg-gray-50/10 dark:bg-gray-800/10 w-[90%]">
         <NavBarTop />
       </div>
-      <div className="h-screen w-sreen relative  bg-gradient-to-t from-black ">
+      </div>
+      <div className="h-screen w-screen relative ">
         <img
           src={homeScreen}
           alt="farm"
-          className="object-cover top-0 absolute mix-blend-overlay h-full w-full"
+          className="object-cover z-20 top-0 absolute mix-blend-overlay h-full w-full opacity-50"
         />
-        <div className=" z-10 flex h-full p-10 md:px-30 gap-20 flex-col justify-center items-start">
-          <h1 className="text-5xl md:text-7xl  text-gray-50">Agrimanager</h1>
-          <p className="text-xl md:text-2xl pr-48 text-gray-200 text-start">
+        <div className="h-screen w-screen absolute top-0 bg-black/30 z-30"></div>
+        <div className="h-screen w-screen z-0 absolute top-0 left-0  bg-green-600/60"></div>
+        <div className=" z-50 flex h-full p-10 md:px-30 gap-20  flex-col justify-center items-start">
+          <h1 className="z-50 text-5xl md:text-7xl uppercase text-gray-50">
+            Agrimanager
+          </h1>
+          <p className="z-50 text-xl md:text-2xl pr-48 text-gray-200 text-start">
             Bienvenue sur notre plateforme dédiée aux agropasteurs ! Simplifiez
             la gestion de vos stocks, employés, transactions et ressources en
             quelques clics. Profitez d'outils efficaces pour optimiser votre
@@ -28,12 +34,26 @@ const Home = () => {
             aujourd'hui et transformez votre façon de travailler !
           </p>
 
-          <Link
-            to="/homedash"
-            className="rounded p-2 bg-gray-50 text-black transition-all hover:bg-white/10 hover:text-white z-20"
+          <div className="flex flex-col md:flex-row gap-5 md:gap-10">
+            <Link
+              to="/login"
+              className="rounded-[10px] border-2 p-3  text-xl  bg-gray-50 text-black transition-all hover:bg-white/10 hover:text-white z-50"
+            >
+              sign in
+            </Link>
+            <Link
+            to="/register"
+            className="rounded-[10px] p-3  border-2 text-xl  bg-gray-50 text-black transition-all hover:bg-white/10 hover:text-white z-50"
           >
-            Essayer le dashboard
+            sign up
           </Link>
+          <Link
+            to="/createAccount"
+            className="rounded-[10px] p-3  border-2 text-xl  bg-gray-50 text-black transition-all hover:bg-white/10 hover:text-white z-50"
+          >
+            create an account
+          </Link>
+          </div>
         </div>
       </div>
 
@@ -80,7 +100,7 @@ const Home = () => {
         </div>
       </div>
 
-      <div className="p-20 min-h-screen dark:text-gray-50  dark:bg-gray-800 text-gray-800  flex flex-col justify-center items-center gap-10">
+      <div className="p-20 min-h-screen dark:text-gray-800  dark:bg-gray-50 bg-gray-800 text-gray-50  flex flex-col justify-center items-center gap-10">
         <h1 className="text-3xl underline text-center md:text-5xl">
           Pourquoi nous?
         </h1>
@@ -122,7 +142,7 @@ const Home = () => {
           </div>
         </div>
       </div>
-      <footer className="flex flex-col p-20 w-full items-center dark:text-gray-50  dark:bg-gray-800">
+      <footer className="flex flex-col p-20 w-full items-center text-gray-50  bg-slate-900">
         <div className="dark:text-gray-50  dark:bg-gray-800 dark-gray-800 p-10 flex flex-row items-center justify-center gap-10">
           <div>
             <Link to="#">
