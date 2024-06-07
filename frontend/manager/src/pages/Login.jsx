@@ -2,8 +2,23 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import LayoutGeneral from "../layouts/LayoutGeneral";
 import { Link, useNavigate } from "react-router-dom";
-import NavBarTop from "../components/NavBarTop";
 import Switcher from "../components/Switcher";
+
+const Modal = ({ message, onClose }) => {
+  return (
+    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+      <div className="bg-white p-6 rounded lex flex-col items-center shadow-md">
+        <p>{message}</p>
+        <button
+          onClick={onClose}
+          className="mt-4 px-4 py-2 bg-blue-500 text-white rounded"
+        >
+          OK
+        </button>
+      </div>
+    </div>
+  );
+};
 
 const Login = () => {
   const navigate = useNavigate();
@@ -11,7 +26,8 @@ const Login = () => {
     email: "",
     password: "",
   });
-
+  const [modalMessage, setModalMessage] = useState('');
+  const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
     // Vérifier si le token est dans le localStorage
@@ -32,25 +48,32 @@ const Login = () => {
 
   const handleLoginSubmit = async (e) => {
     e.preventDefault();
-    console.log(loginData)
     try {
       const response = await axios.post('http://localhost:3500/api/employee/login', loginData);
-      localStorage.setItem('token', response.data.token);
-      alert(response.data.message);
-      navigate('/homedash')
-      console.log(response.data)
+      localStorage.setItem('token', response.data.accessToken);
+      localStorage.setItem('username', response.data.employee.name);
+      localStorage.setItem('userEmail', response.data.employee.email);
+      localStorage.setItem('userFunction', response.data.employee.function);
+      setModalMessage(response.data.message);
+      setShowModal(true);
+      setTimeout(() => {
+        setShowModal(false);
+        navigate('/homedash');
+      }, 2000);
     } catch (error) {
-        alert(error.response.data.error);
-      console.error('Error:', error);
+      setModalMessage(error.response.data.error);
+      setShowModal(true);
     }
   };
+
   return (
     <LayoutGeneral>
+      {showModal && <Modal message={modalMessage} onClose={() => setShowModal(false)} />}
       <section className="bg-gray-50 dark:bg-gray-900">
         <div className="absolute top-3 left-3">
-        <Switcher />
+          <Switcher />
         </div>
-        <div className="flex flex-col items-center justify-center h-screen px-8 ">
+        <div className="flex flex-col items-center justify-center h-screen px-8">
           <a
             href="#"
             className="flex items-center mb-6 text-2xl font-semibold text-gray-900 dark:text-white"
@@ -82,7 +105,7 @@ const Login = () => {
                     type="email"
                     name="email"
                     id="email"
-                    className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white "
+                    className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"
                     placeholder="name@company.com"
                     value={loginData.email}
                     onChange={handleLoginChange}
@@ -101,7 +124,7 @@ const Login = () => {
                     name="password"
                     id="password"
                     placeholder="••••••••"
-                    className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg  block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"
+                    className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                     value={loginData.password}
                     onChange={handleLoginChange}
                     required
@@ -131,12 +154,12 @@ const Login = () => {
                     to="/register"
                     className="text-sm font-medium text-primary-600 hover:underline dark:text-gray-300"
                   >
-                    Register now
+                    register now
                   </Link>
                 </div>
                 <button
                   type="submit"
-                  className="w-full hover:bg-slate-100 hover:dark:bg-slate-700 text-black border border-gray-700 bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:border-gray-200 dark:bg-primary-600 dark:text-white dark:hover:bg-primary-700 dark:focus:ring-primary-800"
+                  className="w-full text-black border border-gray-700 bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:border-gray-200 dark:bg-primary-600 dark:text-white dark:hover:bg-primary-700 dark:focus:ring-primary-800"
                 >
                   Sign in
                 </button>

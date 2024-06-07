@@ -5,8 +5,26 @@ import { useNavigate } from "react-router-dom";
 import NavBarTop from "../components/NavBarTop";
 import Switcher from "../components/Switcher";
 
-const Login = () => {
+const Modal = ({ message, onClose }) => {
+  return (
+    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+      <div className="bg-white p-6 flex flex-col items-center rounded shadow-md">
+        <p>{message}</p>
+        <button
+          onClick={onClose}
+          className="mt-4 px-4 py-2 bg-blue-500 text-white rounded"
+        >
+          OK
+        </button>
+      </div>
+    </div>
+  );
+};
+
+const Register = () => {
   const navigate = useNavigate();
+  const [modalMessage, setModalMessage] = useState('');
+  const [showModal, setShowModal] = useState(false);
   const [registerData, setRegisterData] = useState({
     name_employee: "",
     function_employee: "employee",
@@ -31,8 +49,12 @@ const Login = () => {
         "http://localhost:3500/api/employee/register",
         registerData
       );
-      alert(response.data.message);
-      navigate("/login");
+      setModalMessage(response.data.message);
+      setShowModal(true);
+      setTimeout(() => {
+        setShowModal(false);
+        navigate('/login');
+      }, 2000);
     } catch (error) {
       alert(error.response.data.error);
       console.error("Error:", error);
@@ -41,6 +63,7 @@ const Login = () => {
 
   return (
     <LayoutGeneral>
+      {showModal && <Modal message={modalMessage} onClose={() => setShowModal(false)} />}
       <section className="h-screen flex flex-col justify-center items-center bg-gray-50 dark:bg-gray-900">
        <div className="absolute top-2 left-2"> <Switcher /></div>
         <div className="w-full m-5 max-w-md bg-white rounded-lg shadow dark:bg-gray-800">
@@ -161,4 +184,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default Register;

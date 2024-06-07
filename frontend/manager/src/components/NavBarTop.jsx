@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { CiSearch } from "react-icons/ci";
 import Switcher from './Switcher';
 import { IoMenu } from 'react-icons/io5';
 import SideNav from './SideNav';
@@ -7,8 +6,11 @@ import { useNavigate } from 'react-router-dom';
 
 const NavBarTop = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [isDropdownOpenLog, setIsDropdownOpenLog] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const navigate = useNavigate();
+
+  const username =localStorage.getItem('username')
 
   useEffect(() => {
     // Vérifier si le token est dans le localStorage
@@ -18,6 +20,7 @@ const NavBarTop = () => {
 
   const handleLogout = () => {
     localStorage.removeItem('token');
+    localStorage.removeItem('username');
     setIsLoggedIn(false);
     navigate('/login');
   };
@@ -30,10 +33,10 @@ const NavBarTop = () => {
     <div className="flex flex-row h-12 rounded w-full p-2 items-center justify-between">
       <div> <Switcher /></div>
       <div className="relative">
-        <button onClick={() => setIsDropdownOpen(!isDropdownOpen)} className="dark:text-white">
-          {isLoggedIn ? 'Account' : 'Login'}
+        <button onClick={() => setIsDropdownOpenLog(!isDropdownOpenLog)} className="dark:text-white">
+          {isLoggedIn ? `${username}` : 'Login'}
         </button>
-        {isDropdownOpen && (
+        {isDropdownOpenLog && (
           <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 shadow-lg rounded-md p-4">
             <ul className="list-none p-0 m-0">
               {isLoggedIn ? (

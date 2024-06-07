@@ -8,7 +8,7 @@ import { BiLogoGmail } from "react-icons/bi";
 
 const Home = () => {
   return (
-    <div className="relative overflow-x-hidden">
+    <div className="relative m-0 overflow-x-hidden">
       <div className="flex items-center justify-center w-full fixed top-1 left-0 z-50">
       <div className=" bg-gray-50/10 dark:bg-gray-800/10 w-[90%]">
         <NavBarTop />
@@ -23,7 +23,7 @@ const Home = () => {
         {/* <div className="min-h-screen min-w-screen  absolute top-0 bg-black/50 z-30"></div> */}
         <div className="min-h-screen min-w-screen z-40 absolute top-0 left-0  bg-green-600/60"></div>
 
-        <div className=" z-50 flex min-h-screen p-10 mt-5 md:mt-1 md:px-30 gap-10 flex-col justify-center md:items-start items-center">
+        <div className=" z-50 flex min-h-screen p-10  md:px-30 gap-10 flex-col justify-center md:items-start items-center">
           <h1 className="z-50 text-5xl md:text-7xl uppercase text-gray-50">
             Agrimanager
           </h1>
@@ -61,7 +61,7 @@ const Home = () => {
       <div className="p-20 min-h-screen dark:text-gray-50  dark:bg-gray-800 text-gray-800  flex flex-col justify-center items-center gap-10">
         <h1 className="text-3xl underline text-center md:text-5xl">Services</h1>
         <div className="flex flex-col  md:flex-row justify-center items-center gap-10 ">
-          <div className="fonctionnalite p-4 h-52 md:h-96 shadow-black shadow-sm rounded flex flex-col justify-center text-center ">
+          <div className="fonctionnalite p-4 min-h-52 md:min-h-96 shadow-black shadow-sm rounded flex flex-col justify-center text-center ">
             <h3 className="text-xl md:text-3xl  pb-5">Gestion de Stock</h3>
             <p className="mt-10">
               Surveillez et gérez vos stocks de manière efficace. Accédez en
@@ -70,7 +70,7 @@ const Home = () => {
             </p>
           </div>
 
-          <div className="fonctionnalite p-4 shadow-black h-52 md:h-96 shadow-sm rounded flex flex-col justify-center text-center ">
+          <div className="fonctionnalite p-4 shadow-black min-h-52 md:min-h-96 shadow-sm rounded flex flex-col justify-center text-center ">
             <h3 className="text-xl md:text-3xl pb-5">Gestion des Employés</h3>
             <p className="mt-10">
               Organisez et supervisez facilement votre équipe. Suivez les
@@ -79,7 +79,7 @@ const Home = () => {
             </p>
           </div>
 
-          <div className="fonctionnalite p-4 shadow-black h-52 md:h-96 shadow-sm rounded flex flex-col justify-center text-center ">
+          <div className="fonctionnalite p-4 shadow-black min-h-52 md:min-h-96 shadow-sm rounded flex flex-col justify-center text-center ">
             <h3 className="text-xl md:text-3xl pb-5">
               Gestion des Transactions
             </h3>
@@ -90,7 +90,7 @@ const Home = () => {
             </p>
           </div>
 
-          <div className="fonctionnalite p-4 shadow-black h-52 md:h-96 shadow-sm rounded flex flex-col justify-center text-center ">
+          <div className="fonctionnalite p-4 shadow-black min-h-52 md:min-h-96 shadow-sm rounded flex flex-col justify-center text-center ">
             <h3 className="text-xl md:text-3xl pb-5">Gestion des Ressources</h3>
             <p className="mt-10">
               Optimisez l'utilisation de vos ressources. Planifiez et allouez
@@ -106,7 +106,7 @@ const Home = () => {
           Pourquoi nous?
         </h1>
         <div className="flex flex-col md:flex-row justify-center items-center gap-10">
-          <div className="p-4 h-52 md:h-96 shadow-black shadow-sm rounded flex flex-col justify-center text-center">
+          <div className="p-4 min-h-52 md:min-h-96 shadow-black shadow-sm rounded flex flex-col justify-center text-center">
             <h3 className="text-xl md:text-3xl pb-5">Expertise Spécialisée</h3>
             <p>
               Nous nous consacrons exclusivement aux besoins des agropasteurs,
@@ -115,7 +115,7 @@ const Home = () => {
             </p>
           </div>
 
-          <div className="p-4 h-52 md:h-96 shadow-black shadow-sm rounded flex flex-col justify-center text-center">
+          <div className="p-4 min-h-52 md:min-h-96 shadow-black shadow-sm rounded flex flex-col justify-center text-center">
             <h3 className="text-xl md:text-3xl pb-5">Interface Intuitive</h3>
             <p>
               Notre plateforme est conçue pour être facile à utiliser, même pour
@@ -124,7 +124,7 @@ const Home = () => {
             </p>
           </div>
 
-          <div className="p-4 h-52 md:h-96 shadow-black shadow-sm rounded flex flex-col justify-center text-center">
+          <div className="p-4 min-h-52 md:min-h-96 shadow-black shadow-sm rounded flex flex-col justify-center text-center">
             <h3 className="text-xl md:text-3xl pb-5">Support Client Dédié</h3>
             <p>
               Profitez d'un service client réactif et personnalisé, disponible
@@ -133,7 +133,7 @@ const Home = () => {
             </p>
           </div>
 
-          <div className="p-4 h-52 md:h-96 shadow-black shadow-sm rounded flex flex-col justify-center text-center">
+          <div className="p-4 min-h-52 md:min-h-96 shadow-black shadow-sm rounded flex flex-col justify-center text-center">
             <h3 className="text-xl md:text-3xl pb-5">Innovation Continue</h3>
             <p>
               Nous investissons continuellement dans la recherche et le

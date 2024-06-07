@@ -6,7 +6,7 @@ import {GrResources, GrTransaction} from "react-icons/gr"
 import { NavLink } from 'react-router-dom'
 
 const SideNav = () => {
-
+const username = localStorage.getItem('username')
   const CustomNavLink = ({ to, exact, children }) => {
     return (
       <NavLink
@@ -28,7 +28,7 @@ const SideNav = () => {
           <div className='h-30 flex justify-center items-center'> 
             <div className="photoProfile h-20 w-20 text-white bg-gray-900 rounded-[50%] flex justify-center items-center"><IoPersonSharp  size={42}/></div>
           </div>
-          <div  className='flex justify-center'>username</div>
+          <div  className='flex justify-center'>{username}</div>
         </div>
         <div className='flex flex-col p-4 text-md md:text-lg'>
           <CustomNavLink to="/homedash" ><FaHome /> Home</CustomNavLink>
