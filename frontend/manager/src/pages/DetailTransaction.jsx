@@ -322,9 +322,9 @@ export const DetailTransaction = () => {
           <div className="flex justify-between pb-3 text-gray-700 dark:text-text-50 flew-row ">
             <div
               onClick={() => setOpenAdd(true)}
-              className="flex justify-center gap-2"
+              className="flex justify-center gap-2 dark:text-gray-50"
             >
-              <span className="p-1 bg-green-400  hover:bg-green-600 cursor-pointer">
+              <span className="p-1  hover:bg-green-600 cursor-pointer">
                 <FaPlus />
               </span>
               Ajouter
@@ -351,7 +351,7 @@ export const DetailTransaction = () => {
             <div className="flex flex-col overflow-y-scroll overflow-x-clip px-8 md:px-0 pb-3  hal  max-w-full">
               {filteredTransactions.map((transaction) => (
                 <div
-                  className="flex flex-row justify-between border-y-1 py-2"
+                  className="flex flex-row text-gray-800 dark:text-gray-50 justify-between border-y-1 py-2"
                   key={transaction.id}
                 >
                   <p className="w-1/4 justify-center flex">
@@ -365,7 +365,7 @@ export const DetailTransaction = () => {
                   </p>
                   <div className="w-1/4 justify-center flex flew-row gap-4">
                     <div
-                      className="p-1  bg-orange-400 hover:bg-orange-600 hover:cursor-pointer text-gray-100 "
+                      className="p-1  hover:bg-orange-600 hover:cursor-pointer "
                       onClick={() => {
                         onTransactionClick(transaction);
                       }}
@@ -374,7 +374,7 @@ export const DetailTransaction = () => {
                     </div>
 
                     <div
-                      className="p-1  bg-yellow-400 hover:bg-yellow-600 hover:cursor-pointer text-gray-100 "
+                      className="p-1 hover:bg-yellow-600 hover:cursor-pointer  "
                       onClick={() => {
                         onModifyTransaction(transaction);
                       }}
@@ -384,7 +384,7 @@ export const DetailTransaction = () => {
 
                     <div
                       onClick={() => onDeleteClick(transaction)}
-                      className="p-1 bg-red-400 hover:cursor-pointer hover:bg-red-600 text-gray-100"
+                      className="p-1 hover:cursor-pointer hover:bg-red-600 "
                     >
                       <FaTrashAlt />
                     </div>

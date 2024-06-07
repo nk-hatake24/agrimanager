@@ -275,12 +275,12 @@ export const Supplier = () => {
         </Modals>
 
         <div className="h-screen">
-          <div className="flex justify-between pb-3  flew-row ">
+          <div className="flex justify-between text-gray-800 dark:text-gray-50 pb-3  flew-row ">
             <div
               onClick={() => setOpenAdd(true)}
-              className="flex justify-center gap-2"
+              className="flex justify-center gap-2 "
             >
-              <span className="p-1 bg-green-400  hover:bg-green-600 cursor-pointer">
+              <span className="p-1  hover:bg-green-600 cursor-pointer">
                 <FaPlus />
               </span>
               Ajouter
@@ -318,7 +318,7 @@ export const Supplier = () => {
                   
                   <div className="w-1/4 justify-center flex flew-row gap-4">
                     <div
-                      className="p-1  bg-orange-400 hover:bg-orange-600 hover:cursor-pointer text-gray-100 "
+                      className="p-1 hover:bg-orange-600 hover:cursor-pointer "
                       onClick={() => {
                         onSupplierClick(supplier);
                       }}
@@ -327,7 +327,7 @@ export const Supplier = () => {
                     </div>
 
                     <div
-                      className="p-1  bg-yellow-400 hover:bg-yellow-600 hover:cursor-pointer text-gray-100 "
+                      className="p- hover:bg-yellow-600 hover:cursor-pointer"
                       onClick={() => {
                         onModifySupplier(supplier);
                       }}
@@ -337,7 +337,7 @@ export const Supplier = () => {
 
                     <div
                       onClick={() => onDeleteClick(supplier)}
-                      className="p-1 bg-red-400 hover:cursor-pointer hover:bg-red-600 text-gray-100"
+                      className="p hover:cursor-pointer hover:bg-red-600"
                     >
                       <FaTrashAlt />
                     </div>

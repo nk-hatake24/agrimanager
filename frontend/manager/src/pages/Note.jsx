@@ -260,7 +260,7 @@ export const Note = () => {
               onClick={() => setOpenAdd(true)}
               className="flex justify-center gap-2"
             >
-              <span className="p-1 bg-green-400  hover:bg-green-600 cursor-pointer">
+              <span className="p-1 hover:bg-green-600 cursor-pointer">
                 <FaPlus />
               </span>
               Ajouter
@@ -284,7 +284,7 @@ export const Note = () => {
               <p className="hidden w-1/4 justify-center md:flex">Employé</p>
               <p className="w-1/4 justify-center flex"> détail / supprimer</p>
             </div>
-            <div className="flex flex-col overflow-y-scroll overflow-x-clip pb-3  hal  max-w-full">
+            <div className="flex flex-col overflow-y-scroll overflow-x-clip pb-3 px-8 hal  max-w-full">
               {filteredNotes.map((note) => (
                 <div
                   className="flex flex-row justify-between border-y-1 py-2"
@@ -301,7 +301,7 @@ export const Note = () => {
                   </p>
                   <div className="w-1/4 justify-center flex flew-row gap-4">
                     <div
-                      className="p-1  bg-orange-400 hover:bg-orange-600 hover:cursor-pointer text-gray-100 "
+                      className="p-1 hover:bg-orange-600 hover:cursor-pointer "
                       onClick={() => {
                         onNoteClick(note);
                       }}
@@ -310,7 +310,7 @@ export const Note = () => {
                     </div>
 
                     <div
-                      className="p-1  bg-yellow-400 hover:bg-yellow-600 hover:cursor-pointer text-gray-100 "
+                      className="p-1 hover:bg-yellow-600 hover:cursor-pointer"
                       onClick={() => {
                         onModifyNote(note);
                       }}
@@ -320,7 +320,7 @@ export const Note = () => {
 
                     <div
                       onClick={() => onDeleteClick(note)}
-                      className="p-1 bg-red-400 hover:cursor-pointer hover:bg-red-600 text-gray-100"
+                      className="p-1 hover:cursor-pointer hover:bg-red-600"
                     >
                       <FaTrashAlt />
                     </div>

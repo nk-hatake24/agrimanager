@@ -13,7 +13,7 @@ const NoteSchema = new mongoose.Schema(
     Employee: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Employee",
-      required: truea,
+      required: true,
     },
   },
   {

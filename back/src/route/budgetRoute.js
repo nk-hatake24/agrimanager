@@ -4,11 +4,11 @@ const { ech } = require('../controller/employeeController')
 const {authenticateJWT, authorizeRoles} = require('../config/auth')
 
 
-route.post('/', addBudget)
-route.put('/:id_budget', updateBudget)
-route.delete('/:id', deleteBudget)
-route.get('/', getAllBudget)
-route.get('/f', authenticateJWT, authorizeRoles("admin", "manager"),ech)
+route.post('/', authenticateJWT, authorizeRoles("manager"), addBudget)
+route.put('/:id_budget', authenticateJWT, authorizeRoles("manager"), updateBudget)
+route.delete('/:id', authenticateJWT, authorizeRoles("manager"),deleteBudget)
+route.get('/', authenticateJWT, authorizeRoles("admin","manager", "employee "),getAllBudget)
+route.get('/f', authenticateJWT, authorizeRoles("admin"),ech)
 
 
 module.exports = route

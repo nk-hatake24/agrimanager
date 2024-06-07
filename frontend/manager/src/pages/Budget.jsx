@@ -253,7 +253,7 @@ export const Budget = () => {
               onClick={() => setOpenAdd(true)}
               className="flex justify-center gap-2"
             >
-              <span className="p-1 bg-green-400  hover:bg-green-600 cursor-pointer">
+              <span className="p-1 hover:bg-green-600 cursor-pointer">
                 <FaPlus />
               </span>
               Ajouter
@@ -294,7 +294,7 @@ export const Budget = () => {
                   </p>
                   <div className="w-1/4 justify-center flex flew-row gap-4">
                     <div
-                      className="p-1  bg-orange-400 hover:bg-orange-600 hover:cursor-pointer text-gray-100 "
+                      className="p-1 hover:bg-orange-600 hover:cursor-pointe"
                       onClick={() => {
                         onBudgetClick(budget);
                       }}
@@ -303,7 +303,7 @@ export const Budget = () => {
                     </div>
 
                     <div
-                      className="p-1  bg-yellow-400 hover:bg-yellow-600 hover:cursor-pointer text-gray-100 "
+                      className="p-1 hover:bg-yellow-600 hover:cursor-pointer "
                       onClick={() => {
                         onModifyBudget(budget);
                       }}
@@ -313,7 +313,7 @@ export const Budget = () => {
 
                     <div
                       onClick={() => onDeleteClick(budget)}
-                      className="p-1 bg-red-400 hover:cursor-pointer hover:bg-red-600 text-gray-100"
+                      className="p-1 hover:cursor-pointer hover:bg-red-600 "
                     >
                       <FaTrashAlt />
                     </div>

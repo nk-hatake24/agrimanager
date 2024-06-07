@@ -14,19 +14,20 @@ const Home = () => {
         <NavBarTop />
       </div>
       </div>
-      <div className="h-screen w-screen relative ">
+      <div className="min-h-screen m-0 min-w-screen relative bg-black/60">
         <img
           src={homeScreen}
           alt="farm"
-          className="object-cover z-20 top-0 absolute mix-blend-overlay h-full w-full opacity-50"
+          className="object-cover z-20 top-0 absolute mix-blend-overlay h-full w-full opacity-80"
         />
-        <div className="h-screen w-screen absolute top-0 bg-black/30 z-30"></div>
-        <div className="h-screen w-screen z-0 absolute top-0 left-0  bg-green-600/60"></div>
-        <div className=" z-50 flex h-full p-10 md:px-30 gap-20  flex-col justify-center items-start">
+        {/* <div className="min-h-screen min-w-screen  absolute top-0 bg-black/50 z-30"></div> */}
+        <div className="min-h-screen min-w-screen z-40 absolute top-0 left-0  bg-green-600/60"></div>
+
+        <div className=" z-50 flex min-h-screen p-10 mt-5 md:mt-1 md:px-30 gap-10 flex-col justify-center md:items-start items-center">
           <h1 className="z-50 text-5xl md:text-7xl uppercase text-gray-50">
             Agrimanager
           </h1>
-          <p className="z-50 text-xl md:text-2xl pr-48 text-gray-200 text-start">
+          <p className=" z-50 text-md md:text-2xl  text-gray-200 text-center md:text-start">
             Bienvenue sur notre plateforme dédiée aux agropasteurs ! Simplifiez
             la gestion de vos stocks, employés, transactions et ressources en
             quelques clics. Profitez d'outils efficaces pour optimiser votre
@@ -48,7 +49,7 @@ const Home = () => {
             sign up
           </Link>
           <Link
-            to="/createAccount"
+            to="/account"
             className="rounded-[10px] p-3  border-2 text-xl  bg-gray-50 text-black transition-all hover:bg-white/10 hover:text-white z-50"
           >
             create an account
@@ -143,7 +144,7 @@ const Home = () => {
         </div>
       </div>
       <footer className="flex flex-col p-20 w-full items-center text-gray-50  bg-slate-900">
-        <div className="dark:text-gray-50  dark:bg-gray-800 dark-gray-800 p-10 flex flex-row items-center justify-center gap-10">
+        <div className=" p-10 flex flex-row items-center justify-center gap-10">
           <div>
             <Link to="#">
               <FaXTwitter size={42} />

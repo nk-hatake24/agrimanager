@@ -14,6 +14,7 @@ import { DetailTransaction } from "./pages/DetailTransaction";
 import {Report} from "./pages/Report"
 import { Supplier } from "./pages/Supplier";
 import { Note } from "./pages/Note";
+import {AccountRegister} from './pages/AccountRegister'
 
 function App() {
   const router = createBrowserRouter([
@@ -49,6 +50,10 @@ function App() {
     {
       path: '/resource',
       element: <Resource />,
+    },
+    {
+      path: '/account',
+      element: <AccountRegister />,
     },
     {
       path: 'detail',
