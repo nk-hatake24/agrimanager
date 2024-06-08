@@ -28,7 +28,7 @@ const Register = () => {
   const [registerData, setRegisterData] = useState({
     name_employee: "",
     function_employee: "employee",
-    salary: "",
+    salary: 0,
     address: "",
     email: "",
     password: "",
@@ -112,6 +112,16 @@ const Register = () => {
                   className="w-full p-2.5 bg-gray-50 border border-gray-300 rounded-lg text-gray-900 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                   placeholder="name@company.com"
                   value={registerData.email}
+                  onChange={handleLoginChange}
+                  required
+                />
+                <input
+                  type="number"
+                  name="salary"
+                  id="salary"
+                  className="w-full p-2.5 bg-gray-50 border border-gray-300 rounded-lg text-gray-900 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                  placeholder="300000"
+                  value={registerData.salary}
                   onChange={handleLoginChange}
                   required
                 />

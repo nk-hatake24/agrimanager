@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";  // Make sure to import axios
+import axios from "axios"; // Make sure to import axios
 import Dashboard from "../layouts/Dashboard";
 import Modals from "../layouts/Modals";
 import { FaEye, FaPlus, FaTrashAlt } from "react-icons/fa";
@@ -12,28 +12,30 @@ export const Employee = () => {
   const [deleteItemModal, setDeleteItemModal] = useState(false);
   const [modifyItemModal, setModifyItemModal] = useState(false);
   const [selectedEmployee, setSelectedEmployee] = useState(null);
+  const [role, setRole] = useState("employee");
   const [selectedModifyEmployee, setModifyEmployee] = useState({
     name_employee: "",
     email: "",
-    salary: "",
+    salary: 0,
     address: "",
-    function_employee: ""
+    function_employee: role
   });
   const [newEmployee, setNewEmployee] = useState({
     name_employee: "",
     email: "",
-    salary: "",
+    salary: 0,
     address: "",
-    function_employee: ""
+    function_employee: role,
+    password: ""
   });
   const [EmployeeList, setEmployeeList] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
-  const [role, setRole] = useState("employee");
 
   useEffect(() => {
     const fetchEmployees = async () => {
       try {
         const response = await axios.get("http://localhost:3500/api/employee");
+
         if (Array.isArray(response.data.data)) {
           setEmployeeList(response.data.data);
         } else {
@@ -56,37 +58,69 @@ export const Employee = () => {
     setDeleteItemModal(true);
     setSelectedEmployee(employee);
   };
+  
+  const onFinalDeleteClick = async (employeeId) => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      alert("No token found, please login again.");
+      return;
+    }
 
-  const onFinalDeleteClick = (employeeId) => {
-    setDeleteItemModal(false);
-    deleteEmployee(employeeId);
+    try {
+      await axios.delete(`http://localhost:3500/api/employee/${employeeId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+      setEmployeeList(EmployeeList.filter((employee) => employee.id !== employeeId));
+      setDeleteItemModal(false);
+    } catch (error) {
+      console.error("Error deleting employee:", error.response ? error.response.data : error.message);
+      alert(error.response ? error.response.data.message : error.message);
+    }
   };
+
 
   const deleteEmployee = (employeeId) => {
     setEmployeeList(
-      EmployeeList.filter((employee) => employee.id !== employeeId)
+      EmployeeList.filter((employee) => employee._id !== employeeId)
     );
   };
 
   const onModifyEmployee = (employee) => {
     setModifyItemModal(true);
-    setSelectedEmployee(employee);
+    setModifyEmployee(employee);
   };
 
-  const handleSaveChanges = () => {
-    const updatedEmployees = EmployeeList.map((employee) =>
-      employee.id === selectedModifyEmployee.id
-        ? selectedModifyEmployee
-        : employee
-    );
-    setEmployeeList(updatedEmployees);
-    setModifyItemModal(false);
+  const handleSaveChanges = async () => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      alert("No token found, please login again.");
+      return;
+    }
+    console.log(selectedModifyEmployee)
+    try {
+      const response = await axios.put(`http://localhost:3500/api/employee/${selectedModifyEmployee._id}`, selectedModifyEmployee, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+      const updatedEmployees = EmployeeList.map((employee) =>
+        employee._id === selectedModifyEmployee._id ? response.data : employee
+      );
+      setEmployeeList(updatedEmployees);
+      setModifyItemModal(false);
+    } catch (error) {
+      console.error("Error updating employee:", error);
+      alert(error.response.message);
+    }
   };
 
   const handleModify = (e) => {
     const { name, value } = e.target;
     setModifyEmployee((prevState) => ({
       ...prevState,
+      function_employee: role,
       [name]: value,
     }));
   };
@@ -103,6 +137,7 @@ export const Employee = () => {
     const { name, value } = e.target;
     setNewEmployee({
       ...newEmployee,
+      function_employee: role,
       [name]: value,
     });
   };
@@ -113,30 +148,30 @@ export const Employee = () => {
       alert("No token found, please login again.");
       return;
     }
+    console.log(newEmployee)
 
     try {
-      const response = await axios.post("http://localhost:3500/api/employee", newEmployee, {
+      const response = await axios.post("http://localhost:3500/api/employee/register", newEmployee, {
         headers: {
           Authorization: `Bearer ${token}`
         }
-        
       });
       setEmployeeList([...EmployeeList, response.data]);
       setOpenAdd(false);
     } catch (error) {
       console.error("Error adding employee:", error);
-      alert(error.response.data.error);
+      alert(error.response.data.message);
     }
   };
 
   const filteredEmployees = EmployeeList.filter((employee) =>
-    employee.name_employee.toLowerCase().includes(searchTerm.toLowerCase())
+    employee.name_employee && employee.name_employee.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (
     <Dashboard>
       <div className="p-2 md:p-8">
-        {/* ***************************modal pour ajouter un entree**************** */}
+        {/* Modal for adding an entry */}
         <Modals open={openAdd} onClose={() => setOpenAdd(false)}>
           <div className="flex flex-col gap-2 min-w-80">
             <h1 className="text-2xl mt-2">Ajouter une entrée</h1>
@@ -173,8 +208,8 @@ export const Employee = () => {
               value={newEmployee.function_employee}
               onChange={handleInputChange}
             >
-              <option value="manager">Manager</option>
-              <option value="employee">Employee</option>
+              <option value="manager" onClick={() => setRole('manager')}>Manager</option>
+              <option value="employee" onClick={() => setRole('employee')}>Employee</option>
             </select>
             <label htmlFor="salary">
               Salaire (CFA) <span className="text-red-500">*</span>
@@ -200,7 +235,18 @@ export const Employee = () => {
               onChange={handleInputChange}
               required
             />
-
+            <label htmlFor="password">
+              Mot de passe <span className="text-red-500">*</span>
+            </label>
+            <input
+              type="password"
+              name="password"
+              className="p-2 text-gray-900"
+              placeholder="Mot de passe"
+              value={newEmployee.password}
+              onChange={handleInputChange}
+              required
+            />
             <div className="flex flex-row justify-between">
               <button className="bg-green-400 hover:bg-green-600 p-1" onClick={handleAddEmployee}>
                 Ajouter
@@ -214,7 +260,6 @@ export const Employee = () => {
             </div>
           </div>
         </Modals>
-
 
         <Modals
           open={openListItem}
@@ -231,8 +276,8 @@ export const Employee = () => {
               <p>Nom: {selectedEmployee.name_employee}</p>
               <p>Fonction: {selectedEmployee.function_employee}</p>
               <p>Email: {selectedEmployee.email}</p>
-              <p>Addresse: {selectedEmployee.address}</p>
-              <p>Salaire:{selectedEmployee.salary}</p>
+              <p>Adresse: {selectedEmployee.address}</p>
+              <p>Salaire: {selectedEmployee.salary}</p>
             </div>
           )}
         </Modals>
@@ -247,12 +292,12 @@ export const Employee = () => {
             <div className="flex flex-col gap-4  justify-center items-center">
               <FaTrashAlt size={50} className="text-red-600" />
               <p className="text-2xl">Supprimer</p>
-              <p className="text-xl">{selectedEmployee.id}</p>
+              <p className="text-xl">{selectedEmployee._id}</p>
               <p className="text-xl">{selectedEmployee.name_employee}</p>
 
               <div className="flex flex-row gap-10 justify-between">
                 <button
-                  onClick={() => onFinalDeleteClick(selectedEmployee.id)}
+                  onClick={() => onFinalDeleteClick(selectedEmployee._id)}
                   className="p-1 bg-red-400 hover:bg-red-600"
                 >
                   Supprimer
@@ -305,14 +350,14 @@ export const Employee = () => {
               </select>
               <label htmlFor="salary">Salaire (cfa)</label>
               <input
-                type="text"
+                type="number"
                 name="salary"
                 className="p-2 text-gray-900"
                 onChange={handleModify}
                 placeholder="30000"
                 value={selectedModifyEmployee.salary}
               />
-              <label htmlFor="address">Addresse</label>
+              <label htmlFor="address">Adresse</label>
               <input
                 type="text"
                 name="address"
@@ -375,7 +420,7 @@ export const Employee = () => {
               {filteredEmployees.map((index) => (
                 <div
                   className="flex flex-row justify-between border-y-1 py-2"
-                  key={index.id}
+                  key={index._id}
                 >
                   <p className="w-1/4 justify-center flex">
                     {index.name_employee}

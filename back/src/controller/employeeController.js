@@ -75,24 +75,28 @@ const updateEmployee = async (req, res) => {
   const { id } = req.params;
   const updateData = req.body;
 
+  console.log("Request to update employee", id, updateData);
+
   try {
-    const updatedEmployee = await Employee.findOneAndUpdate(id, updateData, {
-      new: true,
-      runValidators: true,
-    });
+    const updatedEmployee = await Employee.findOneAndUpdate(
+      { _id: id },
+      updateData,
+      {
+        new: true,
+        runValidators: true,
+      }
+    );
     if (!updatedEmployee) {
       return res.status(404).json({
-        message:
-          "Employee not found. to modify an employee, he or she most exist",
+        message: "Employee not found. To modify an employee, they must exist.",
       });
     }
-    res
-      .status(200)
-      .json({
-        message: "the employee informations had been updated",
-        data: updatedEmployee,
-      });
+    res.status(200).json({
+      message: "The employee information has been updated",
+      data: updatedEmployee,
+    });
   } catch (error) {
+    console.error("Error updating employee:", error);
     res.status(400).json({ message: error.message });
   }
 };
@@ -102,7 +106,8 @@ const deleteEmployee = async (req, res) => {
   const { id } = req.params;
 
   try {
-    const deletedEmployee = await Employee.findOneAndDelete(id);
+    const deletedEmployee = await Employee.findOneAndDelete(
+      {_id:id});
     if (!deletedEmployee) {
       return res
         .status(404)

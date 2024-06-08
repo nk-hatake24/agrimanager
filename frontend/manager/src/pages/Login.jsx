@@ -5,10 +5,13 @@ import { Link, useNavigate } from "react-router-dom";
 import Switcher from "../components/Switcher";
 
 const Modal = ({ message, onClose }) => {
+  const username = localStorage.getItem('username')
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-      <div className="bg-white p-6 rounded lex flex-col items-center shadow-md">
+      <div className="flex gap-5  bg-gray-50 dark:bg-gray-900 dark:text-gray-50 text-gray-900  p-6 rounded  flex-col items-center shadow-md">
+        <br/>
         <p>{message}</p>
+        <p> {(username && username==! null)?`welcome ${username}`:''}</p>
         <button
           onClick={onClose}
           className="mt-4 px-4 py-2 bg-blue-500 text-white rounded"
@@ -28,10 +31,10 @@ const Login = () => {
   });
   const [modalMessage, setModalMessage] = useState('');
   const [showModal, setShowModal] = useState(false);
+  const token = localStorage.getItem('token');
 
   useEffect(() => {
-    // Vérifier si le token est dans le localStorage
-    const token = localStorage.getItem('token');
+
     if (token) {
       // Rediriger vers la page d'accueil ou une autre page protégée
       navigate('/homedash');
@@ -50,7 +53,7 @@ const Login = () => {
     e.preventDefault();
     try {
       const response = await axios.post('http://localhost:3500/api/employee/login', loginData);
-      localStorage.setItem('token', response.data.accessToken);
+      localStorage.setItem('token', response.data.token);
       localStorage.setItem('username', response.data.employee.name);
       localStorage.setItem('userEmail', response.data.employee.email);
       localStorage.setItem('userFunction', response.data.employee.function);
@@ -59,9 +62,10 @@ const Login = () => {
       setTimeout(() => {
         setShowModal(false);
         navigate('/homedash');
+
       }, 2000);
     } catch (error) {
-      setModalMessage(error.response.data.error);
+      setModalMessage(error.response.data.message);
       setShowModal(true);
     }
   };

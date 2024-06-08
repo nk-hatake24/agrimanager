@@ -6,7 +6,7 @@ const {employeeRegister, searchAllEmployee, searchOneEmployee, updateEmployee, d
 route.post("/register",  employeeRegister)
 route.get("/", searchAllEmployee)
 route.get("/:id", searchOneEmployee)
-route.put('/:id', authenticateJWT, authorizeRoles("manager", "employee", "admin"), updateEmployee)
+route.put('/:id', authenticateJWT, authorizeRoles("manager", "admin"), updateEmployee)
 route.delete('/:id', authenticateJWT, authorizeRoles("manager", "employee", "admin"),deleteEmployee)
 route.post('/login', login)
 

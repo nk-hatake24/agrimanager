@@ -3,7 +3,10 @@ const bcrypt = require("bcrypt");
 
 const employeeSchema = new mongoose.Schema(
   {
-   
+   id: {
+    type: String,
+    unique: [true , ' the id most be unique']
+   },
     name_employee:{
       type: String,
       required: [true, 'name of the employee is required']
@@ -23,7 +26,7 @@ const employeeSchema = new mongoose.Schema(
       required: [true, "password is required"],
     },
     salary: {
-      type: Number,
+      type: String,
     },
     address: {
       type: String,
