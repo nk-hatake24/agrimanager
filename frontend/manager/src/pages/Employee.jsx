@@ -1,10 +1,13 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios"; // Make sure to import axios
-import Dashboard from "../layouts/Dashboard";
-import Modals from "../layouts/Modals";
-import { FaEye, FaPlus, FaTrashAlt } from "react-icons/fa";
-import { CiSearch } from "react-icons/ci";
-import { HiPencil } from "react-icons/hi2";
+// components/Employee.js
+import React, { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import axios from 'axios';
+import Dashboard from '../layouts/Dashboard';
+import Modals from '../layouts/Modals';
+import { FaEye, FaPlus, FaTrashAlt } from 'react-icons/fa';
+import { CiSearch } from 'react-icons/ci';
+import { HiPencil } from 'react-icons/hi2';
+import { fetchEmployees } from '../features/employee/employeSlice';
 
 export const Employee = () => {
   const [openAdd, setOpenAdd] = useState(false);
@@ -12,42 +15,38 @@ export const Employee = () => {
   const [deleteItemModal, setDeleteItemModal] = useState(false);
   const [modifyItemModal, setModifyItemModal] = useState(false);
   const [selectedEmployee, setSelectedEmployee] = useState(null);
-  const [role, setRole] = useState("employee");
+  const [role, setRole] = useState('employee');
+  const [loading, setLoading] = useState(false)
   const [selectedModifyEmployee, setModifyEmployee] = useState({
-    name_employee: "",
-    email: "",
+    name_employee: '',
+    email: '',
     salary: 0,
-    address: "",
-    function_employee: role
+    address: '',
+    function_employee: role,
   });
   const [newEmployee, setNewEmployee] = useState({
-    name_employee: "",
-    email: "",
+    name_employee: '',
+    email: '',
     salary: 0,
-    address: "",
+    address: '',
     function_employee: role,
-    password: ""
+    password: '',
   });
-  const [EmployeeList, setEmployeeList] = useState([]);
-  const [searchTerm, setSearchTerm] = useState("");
+  const [searchTerm, setSearchTerm] = useState('');
+
+  const dispatch = useDispatch();
+  const employeeList = useSelector((state) => state.employee.list);
+  const employeeStatus = useSelector((state) => state.employee.status);
+  const employeeError = useSelector((state) => state.employee.error);
 
   useEffect(() => {
-    const fetchEmployees = async () => {
-      try {
-        const response = await axios.get("http://localhost:3500/api/employee");
-
-        if (Array.isArray(response.data.data)) {
-          setEmployeeList(response.data.data);
-        } else {
-          console.error("API response is not an array:", response.data);
-        }
-      } catch (error) {
-        console.error("Error fetching employees:", error);
-      }
-    };
-
-    fetchEmployees();
-  }, []);
+    if (employeeStatus === 'idle') {
+      dispatch(fetchEmployees());
+    }else if(employeeStatus === 'loading'){
+      setLoading(true)
+      const print = 'loading'
+    }
+  }, [employeeStatus, dispatch]);
 
   const onProductClick = (employee) => {
     setOpenListItem(true);
@@ -58,33 +57,26 @@ export const Employee = () => {
     setDeleteItemModal(true);
     setSelectedEmployee(employee);
   };
-  
+
   const onFinalDeleteClick = async (employeeId) => {
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem('token');
     if (!token) {
-      alert("No token found, please login again.");
+      alert('No token found, please login again.');
       return;
     }
 
     try {
       await axios.delete(`http://localhost:3500/api/employee/${employeeId}`, {
         headers: {
-          Authorization: `Bearer ${token}`
-        }
+          Authorization: `Bearer ${token}`,
+        },
       });
-      setEmployeeList(EmployeeList.filter((employee) => employee.id !== employeeId));
+      dispatch(fetchEmployees());
       setDeleteItemModal(false);
     } catch (error) {
-      console.error("Error deleting employee:", error.response ? error.response.data : error.message);
+      console.error('Error deleting employee:', error.response ? error.response.data : error.message);
       alert(error.response ? error.response.data.message : error.message);
     }
-  };
-
-
-  const deleteEmployee = (employeeId) => {
-    setEmployeeList(
-      EmployeeList.filter((employee) => employee._id !== employeeId)
-    );
   };
 
   const onModifyEmployee = (employee) => {
@@ -93,25 +85,22 @@ export const Employee = () => {
   };
 
   const handleSaveChanges = async () => {
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem('token');
     if (!token) {
-      alert("No token found, please login again.");
+      alert('No token found, please login again.');
       return;
     }
-    console.log(selectedModifyEmployee)
+
     try {
       const response = await axios.put(`http://localhost:3500/api/employee/${selectedModifyEmployee._id}`, selectedModifyEmployee, {
         headers: {
-          Authorization: `Bearer ${token}`
-        }
+          Authorization: `Bearer ${token}`,
+        },
       });
-      const updatedEmployees = EmployeeList.map((employee) =>
-        employee._id === selectedModifyEmployee._id ? response.data : employee
-      );
-      setEmployeeList(updatedEmployees);
+      dispatch(fetchEmployees());
       setModifyItemModal(false);
     } catch (error) {
-      console.error("Error updating employee:", error);
+      console.error('Error updating employee:', error);
       alert(error.response.message);
     }
   };
@@ -143,28 +132,27 @@ export const Employee = () => {
   };
 
   const handleAddEmployee = async () => {
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem('token');
     if (!token) {
-      alert("No token found, please login again.");
+      alert('No token found, please login again.');
       return;
     }
-    console.log(newEmployee)
 
     try {
-      const response = await axios.post("http://localhost:3500/api/employee/register", newEmployee, {
+      const response = await axios.post('http://localhost:3500/api/employee/register', newEmployee, {
         headers: {
-          Authorization: `Bearer ${token}`
-        }
+          Authorization: `Bearer ${token}`,
+        },
       });
-      setEmployeeList([...EmployeeList, response.data]);
+      dispatch(fetchEmployees());
       setOpenAdd(false);
     } catch (error) {
-      console.error("Error adding employee:", error);
+      console.error('Error adding employee:', error);
       alert(error.response.data.message);
     }
   };
 
-  const filteredEmployees = EmployeeList.filter((employee) =>
+  const filteredEmployees = employeeList.filter((employee) =>
     employee.name_employee && employee.name_employee.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
@@ -200,7 +188,7 @@ export const Employee = () => {
               required
             />
             <label htmlFor="role">
-              Role: <span className="text-red-500">*</span>{" "}
+              Role: <span className="text-red-500">*</span>{' '}
             </label>
             <select
               className="text-gray-800 p-2"
@@ -208,8 +196,12 @@ export const Employee = () => {
               value={newEmployee.function_employee}
               onChange={handleInputChange}
             >
-              <option value="manager" onClick={() => setRole('manager')}>Manager</option>
-              <option value="employee" onClick={() => setRole('employee')}>Employee</option>
+              <option value="manager" onClick={() => setRole('manager')}>
+                Manager
+              </option>
+              <option value="employee" onClick={() => setRole('employee')}>
+                Employee
+              </option>
             </select>
             <label htmlFor="salary">
               Salaire (CFA) <span className="text-red-500">*</span>
@@ -251,10 +243,7 @@ export const Employee = () => {
               <button className="bg-green-400 hover:bg-green-600 p-1" onClick={handleAddEmployee}>
                 Ajouter
               </button>
-              <button
-                className="bg-red-400 hover:bg-red-600 p-1"
-                onClick={() => setOpenAdd(false)}
-              >
+              <button className="bg-red-400 hover:bg-red-600 p-1" onClick={() => setOpenAdd(false)}>
                 Annuler
               </button>
             </div>
@@ -269,10 +258,7 @@ export const Employee = () => {
         >
           {selectedEmployee && (
             <div className="m-8 text-center flex gap-4 flex-col capitalize">
-              <h2 className="text-2xl pb-2 ">
-                {" "}
-                {selectedEmployee.name_employee}
-              </h2>
+              <h2 className="text-2xl pb-2 ">{selectedEmployee.name_employee}</h2>
               <p>Nom: {selectedEmployee.name_employee}</p>
               <p>Fonction: {selectedEmployee.function_employee}</p>
               <p>Email: {selectedEmployee.email}</p>
@@ -296,16 +282,10 @@ export const Employee = () => {
               <p className="text-xl">{selectedEmployee.name_employee}</p>
 
               <div className="flex flex-row gap-10 justify-between">
-                <button
-                  onClick={() => onFinalDeleteClick(selectedEmployee._id)}
-                  className="p-1 bg-red-400 hover:bg-red-600"
-                >
+                <button onClick={() => onFinalDeleteClick(selectedEmployee._id)} className="p-1 bg-red-400 hover:bg-red-600">
                   Supprimer
                 </button>
-                <button
-                  onClick={() => setDeleteItemModal(false)}
-                  className="p-1  bg-orange-400 hover:bg-orange-600"
-                >
+                <button onClick={() => setDeleteItemModal(false)} className="p-1  bg-orange-400 hover:bg-orange-600">
                   Annuler
                 </button>
               </div>
@@ -313,10 +293,7 @@ export const Employee = () => {
           )}
         </Modals>
 
-        <Modals
-          open={modifyItemModal}
-          onClose={() => setModifyItemModal(false)}
-        >
+        <Modals open={modifyItemModal} onClose={() => setModifyItemModal(false)}>
           {selectedModifyEmployee && (
             <div className="flex flex-col gap-2 min-w-80">
               <h1 className="text-2xl mt-2">Modifier une entrée</h1>
@@ -367,16 +344,10 @@ export const Employee = () => {
                 value={selectedModifyEmployee.address}
               />
               <div className="flex flex-row justify-between">
-                <button
-                  className="bg-green-400 hover:bg-green-600 p-1"
-                  onClick={handleSaveChanges}
-                >
+                <button className="bg-green-400 hover:bg-green-600 p-1" onClick={handleSaveChanges}>
                   Sauvegarder
                 </button>
-                <button
-                  className="bg-red-400 hover:bg-red-600 p-1"
-                  onClick={() => setModifyItemModal(false)}
-                >
+                <button className="bg-red-400 hover:bg-red-600 p-1" onClick={() => setModifyItemModal(false)}>
                   Annuler
                 </button>
               </div>
@@ -386,10 +357,7 @@ export const Employee = () => {
 
         <div className="h-screen">
           <div className="flex justify-between pb-3  flew-row ">
-            <div
-              onClick={() => setOpenAdd(true)}
-              className="flex justify-center gap-2"
-            >
+            <div onClick={() => setOpenAdd(true)} className="flex justify-center gap-2">
               <span className="p-1 bg-green-0  hover:bg-green-600 cursor-pointer">
                 <FaPlus />
               </span>
@@ -411,26 +379,15 @@ export const Employee = () => {
             <div className="flex flex-row justify-between w py-2 bg-gray-200 dark:bg-gray-700">
               <p className="w-1/4 justify-center flex"> Employé</p>
               <p className="w-1/4 justify-center flex">Fonction</p>
-              <p className="hidden w-1/4 justify-center md:flex">
-                Salaire (CFA){" "}
-              </p>
+              <p className="hidden w-1/4 justify-center md:flex">Salaire (CFA)</p>
               <p className="w-1/4 justify-center flex"> detail / supprimer</p>
             </div>
             <div className="flex flex-col overflow-y-scroll overflow-x-clip pb-3 p hal px-8 md:px-0 max-w-full">
-              {filteredEmployees.map((index) => (
-                <div
-                  className="flex flex-row justify-between border-y-1 py-2"
-                  key={index._id}
-                >
-                  <p className="w-1/4 justify-center flex">
-                    {index.name_employee}
-                  </p>
-                  <p className="w-1/4 justify-center flex">
-                    {index.function_employee}
-                  </p>
-                  <p className="hidden w-1/4 justify-center md:flex">
-                    {index.salary}
-                  </p>
+            {filteredEmployees.map((index) => (
+                <div className="flex flex-row justify-between border-y-1 py-2" key={index._id}>
+                  <p className="w-1/4 justify-center flex">{index.name_employee}</p>
+                  <p className="w-1/4 justify-center flex">{index.function_employee}</p>
+                  <p className="hidden w-1/4 justify-center md:flex">{index.salary}</p>
                   <div className="w-1/4 justify-center flex flew-row gap-4">
                     <div
                       className="p-1  bg-orange-0 hover:bg-orange-600 hover:cursor-pointer "
@@ -450,10 +407,7 @@ export const Employee = () => {
                       <HiPencil />
                     </div>
 
-                    <div
-                      onClick={() => onDeleteClick(index)}
-                      className="p-1 bg-red-0 hover:cursor-pointer hover:bg-red-600 "
-                    >
+                    <div onClick={() => onDeleteClick(index)} className="p-1 bg-red-0 hover:cursor-pointer hover:bg-red-600 ">
                       <FaTrashAlt />
                     </div>
                   </div>

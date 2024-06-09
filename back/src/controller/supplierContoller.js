@@ -3,15 +3,14 @@ const Supplier = require('../model/supplierModel');
 //*******************add a supplier **************************** */
 const addSupplier = async (req, res) => {
   try {
-    const { id_supplier, name_supplier, phone_supplier, email_supplier, address_supplier } = req.body;
+    const { name_supplier, phone_supplier, email_supplier, address_supplier } = req.body;
     
-    const existingSupplier = await Supplier.findOne({ id_supplier });
+    const existingSupplier = await Supplier.findOne({ email_supplier });
     if (existingSupplier) {
-      return res.status(409).json({ message: "A supplier with this ID already exists." });
+      return res.status(409).json({ message: "A supplier with this email already exists." });
     }
 
     const supplier = new Supplier({
-      id_supplier,
       name_supplier,
       phone_supplier,
       email_supplier, 
@@ -22,7 +21,7 @@ const addSupplier = async (req, res) => {
     res.status(201).json({ message: "Supplier added successfully", data: savedSupplier });
   } catch (error) {
     console.error("Error adding supplier:", error);
-    res.status(500).json({ message: "Internal server error" });
+    res.status(500).json({ message: "internal error" });
   }
 };
 

@@ -1,33 +1,29 @@
 import React, { useEffect, useState } from 'react'
 import Dashboard from '../layouts/Dashboard'
-import axios from 'axios';
+import { fetchEmployees } from '../features/employee/employeSlice';
+import { useDispatch, useSelector } from 'react-redux';
+
 
 export const HomeDashboard1 = () => {
-  const [EmployeeList, setEmployeeList]=useState([])
+  const dispatch = useDispatch();
+  const employeeList = useSelector((state) => state.employee.list);
+  const employeeStatus = useSelector((state) => state.employee.status);
+  const employeeError = useSelector((state) => state.employee.error);
 
   useEffect(() => {
-    const fetchEmployees = async () => {
-      try {
-        const response = await axios.get("http://localhost:3500/api/employee");
-
-        if (Array.isArray(response.data.data)) {
-          setEmployeeList(response.data.data);
-        } else {
-          console.error("API response is not an array:", response.data);
-        }
-      } catch (error) {
-        console.error("Error fetching employees:", error);
-      }
-    };
-
-    fetchEmployees();
-  }, []);
+    if (employeeStatus === 'idle') {
+      dispatch(fetchEmployees());
+    }else if(employeeStatus === 'loading'){
+      // setLoading(true)
+      const print = 'loading'
+    }
+  }, [employeeStatus, dispatch]);
 
   return (
     <Dashboard>
       <div>
         <h2 className="text-xl">Nombre d'employee</h2>
-        <p className='text-3xl'>{EmployeeList.length}</p>
+        <p className='text-3xl'>{employeeList.length}</p>
       </div>
     </Dashboard>
   )

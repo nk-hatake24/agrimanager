@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from "react";
+import axios from "axios";
 import Dashboard from "../layouts/Dashboard";
 import Modals from "../layouts/Modals";
 import { FaEye, FaPlus, FaTrashAlt } from "react-icons/fa";
-import { resources, suppliers } from "../mock/Mocks1";
 import { CiSearch } from "react-icons/ci";
 import { HiPencil } from "react-icons/hi2";
-import Resource from "./Resource";
 
 export const Detail = () => {
   const [openAdd, setOpenAdd] = useState(false);
@@ -14,14 +13,64 @@ export const Detail = () => {
   const [modifyItemModal, setModifyItemModal] = useState(false);
   const [selectedResource, setSelectedResource] = useState(null);
   const [selectedModifyResource, setModifyResource] = useState({
+    _id: "",
     quantity_resource: "",
     unit_price: "",
     name_resource: "",
     supplier: "",
   });
-  const [ResourceList, setResourceList] = useState(resources);
+  const [newResource, setNewResource] = useState({
+    quantity_resource: "",
+    unit_price: "",
+    name_resource: "",
+    supplier: "",
+  });
+  const [ResourceList, setResourceList] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
-  const [SupplierList, setSupplierList] = useState(suppliers);
+  const [SupplierList, setSupplierList] = useState([]);
+
+  useEffect(() => {
+    const fetchResources = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        const response = await axios.get("http://localhost:3500/api/resource", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (Array.isArray(response.data)) {
+          setResourceList(response.data);
+        } else {
+          console.error("API response is not an array:", response.data);
+        }
+      } catch (error) {
+        console.error("Error fetching resources:", error);
+      }
+    };
+
+    const fetchSuppliers = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        const response = await axios.get("http://localhost:3500/api/supplier", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (Array.isArray(response.data.data)) {
+          setSupplierList(response.data.data);
+        } else {
+          console.error("API response is not an array:", response.data);
+        }
+      } catch (error) {
+        console.error("Error fetching resources:", error);
+      }
+    };
+
+    fetchResources();
+    fetchSuppliers();
+  }, []);
 
   const onResourceClick = (resource) => {
     setOpenListItem(true);
@@ -33,31 +82,58 @@ export const Detail = () => {
     setSelectedResource(resource);
   };
 
-  const onFinalDeleteClick = (resourceId) => {
-    setDeleteItemModal(false);
-    deleteResource(resourceId);
-  };
+  const onFinalDeleteClick = async (resourceId) => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      alert("No token found, please login again.");
+      return;
+    }
 
-  const deleteResource = (resourceId) => {
-    setDeleteItemModal(false);
-    setResourceList(
-      ResourceList.filter((resource) => resource.id !== resourceId)
-    );
+    try {
+      await axios.delete(`http://localhost:3500/api/resource/${resourceId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setResourceList(ResourceList.filter((resource) => resource._id !== resourceId));
+      setDeleteItemModal(false);
+    } catch (error) {
+      console.error("Error deleting resource:", error.response ? error.response.data : error.message);
+      alert(error.response ? error.response.data.message : error.message);
+    }
   };
 
   const onModifyResource = (resource) => {
     setModifyItemModal(true);
-    setSelectedResource(resource);
+    setModifyResource(resource);
   };
 
-  const handleSaveChanges = () => {
-    const updatedResources = ResourceList.map((resource) =>
-      resource.id === selectedModifyResource.id
-        ? selectedModifyResource
-        : resource
-    );
-    setResourceList(updatedResources);
-    setModifyItemModal(false);
+  const handleSaveChanges = async () => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      alert("No token found, please login again.");
+      return;
+    }
+
+    try {
+      const response = await axios.put(
+        `http://localhost:3500/api/resource/${selectedModifyResource._id}`,
+        selectedModifyResource,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      const updatedResources = ResourceList.map((resource) =>
+        resource._id === selectedModifyResource._id ? response.data.data : resource
+      );
+      setResourceList(updatedResources);
+      setModifyItemModal(false);
+    } catch (error) {
+      console.error("Error updating resource:", error);
+      alert(error.response ? error.response.data.message : error.message);
+    }
   };
 
   const handleModify = (e) => {
@@ -72,12 +148,42 @@ export const Detail = () => {
     setSearchTerm(event.target.value);
   };
 
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setNewResource({
+      ...newResource,
+      [name]: value,
+    });
+  };
+
+  const handleAddResource = async () => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      alert("No token found, please login again.");
+      return;
+    }
+    console.log(newResource);
+
+    try {
+      const response = await axios.post("http://localhost:3500/api/resource", newResource, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setResourceList([...ResourceList, response.data.data]);
+      setOpenAdd(false);
+    } catch (error) {
+      console.error("Error adding resource:", error);
+      alert(error.response ? error.response.data.message : error.message);
+    }
+  };
+
   const filteredResources = ResourceList.filter((resource) =>
     resource.name_resource.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (
-    <Resource>
+    <Dashboard>
       <div className="p-2 md:p-8">
         {/* Modal pour ajouter une ressource */}
         <Modals open={openAdd} onClose={() => setOpenAdd(false)}>
@@ -90,12 +196,8 @@ export const Detail = () => {
               type="number"
               name="quantity_resource"
               className="p-2 text-gray-900"
-              onChange={(e) =>
-                setModifyResource((prevState) => ({
-                  ...prevState,
-                  quantity_resource: e.target.value,
-                }))
-              }
+              onChange={handleInputChange}
+              value={newResource.quantity_resource}
               placeholder="100"
             />
             <label htmlFor="unit_price">
@@ -105,12 +207,8 @@ export const Detail = () => {
               type="number"
               name="unit_price"
               className="p-2 text-gray-900"
-              onChange={(e) =>
-                setModifyResource((prevState) => ({
-                  ...prevState,
-                  unit_price: e.target.value,
-                }))
-              }
+              onChange={handleInputChange}
+              value={newResource.unit_price}
               placeholder="500"
             />
             <label htmlFor="name_resource">
@@ -120,12 +218,8 @@ export const Detail = () => {
               type="text"
               name="name_resource"
               className="p-2 text-gray-900"
-              onChange={(e) =>
-                setModifyResource((prevState) => ({
-                  ...prevState,
-                  name_resource: e.target.value,
-                }))
-              }
+              onChange={handleInputChange}
+              value={newResource.name_resource}
               placeholder="Eau"
             />
             <label htmlFor="supplier">
@@ -134,32 +228,19 @@ export const Detail = () => {
             <select
               name="supplier"
               className="p-2 text-gray-900"
-              onChange={(e) =>
-                setModifyResource((prevState) => ({
-                  ...prevState,
-                  supplier: e.target.value,
-                }))
-              }
+              onChange={handleInputChange}
+              value={newResource.supplier}
             >
               <option value="">Sélectionner un fournisseur</option>
               {SupplierList.map((supplier) => (
-                <option key={supplier.id} value={supplier.id}>
-                  {supplier.name}
+                <option key={supplier._id} value={supplier._id}>
+                  {supplier.name_supplier}
                 </option>
               ))}
             </select>
 
             <div className="flex flex-row justify-between">
-              <button
-                className="bg-green-400 hover:bg-green-600 p-1"
-                onClick={() => {
-                  setResourceList([
-                    ...ResourceList,
-                    { ...selectedModifyResource, id: Date.now() },
-                  ]);
-                  setOpenAdd(false);
-                }}
-              >
+              <button className="bg-green-400 hover:bg-green-600 p-1" onClick={handleAddResource}>
                 Ajouter
               </button>
               <button
@@ -203,7 +284,7 @@ export const Detail = () => {
               <p className="text-xl">{selectedResource.name_resource}</p>
               <div className="flex flex-row gap-10 justify-between">
                 <button
-                  onClick={() => onFinalDeleteClick(selectedResource.id)}
+                  onClick={() => onFinalDeleteClick(selectedResource._id)}
                   className="p-1 bg-red-400 hover:bg-red-600"
                 >
                   Supprimer
@@ -262,7 +343,7 @@ export const Detail = () => {
               >
                 <option value="">Sélectionner un fournisseur</option>
                 {SupplierList.map((supplier) => (
-                  <option key={supplier.id} value={supplier.id}>
+                  <option key={supplier._id} value={supplier._id}>
                     {supplier.name}
                   </option>
                 ))}
@@ -319,7 +400,7 @@ export const Detail = () => {
               {filteredResources.map((resource) => (
                 <div
                   className="flex flex-row justify-between border-y-1 py-2"
-                  key={resource.id}
+                  key={resource._id}
                 >
                   <p className="w-1/4 justify-center flex">
                     {resource.name_resource}
@@ -362,6 +443,6 @@ export const Detail = () => {
           </div>
         </div>
       </div>
-    </Resource>
+    </Dashboard>
   );
 };
