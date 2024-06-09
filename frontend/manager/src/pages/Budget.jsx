@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios"; // Make sure to import axios
 import Dashboard from "../layouts/Dashboard";
 import Modals from "../layouts/Modals";
 import { FaEye, FaPlus, FaTrashAlt } from "react-icons/fa";
-import { budgets } from "../mock/Mocks1"; // Assumez que vous avez un mock de budget similaire à employees
 import { CiSearch } from "react-icons/ci";
 import { HiPencil } from "react-icons/hi2";
 
@@ -13,12 +13,40 @@ export const Budget = () => {
   const [modifyItemModal, setModifyItemModal] = useState(false);
   const [selectedBudget, setSelectedBudget] = useState(null);
   const [selectedModifyBudget, setModifyBudget] = useState({
+    _id: "",
     previsions: "",
     real_budget: "",
     period: "",
   });
-  const [BudgetList, setBudgetList] = useState(budgets);
+  const [newBudget, setNewBudget] = useState({
+    previsions: "",
+    real_budget: "",
+    period: "",
+  });
+  const [BudgetList, setBudgetList] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
+
+  useEffect(() => {
+    const fetchBudgets = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        const response = await axios.get("http://localhost:3500/api/budget", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        if (Array.isArray(response.data.data)) {
+          setBudgetList(response.data.data);
+        } else {
+          console.error("API response is not an array:", response.data);
+        }
+      } catch (error) {
+        console.error("Error fetching budgets:", error);
+      }
+    };
+
+    fetchBudgets();
+  }, []);
 
   const onBudgetClick = (budget) => {
     setOpenListItem(true);
@@ -30,31 +58,58 @@ export const Budget = () => {
     setSelectedBudget(budget);
   };
 
-  const onFinalDeleteClick = (budgetId) => {
-    setDeleteItemModal(false);
-    deleteBudget(budgetId);
-  };
+  const onFinalDeleteClick = async (budgetId) => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      alert("No token found, please login again.");
+      return;
+    }
 
-  const deleteBudget = (budgetId) => {
-    setDeleteItemModal(false);
-    setBudgetList(
-      BudgetList.filter((budget) => budget.id !== budgetId)
-    );
+    try {
+      await axios.delete(`http://localhost:3500/api/budget/${budgetId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setBudgetList(BudgetList.filter((budget) => budget._id !== budgetId));
+      setDeleteItemModal(false);
+    } catch (error) {
+      console.error("Error deleting budget:", error.response ? error.response.data : error.message);
+      alert(error.response ? error.response.data.message : error.message);
+    }
   };
 
   const onModifyBudget = (budget) => {
     setModifyItemModal(true);
-    setSelectedBudget(budget);
+    setModifyBudget(budget);
   };
 
-  const handleSaveChanges = () => {
-    const updatedBudgets = BudgetList.map((budget) =>
-      budget.id === selectedModifyBudget.id
-        ? selectedModifyBudget
-        : budget
-    );
-    setBudgetList(updatedBudgets);
-    setModifyItemModal(false);
+  const handleSaveChanges = async () => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      alert("No token found, please login again.");
+      return;
+    }
+
+    try {
+      const response = await axios.put(
+        `http://localhost:3500/api/budget/${selectedModifyBudget._id}`,
+        selectedModifyBudget,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      const updatedBudgets = BudgetList.map((budget) =>
+        budget._id === selectedModifyBudget._id ? response.data.data : budget
+      );
+      setBudgetList(updatedBudgets);
+      setModifyItemModal(false);
+    } catch (error) {
+      console.error("Error updating budget:", error);
+      alert(error.response ? error.response.data.message : error.message);
+    }
   };
 
   const handleModify = (e) => {
@@ -69,6 +124,36 @@ export const Budget = () => {
     setSearchTerm(event.target.value);
   };
 
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setNewBudget({
+      ...newBudget,
+      [name]: value,
+    });
+  };
+
+  const handleAddBudget = async () => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      alert("No token found, please login again.");
+      return;
+    }
+    console.log(newBudget);
+
+    try {
+      const response = await axios.post("http://localhost:3500/api/budget", newBudget, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setBudgetList([...BudgetList, response.data.data]);
+      setOpenAdd(false);
+    } catch (error) {
+      console.error("Error adding budget:", error);
+      alert(error.response ? error.response.data.message : error.message);
+    }
+  };
+
   const filteredBudgets = BudgetList.filter((budget) =>
     budget.period.toLowerCase().includes(searchTerm.toLowerCase())
   );
@@ -76,7 +161,7 @@ export const Budget = () => {
   return (
     <Dashboard>
       <div className="p-2 md:p-8">
-        {/* Modal pour ajouter une entrée */}
+        {/* Modal for adding an entry */}
         <Modals open={openAdd} onClose={() => setOpenAdd(false)}>
           <div className="flex flex-col gap-2 min-w-80">
             <h1 className="text-2xl mt-2">Ajouter un budget</h1>
@@ -87,12 +172,8 @@ export const Budget = () => {
               type="number"
               name="previsions"
               className="p-2 text-gray-900"
-              onChange={(e) =>
-                setModifyBudget((prevState) => ({
-                  ...prevState,
-                  previsions: e.target.value,
-                }))
-              }
+              onChange={handleInputChange}
+              value={newBudget.previsions}
               placeholder="100000"
             />
             <label htmlFor="real_budget">
@@ -102,41 +183,24 @@ export const Budget = () => {
               type="number"
               name="real_budget"
               className="p-2 text-gray-900"
-              onChange={(e) =>
-                setModifyBudget((prevState) => ({
-                  ...prevState,
-                  real_budget: e.target.value,
-                }))
-              }
+              onChange={handleInputChange}
+              value={newBudget.real_budget}
               placeholder="90000"
             />
             <label htmlFor="period">
               Période <span className="text-red-500">*</span>
             </label>
             <input
-              type="text"
+              type="date"
               name="period"
               className="p-2 text-gray-900"
-              onChange={(e) =>
-                setModifyBudget((prevState) => ({
-                  ...prevState,
-                  period: e.target.value,
-                }))
-              }
+              onChange={handleInputChange}
+              value={newBudget.period}
               placeholder="Janvier 2024"
             />
 
             <div className="flex flex-row justify-between">
-              <button
-                className="bg-green-400 hover:bg-green-600 p-1"
-                onClick={() => {
-                  setBudgetList([
-                    ...BudgetList,
-                    { ...selectedModifyBudget, id: Date.now() },
-                  ]);
-                  setOpenAdd(false);
-                }}
-              >
+              <button className="bg-green-400 hover:bg-green-600 p-1" onClick={handleAddBudget}>
                 Ajouter
               </button>
               <button
@@ -179,7 +243,7 @@ export const Budget = () => {
               <p className="text-xl">{selectedBudget.period}</p>
               <div className="flex flex-row gap-10 justify-between">
                 <button
-                  onClick={() => onFinalDeleteClick(selectedBudget.id)}
+                  onClick={() => onFinalDeleteClick(selectedBudget._id)}
                   className="p-1 bg-red-400 hover:bg-red-600"
                 >
                   Supprimer
@@ -222,7 +286,7 @@ export const Budget = () => {
               />
               <label htmlFor="period">Période</label>
               <input
-                type="text"
+                type="date"
                 name="period"
                 className="p-2 text-gray-900"
                 onChange={handleModify}
@@ -281,7 +345,7 @@ export const Budget = () => {
               {filteredBudgets.map((budget) => (
                 <div
                   className="flex flex-row justify-between border-y-1 py-2"
-                  key={budget.id}
+                  key={budget._id}
                 >
                   <p className="w-1/4 justify-center flex">
                     {budget.period}
