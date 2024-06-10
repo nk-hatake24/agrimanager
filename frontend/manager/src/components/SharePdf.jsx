@@ -1,20 +1,20 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { jsPDF } from "jspdf";
 import "jspdf-autotable";
-import { FaDownload, FaShareAlt } from "react-icons/fa";
+import { FaDownload, FaEnvelope, FaShareAlt } from "react-icons/fa";
 import {
-  EmailShareButton,
-  EmailIcon,
+
   FacebookShareButton,
   FacebookIcon,
   TwitterShareButton,
   TwitterIcon,
-  LinkedinShareButton,
-  LinkedinIcon,
 } from "react-share";
+import emailjs from 'emailjs-com'
 import Modals from "../layouts/Modals";
 
 const SharePdf = ({ transactions }) => {
+  const form = useRef();
+
   const [addOpen, setAddOpen] = useState(false);
 
   const generatePDF = () => {
@@ -68,6 +68,41 @@ const SharePdf = ({ transactions }) => {
     doc.autoTable(tableColumn, tableRows, { startY: 20 });
     return doc.output("Transactionpdf");
   };
+  const sendEmail = (e) => {
+    e.preventDefault();
+
+    const doc = new jsPDF();
+    const tableColumn = ["Date", "Quantity Resource", "Total Price", "Resource", "Employee"];
+    const tableRows = [];
+    
+    transactions.forEach(transaction => {
+      const transactionData = [
+        transaction.date,
+        transaction.quantity_resource,
+        transaction.total_price,
+        transaction.resource.name_resource,
+        transaction.employee.name_employee
+      ];
+      tableRows.push(transactionData);
+    });
+
+    doc.autoTable(tableColumn, tableRows, { startY: 20 });
+    const pdfData = doc.output('blob'); // Get the PDF as a Blob
+
+    const formData = new FormData();
+    formData.append('file', pdfData, 'transactions.pdf');
+
+    // Sending the email using EmailJS
+    emailjs.sendForm('YOUR_SERVICE_ID', 'YOUR_TEMPLATE_ID', form.current, 'YOUR_USER_ID')
+      .then((result) => {
+          console.log(result.text);
+          alert('Email sent successfully');
+      }, (error) => {
+          console.log(error.text);
+          alert('Failed to send email');
+      });
+  };
+
   const pdfDataURL = getPDFUrl();
 
   return (
@@ -79,7 +114,7 @@ const SharePdf = ({ transactions }) => {
             <form ref={form} onSubmit={sendEmail}>
               <button type="submit">
                 {" "}
-                <FaEnvelope /> Send Email{" "}
+                <FaEnvelope /> 
               </button>
               <input type="hidden" name="pdf_data" value="transactions.pdf" />
             </form>

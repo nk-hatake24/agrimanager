@@ -317,14 +317,7 @@ export const DetailTransaction = () => {
                 onChange={handleModify}
                 value={selectedModifyTransaction.quantity_resource}
               />
-              <label htmlFor="total_price">Prix Total</label>
-              <input
-                type="number"
-                name="total_price"
-                className="p-2 text-gray-900"
-                onChange={handleModify}
-                value={selectedModifyTransaction.total_price}
-              />
+              
               <label htmlFor="resource">Ressource</label>
               <select
                 name="resource"

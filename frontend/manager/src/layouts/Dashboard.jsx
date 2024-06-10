@@ -16,7 +16,7 @@ const Dashboard = ({children}) => {
                 <div className='shadow  shadow-gray-400 dark:shadow-gray-700'>
                   <NavBarTop />
                 </div>
-              <section className='h-full overflow-clip rounded shadow-md shadow-gray-200 dark:text-gray-50 dark:shadow-gray-700'>
+              <section className='h-full  overflow-y-scroll md:overflow-clip rounded shadow-md shadow-gray-200 dark:text-gray-50 dark:shadow-gray-700'>
                   {children}
               </section>
             </div>

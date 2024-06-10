@@ -13,6 +13,7 @@ import PdfGenerator from "../components/PdfGenerator";
 import { Transaction } from "./Transaction";
 
 export const Sell = () => {
+  const currentUser = localStorage.getItem("id");
   const [openAdd, setOpenAdd] = useState(false);
   const [openListItem, setOpenListItem] = useState(false);
   const [deleteItemModal, setDeleteItemModal] = useState(false);
@@ -24,14 +25,14 @@ export const Sell = () => {
     quantity_resource: "",
     total_price: "",
     resource: "",
-    employee: "",
+    employee: currentUser,
   });
   const [newTransaction, setNewTransaction] = useState({
     date: "",
     quantity_resource: "",
     total_price: "",
     resource: "",
-    employee: "",
+    employee: currentUser,
   });
   const [searchTerm, setSearchTerm] = useState("");
 
@@ -49,13 +50,13 @@ export const Sell = () => {
   const employeeError = useSelector((state) => state.employee.error);
 
   useEffect(() => {
-    if (transactionStatus === 'idle') {
+    if (transactionStatus === "idle") {
       dispatch(fetchTransactions());
     }
-    if (resourceStatus === 'idle') {
+    if (resourceStatus === "idle") {
       dispatch(fetchResources());
     }
-    if (employeeStatus === 'idle') {
+    if (employeeStatus === "idle") {
       dispatch(fetchSuppliers());
     }
   }, [transactionStatus, resourceStatus, employeeStatus, dispatch]);
@@ -71,9 +72,9 @@ export const Sell = () => {
   };
 
   const onFinalDeleteClick = async (transactionId) => {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem("token");
     if (!token) {
-      alert('No token found, please login again.');
+      alert("No token found, please login again.");
       return;
     }
 
@@ -86,7 +87,10 @@ export const Sell = () => {
       dispatch(fetchTransactions());
       setDeleteItemModal(false);
     } catch (error) {
-      console.error('Error deleting transaction:', error.response ? error.response.data : error.message);
+      console.error(
+        "Error deleting transaction:",
+        error.response ? error.response.data : error.message
+      );
       alert(error.response ? error.response.data.message : error.message);
     }
   };
@@ -97,9 +101,9 @@ export const Sell = () => {
   };
 
   const handleSaveChanges = async () => {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem("token");
     if (!token) {
-      alert('No token found, please login again.');
+      alert("No token found, please login again.");
       return;
     }
 
@@ -116,7 +120,7 @@ export const Sell = () => {
       dispatch(fetchTransactions());
       setModifyItemModal(false);
     } catch (error) {
-      console.error('Error updating transaction:', error);
+      console.error("Error updating transaction:", error);
       alert(error.response ? error.response.data.message : error.message);
     }
   };
@@ -142,14 +146,14 @@ export const Sell = () => {
   };
 
   const handleAddTransaction = async () => {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem("token");
     if (!token) {
-      alert('No token found, please login again.');
+      alert("No token found, please login again.");
       return;
     }
 
     try {
-      await axios.post('http://localhost:3500/api/sell', newTransaction, {
+      await axios.post("http://localhost:3500/api/sell", newTransaction, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -157,18 +161,19 @@ export const Sell = () => {
       dispatch(fetchTransactions());
       setOpenAdd(false);
     } catch (error) {
-      console.error('Error adding transaction:', error);
+      console.error("Error adding transaction:", error);
       alert(error.response ? error.response.data.message : error.message);
     }
   };
 
   const filteredTransactions = transactionList.filter((transaction) =>
-  transaction.resource.name_resource.toLowerCase().includes(searchTerm.toLowerCase())
-);
+    transaction.resource.name_resource
+      .toLowerCase()
+      .includes(searchTerm.toLowerCase())
+  );
 
   return (
     <Transaction>
-
       <div className="p-2 md:p-8">
         {/* Modal pour ajouter une transaction */}
         <Modals open={openAdd} onClose={() => setOpenAdd(false)}>
@@ -211,22 +216,7 @@ export const Sell = () => {
                 </option>
               ))}
             </select>
-            <label htmlFor="employee">
-              Employé <span className="text-red-500">*</span>
-            </label>
-            <select
-              name="employee"
-              className="p-2 text-gray-900"
-              onChange={handleInputChange}
-              value={newTransaction.employee}
-            >
-              <option value="">Sélectionner un employé</option>
-              {employeeList.map((employee) => (
-                <option key={employee._id} value={employee._id}>
-                  {employee.name_employee}
-                </option>
-              ))}
-            </select>
+           
 
             <div className="flex flex-row justify-between">
               <button
@@ -293,7 +283,10 @@ export const Sell = () => {
           )}
         </Modals>
 
-        <Modals open={modifyItemModal} onClose={() => setModifyItemModal(false)}>
+        <Modals
+          open={modifyItemModal}
+          onClose={() => setModifyItemModal(false)}
+        >
           {selectedModifyTransaction && (
             <div className="flex flex-col gap-2 min-w-80">
               <h1 className="text-2xl mt-2">Modifier une transaction</h1>
@@ -305,22 +298,7 @@ export const Sell = () => {
                 onChange={handleModify}
                 value={selectedModifyTransaction.date}
               />
-              <label htmlFor="quantity_resource">Quantité</label>
-              <input
-                type="number"
-                name="quantity_resource"
-                className="p-2 text-gray-900"
-                onChange={handleModify}
-                value={selectedModifyTransaction.quantity_resource}
-              />
-              <label htmlFor="total_price">Prix Total</label>
-              <input
-                type="number"
-                name="total_price"
-                className="p-2 text-gray-900"
-                onChange={handleModify}
-                value={selectedModifyTransaction.total_price}
-              />
+              
               <label htmlFor="resource">Ressource</label>
               <select
                 name="resource"
@@ -335,25 +313,18 @@ export const Sell = () => {
                   </option>
                 ))}
               </select>
-              <label htmlFor="employee">Employé</label>
-              <select
-                name="employee"
-                className="p-2 text-gray-900"
-                onChange={handleModify}
-                value={selectedModifyTransaction.employee}
-              >
-                <option value="">Sélectionner un employé</option>
-                {employeeList.map((employee) => (
-                  <option key={employee._id} value={employee._id}>
-                    {employee.name_employee}
-                  </option>
-                ))}
-              </select>
+             
               <div className="flex flex-row justify-between">
-                <button className="bg-green-400 hover:bg-green-600 p-1" onClick={handleSaveChanges}>
+                <button
+                  className="bg-green-400 hover:bg-green-600 p-1"
+                  onClick={handleSaveChanges}
+                >
                   Sauvegarder
                 </button>
-                <button className="bg-red-400 hover:bg-red-600 p-1" onClick={() => setModifyItemModal(false)}>
+                <button
+                  className="bg-red-400 hover:bg-red-600 p-1"
+                  onClick={() => setModifyItemModal(false)}
+                >
                   Annuler
                 </button>
               </div>
@@ -363,7 +334,10 @@ export const Sell = () => {
 
         <div className="h-screen">
           <div className="flex justify-between pb-3 text-gray-700 dark:text-text-50 flew-row ">
-            <div onClick={() => setOpenAdd(true)} className="flex justify-center gap-2 dark:text-gray-50">
+            <div
+              onClick={() => setOpenAdd(true)}
+              className="flex justify-center gap-2 dark:text-gray-50"
+            >
               <span className="p-1  hover:bg-green-600 cursor-pointer">
                 <FaPlus />
               </span>
@@ -393,20 +367,42 @@ export const Sell = () => {
             </div>
             <div className="flex flex-col overflow-y-scroll overflow-x-clip px-8 md:px-0 pb-3  hal  max-w-full">
               {filteredTransactions.map((transaction) => (
-                <div className="flex flex-row text-gray-800 dark:text-gray-50 justify-between border-y-1 py-2" key={transaction._id}>
-                  <p className="w-1/4 justify-center flex">{transaction.date}</p>
-                  <p className="w-1/4 justify-center flex">{transaction.quantity_resource}</p>
-                  <p className="hidden w-1/4 justify-center md:flex">{transaction.total_price}</p>
+                <div
+                  className="flex flex-row text-gray-800 dark:text-gray-50 justify-between border-y-1 py-2"
+                  key={transaction._id}
+                >
+                  <p className="w-1/4 justify-center flex">
+                    {transaction.date}
+                  </p>
+                  <p className="w-1/4 justify-center flex">
+                    {transaction.quantity_resource}
+                  </p>
+                  <p className="hidden w-1/4 justify-center md:flex">
+                    {transaction.total_price}
+                  </p>
                   <div className="w-1/4 justify-center flex flew-row gap-4">
-                    <div className="p-1  hover:bg-orange-600 hover:cursor-pointer " onClick={() => { onTransactionClick(transaction); }}>
+                    <div
+                      className="p-1  hover:bg-orange-600 hover:cursor-pointer "
+                      onClick={() => {
+                        onTransactionClick(transaction);
+                      }}
+                    >
                       <FaEye />
                     </div>
 
-                    <div className="p-1 hover:bg-yellow-600 hover:cursor-pointer  " onClick={() => { onModifyTransaction(transaction); }}>
+                    <div
+                      className="p-1 hover:bg-yellow-600 hover:cursor-pointer  "
+                      onClick={() => {
+                        onModifyTransaction(transaction);
+                      }}
+                    >
                       <HiPencil />
                     </div>
 
-                    <div onClick={() => onDeleteClick(transaction)} className="p-1 hover:cursor-pointer hover:bg-red-600 ">
+                    <div
+                      onClick={() => onDeleteClick(transaction)}
+                      className="p-1 hover:cursor-pointer hover:bg-red-600 "
+                    >
                       <FaTrashAlt />
                     </div>
                   </div>
@@ -417,6 +413,5 @@ export const Sell = () => {
         </div>
       </div>
     </Transaction>
-
   );
 };
