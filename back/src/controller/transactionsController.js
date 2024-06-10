@@ -38,39 +38,40 @@ const updateTransaction = async (req, res) => {
   const { date, resource, quantity_resource, employee } = req.body;
 
   try {
-    const transaction = await Transaction.findOneAndUpdate(
+    let transaction = await Transaction.findOneAndUpdate(
       { _id: id },
-      { $set: { date, resource, employee, resource } },
+      { $set: { date, resource, employee } },
       { new: true, runValidators: true }
     );
+    
     if (!transaction) {
       return res.status(404).json({ message: "Transaction not found" });
     }
 
-    const resource = await Resource.findById(transaction.resource);
-    if (!resource) {
+    const resourceData = await Resource.findById(resource);
+    if (!resourceData) {
       return res.status(404).json({
         message: "Resource not found associated with the transaction",
       });
     }
-    if (
-      quantity_resource &&
-      quantity_resource !== transaction.quantity_resource
-    ) {
-      transaction.total_price = quantity_resource * resource.unit_price;
+
+    if (quantity_resource && quantity_resource !== transaction.quantity_resource) {
+      transaction.total_price = quantity_resource * resourceData.unit_price;
       transaction.quantity_resource = quantity_resource;
+      transaction = await transaction.save(); // Save updated transaction with new total_price and quantity_resource
     }
 
-    const updatedTransaction = await transaction.save();
     res.status(200).json({
       message: "Transaction updated successfully",
-      data: updatedTransaction,
+      data: transaction,
     });
   } catch (error) {
     console.error("Error updating transaction:", error);
     res.status(500).json({ message: "Internal server error" });
   }
 };
+
+
 
 const getAllTransactions = async (req, res) => {
   try {
