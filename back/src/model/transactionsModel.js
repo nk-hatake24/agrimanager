@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const TransactionSchema = new mongoose.Schema({
     
     date:{
-        type: Date,
+        type: String,
         required: [true, 'the date of the transaction is required']
     },
     quantity_resource:{

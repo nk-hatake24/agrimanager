@@ -1,22 +1,25 @@
 const Transaction = require("../model/transactionsModel");
 const Resource = require("../model/resourceModel");
+const Employee = require('../model/employeeModel')
 
 // ******************* addTransaction ***********************
 const addTransaction = async (req, res) => {
-  const { resource, quantity } = req.body;
+  const { date, resource, quantity_resource, employee } = req.body;
 
   try {
-    const resourceData = await Resource.findById(resource);
+    const resourceData = await Resource.findById(resource).populate('resource');
     if (!resourceData) {
       return res.status(404).json({ message: "Resource not found" });
     }
 
-    const totalPrice = quantity * resourceData.unit_price;
+    const total_price = quantity_resource * resourceData.unit_price;
 
     const transaction = new Transaction({
       resource,
-      quantity,
-      totalPrice,
+      quantity_resource,
+      total_price,
+      employee,
+      date,
     });
 
     const savedTransaction = await transaction.save();
@@ -31,11 +34,15 @@ const addTransaction = async (req, res) => {
 };
 // ********************** update transaction ********************************
 const updateTransaction = async (req, res) => {
-  const { transactionId } = req.params;
-  const { quantity } = req.body;
+  const { id } = req.params;
+  const { date, resource, quantity_resource, employee } = req.body;
 
   try {
-    const transaction = await Transaction.findById(transactionId);
+    const transaction = await Transaction.findOneAndUpdate(
+      { _id: id },
+      { $set: { date,resource, employee, resource }},
+      { new: true, runValidators: true }
+    )
     if (!transaction) {
       return res.status(404).json({ message: "Transaction not found" });
     }
@@ -46,9 +53,9 @@ const updateTransaction = async (req, res) => {
         message: "Resource not found associated with the transaction",
       });
     }
-    if (quantity && quantity !== transaction.quantity) {
-      transaction.totalPrice = quantity * resource.unit_price;
-      transaction.quantity = quantity;
+    if (quantity_resource && quantity_resource !== transaction.quantity_resource) {
+      transaction.total_price = quantity_resource * resource.unit_price;
+      transaction.quantity_resource = quantity_resource;
     }
 
     const updatedTransaction = await transaction.save();
@@ -64,7 +71,7 @@ const updateTransaction = async (req, res) => {
 
 const getAllTransactions = async (req, res) => {
   try {
-    const transaction = await Transaction.find({});
+    const transaction = await Transaction.find()
     return res
       .status(200)
       .json({ message: "all the employee search", data: transaction });

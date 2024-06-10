@@ -2,10 +2,11 @@ const Note = require('../model/noteModel')
 
 const addNote = async (req, res) => {
     try {
-      const { title, description } = req.body;
+      const { title, description,employee } = req.body;
       const newNote = new Note({
         title,
         description,
+        employee
       });
   
       await newNote.save();

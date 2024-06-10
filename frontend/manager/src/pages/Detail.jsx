@@ -1,10 +1,14 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
-import Dashboard from "../layouts/Dashboard";
-import Modals from "../layouts/Modals";
-import { FaEye, FaPlus, FaTrashAlt } from "react-icons/fa";
-import { CiSearch } from "react-icons/ci";
-import { HiPencil } from "react-icons/hi2";
+// components/Detail.js
+import React, { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import Dashboard from '../layouts/Dashboard';
+import Modals from '../layouts/Modals';
+import { FaEye, FaPlus, FaTrashAlt } from 'react-icons/fa';
+import { CiSearch } from 'react-icons/ci';
+import { HiPencil } from 'react-icons/hi2';
+import { fetchResources } from '../features/resource/resourceSlice';
+import { fetchSuppliers } from '../features/supplier/supplierSlice';
+import Resource from './Resource';
 
 export const Detail = () => {
   const [openAdd, setOpenAdd] = useState(false);
@@ -13,64 +17,37 @@ export const Detail = () => {
   const [modifyItemModal, setModifyItemModal] = useState(false);
   const [selectedResource, setSelectedResource] = useState(null);
   const [selectedModifyResource, setModifyResource] = useState({
-    _id: "",
-    quantity_resource: "",
-    unit_price: "",
-    name_resource: "",
-    supplier: "",
+    _id: '',
+    quantity_resource: '',
+    unit_price: '',
+    name_resource: '',
+    supplier: '',
   });
   const [newResource, setNewResource] = useState({
-    quantity_resource: "",
-    unit_price: "",
-    name_resource: "",
-    supplier: "",
+    quantity_resource: '',
+    unit_price: '',
+    name_resource: '',
+    supplier: '',
   });
-  const [ResourceList, setResourceList] = useState([]);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [SupplierList, setSupplierList] = useState([]);
+  const [searchTerm, setSearchTerm] = useState('');
+
+  const dispatch = useDispatch();
+  const resourceList = useSelector((state) => state.resource.list);
+  const resourceStatus = useSelector((state) => state.resource.status);
+  const resourceError = useSelector((state) => state.resource.error);
+
+  const supplierList = useSelector((state) => state.supplier.list);
+  const supplierStatus = useSelector((state) => state.supplier.status);
+  const supplierError = useSelector((state) => state.supplier.error);
 
   useEffect(() => {
-    const fetchResources = async () => {
-      try {
-        const token = localStorage.getItem("token");
-        const response = await axios.get("http://localhost:3500/api/resource", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-
-        if (Array.isArray(response.data)) {
-          setResourceList(response.data);
-        } else {
-          console.error("API response is not an array:", response.data);
-        }
-      } catch (error) {
-        console.error("Error fetching resources:", error);
-      }
-    };
-
-    const fetchSuppliers = async () => {
-      try {
-        const token = localStorage.getItem("token");
-        const response = await axios.get("http://localhost:3500/api/supplier", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-
-        if (Array.isArray(response.data.data)) {
-          setSupplierList(response.data.data);
-        } else {
-          console.error("API response is not an array:", response.data);
-        }
-      } catch (error) {
-        console.error("Error fetching resources:", error);
-      }
-    };
-
-    fetchResources();
-    fetchSuppliers();
-  }, []);
+    if (resourceStatus === 'idle') {
+      dispatch(fetchResources());
+    }
+    if (supplierStatus === 'idle') {
+      dispatch(fetchSuppliers());
+    }
+  }, [resourceStatus, supplierStatus, dispatch]);
 
   const onResourceClick = (resource) => {
     setOpenListItem(true);
@@ -83,9 +60,9 @@ export const Detail = () => {
   };
 
   const onFinalDeleteClick = async (resourceId) => {
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem('token');
     if (!token) {
-      alert("No token found, please login again.");
+      alert('No token found, please login again.');
       return;
     }
 
@@ -95,10 +72,10 @@ export const Detail = () => {
           Authorization: `Bearer ${token}`,
         },
       });
-      setResourceList(ResourceList.filter((resource) => resource._id !== resourceId));
+      dispatch(fetchResources());
       setDeleteItemModal(false);
     } catch (error) {
-      console.error("Error deleting resource:", error.response ? error.response.data : error.message);
+      console.error('Error deleting resource:', error.response ? error.response.data : error.message);
       alert(error.response ? error.response.data.message : error.message);
     }
   };
@@ -109,14 +86,14 @@ export const Detail = () => {
   };
 
   const handleSaveChanges = async () => {
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem('token');
     if (!token) {
-      alert("No token found, please login again.");
+      alert('No token found, please login again.');
       return;
     }
 
     try {
-      const response = await axios.put(
+      await axios.put(
         `http://localhost:3500/api/resource/${selectedModifyResource._id}`,
         selectedModifyResource,
         {
@@ -125,13 +102,10 @@ export const Detail = () => {
           },
         }
       );
-      const updatedResources = ResourceList.map((resource) =>
-        resource._id === selectedModifyResource._id ? response.data.data : resource
-      );
-      setResourceList(updatedResources);
+      dispatch(fetchResources());
       setModifyItemModal(false);
     } catch (error) {
-      console.error("Error updating resource:", error);
+      console.error('Error updating resource:', error);
       alert(error.response ? error.response.data.message : error.message);
     }
   };
@@ -157,33 +131,33 @@ export const Detail = () => {
   };
 
   const handleAddResource = async () => {
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem('token');
     if (!token) {
-      alert("No token found, please login again.");
+      alert('No token found, please login again.');
       return;
     }
     console.log(newResource);
 
     try {
-      const response = await axios.post("http://localhost:3500/api/resource", newResource, {
+      await axios.post('http://localhost:3500/api/resource', newResource, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
-      setResourceList([...ResourceList, response.data.data]);
+      dispatch(fetchResources());
       setOpenAdd(false);
     } catch (error) {
-      console.error("Error adding resource:", error);
+      console.error('Error adding resource:', error);
       alert(error.response ? error.response.data.message : error.message);
     }
   };
 
-  const filteredResources = ResourceList.filter((resource) =>
+  const filteredResources = resourceList.filter((resource) =>
     resource.name_resource.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (
-    <Dashboard>
+    <Resource>
       <div className="p-2 md:p-8">
         {/* Modal pour ajouter une ressource */}
         <Modals open={openAdd} onClose={() => setOpenAdd(false)}>
@@ -232,7 +206,7 @@ export const Detail = () => {
               value={newResource.supplier}
             >
               <option value="">Sélectionner un fournisseur</option>
-              {SupplierList.map((supplier) => (
+              {supplierList.map((supplier) => (
                 <option key={supplier._id} value={supplier._id}>
                   {supplier.name_supplier}
                 </option>
@@ -283,16 +257,10 @@ export const Detail = () => {
               <p className="text-2xl">Supprimer</p>
               <p className="text-xl">{selectedResource.name_resource}</p>
               <div className="flex flex-row gap-10 justify-between">
-                <button
-                  onClick={() => onFinalDeleteClick(selectedResource._id)}
-                  className="p-1 bg-red-400 hover:bg-red-600"
-                >
+                <button onClick={() => onFinalDeleteClick(selectedResource._id)} className="p-1 bg-red-400 hover:bg-red-600">
                   Supprimer
                 </button>
-                <button
-                  onClick={() => setDeleteItemModal(false)}
-                  className="p-1 bg-orange-400 hover:bg-orange-600"
-                >
+                <button onClick={() => setDeleteItemModal(false)} className="p-1 bg-orange-400 hover:bg-orange-600">
                   Annuler
                 </button>
               </div>
@@ -300,10 +268,7 @@ export const Detail = () => {
           )}
         </Modals>
 
-        <Modals
-          open={modifyItemModal}
-          onClose={() => setModifyItemModal(false)}
-        >
+        <Modals open={modifyItemModal} onClose={() => setModifyItemModal(false)}>
           {selectedModifyResource && (
             <div className="flex flex-col gap-2 min-w-80">
               <h1 className="text-2xl mt-2">Modifier une ressource</h1>
@@ -342,23 +307,17 @@ export const Detail = () => {
                 value={selectedModifyResource.supplier}
               >
                 <option value="">Sélectionner un fournisseur</option>
-                {SupplierList.map((supplier) => (
+                {supplierList.map((supplier) => (
                   <option key={supplier._id} value={supplier._id}>
-                    {supplier.name}
+                    {supplier.name_supplier}
                   </option>
                 ))}
               </select>
               <div className="flex flex-row justify-between">
-                <button
-                  className="bg-green-400 hover:bg-green-600 p-1"
-                  onClick={handleSaveChanges}
-                >
+                <button className="bg-green-400 hover:bg-green-600 p-1" onClick={handleSaveChanges}>
                   Sauvegarder
                 </button>
-                <button
-                  className="bg-red-400 hover:bg-red-600 p-1"
-                  onClick={() => setModifyItemModal(false)}
-                >
+                <button className="bg-red-400 hover:bg-red-600 p-1" onClick={() => setModifyItemModal(false)}>
                   Annuler
                 </button>
               </div>
@@ -368,10 +327,7 @@ export const Detail = () => {
 
         <div className="h-screen">
           <div className="flex justify-between pb-3  flew-row ">
-            <div
-              onClick={() => setOpenAdd(true)}
-              className="flex justify-center gap-2"
-            >
+            <div onClick={() => setOpenAdd(true)} className="flex justify-center gap-2">
               <span className="p-1  hover:bg-green-600 cursor-pointer">
                 <FaPlus />
               </span>
@@ -398,19 +354,10 @@ export const Detail = () => {
             </div>
             <div className="flex px-8 md:px-0 flex-col overflow-y-scroll overflow-x-clip pb-3  hal  max-w-full">
               {filteredResources.map((resource) => (
-                <div
-                  className="flex flex-row justify-between border-y-1 py-2"
-                  key={resource._id}
-                >
-                  <p className="w-1/4 justify-center flex">
-                    {resource.name_resource}
-                  </p>
-                  <p className="w-1/4 justify-center flex">
-                    {resource.quantity_resource}
-                  </p>
-                  <p className="hidden w-1/4 justify-center md:flex">
-                    {resource.unit_price}
-                  </p>
+                <div className="flex flex-row justify-between border-y-1 py-2" key={resource._id}>
+                  <p className="w-1/4 justify-center flex">{resource.name_resource}</p>
+                  <p className="w-1/4 justify-center flex">{resource.quantity_resource}</p>
+                  <p className="hidden w-1/4 justify-center md:flex">{resource.unit_price}</p>
                   <div className="w-1/4 justify-center flex flew-row gap-4">
                     <div
                       className="p-1 hover:bg-orange-600 hover:cursor-pointer "
@@ -430,10 +377,7 @@ export const Detail = () => {
                       <HiPencil />
                     </div>
 
-                    <div
-                      onClick={() => onDeleteClick(resource)}
-                      className="p-1 hover:cursor-pointer hover:bg-red-600 "
-                    >
+                    <div onClick={() => onDeleteClick(resource)} className="p-1 hover:cursor-pointer hover:bg-red-600 ">
                       <FaTrashAlt />
                     </div>
                   </div>
@@ -443,6 +387,6 @@ export const Detail = () => {
           </div>
         </div>
       </div>
-    </Dashboard>
+    </Resource>
   );
 };

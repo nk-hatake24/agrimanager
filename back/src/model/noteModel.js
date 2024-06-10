@@ -10,7 +10,7 @@ const NoteSchema = new mongoose.Schema(
       type: String,
       required: [true, "The description is required"],
     },
-    Employee: {
+    employee: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Employee",
       required: true,

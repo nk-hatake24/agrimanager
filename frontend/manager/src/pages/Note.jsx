@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import Dashboard from "../layouts/Dashboard";
 import Modals from "../layouts/Modals";
 import { FaEye, FaPlus, FaTrashAlt } from "react-icons/fa";
-import { notes, employees } from "../mock/Mocks1"; // Assumez que vous avez un mock de notes et employees similaire à suppliers
 import { CiSearch } from "react-icons/ci";
 import { HiPencil } from "react-icons/hi2";
 
@@ -13,13 +13,60 @@ export const Note = () => {
   const [modifyItemModal, setModifyItemModal] = useState(false);
   const [selectedNote, setSelectedNote] = useState(null);
   const [selectedModifyNote, setModifyNote] = useState({
+    _id: "",
     title: "",
     description: "",
     employee: "",
   });
-  const [NoteList, setNoteList] = useState(notes);
+  const [newNote, setNewNote] = useState({
+    title: "",
+    description: "",
+    employee: "",
+  });
+  const [NoteList, setNoteList] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
-  const [EmployeeList, setEmployeeList] = useState(employees);
+  const [EmployeeList, setEmployeeList] = useState([]);
+
+  useEffect(() => {
+    const fetchNotes = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        const response = await axios.get("http://localhost:3500/api/note", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        if (Array.isArray(response.data)) {
+          setNoteList(response.data);
+        } else {
+          console.error("API response is not an array:", response.data);
+        }
+      } catch (error) {
+        console.error("Error fetching notes:", error);
+      }
+    };
+
+    const fetchEmployees = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        const response = await axios.get("http://localhost:3500/api/employee", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        if (Array.isArray(response.data.data)) {
+          setEmployeeList(response.data.data);
+        } else {
+          console.error("API response is not an array:", response.data);
+        }
+      } catch (error) {
+        console.error("Error fetching employees:", error);
+      }
+    };
+
+    fetchNotes();
+    fetchEmployees();
+  }, []);
 
   const onNoteClick = (note) => {
     setOpenListItem(true);
@@ -31,31 +78,58 @@ export const Note = () => {
     setSelectedNote(note);
   };
 
-  const onFinalDeleteClick = (noteId) => {
-    setDeleteItemModal(false);
-    deleteNote(noteId);
-  };
+  const onFinalDeleteClick = async (noteId) => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      alert("No token found, please login again.");
+      return;
+    }
 
-  const deleteNote = (noteId) => {
-    setDeleteItemModal(false);
-    setNoteList(
-      NoteList.filter((note) => note.id !== noteId)
-    );
+    try {
+      await axios.delete(`http://localhost:3500/api/note/${noteId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setNoteList(NoteList.filter((note) => note._id !== noteId));
+      setDeleteItemModal(false);
+    } catch (error) {
+      console.error("Error deleting note:", error.response ? error.response.data : error.message);
+      alert(error.response ? error.response.data.message : error.message);
+    }
   };
 
   const onModifyNote = (note) => {
     setModifyItemModal(true);
-    setSelectedNote(note);
+    setModifyNote(note);
   };
 
-  const handleSaveChanges = () => {
-    const updatedNotes = NoteList.map((note) =>
-      note.id === selectedModifyNote.id
-        ? selectedModifyNote
-        : note
-    );
-    setNoteList(updatedNotes);
-    setModifyItemModal(false);
+  const handleSaveChanges = async () => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      alert("No token found, please login again.");
+      return;
+    }
+
+    try {
+      const response = await axios.put(
+        `http://localhost:3500/api/note/${selectedModifyNote._id}`,
+        selectedModifyNote,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      const updatedNotes = NoteList.map((note) =>
+        note._id === selectedModifyNote._id ? response.data.data : note
+      );
+      setNoteList(updatedNotes);
+      setModifyItemModal(false);
+    } catch (error) {
+      console.error("Error updating note:", error);
+      alert(error.response ? error.response.data.message : error.message);
+    }
   };
 
   const handleModify = (e) => {
@@ -68,6 +142,37 @@ export const Note = () => {
 
   const handleSearch = (event) => {
     setSearchTerm(event.target.value);
+  };
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setNewNote({
+      ...newNote,
+      [name]: value,
+    });
+  };
+
+  const handleAddNote = async () => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      alert("No token found, please login again.");
+      return;
+    }
+    console.log(newNote);
+
+    try {
+      const response = await axios.post("http://localhost:3500/api/note", newNote, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setNoteList([...NoteList, response.data.data]);
+      setOpenAdd(false);
+      setNewNote({ title: "", description: "", employee: "" }); // Clear form fields
+    } catch (error) {
+      console.error("Error adding note:", error);
+      alert(error.response ? error.response.data.message : error.message);
+    }
   };
 
   const filteredNotes = NoteList.filter((note) =>
@@ -88,12 +193,8 @@ export const Note = () => {
               type="text"
               name="title"
               className="p-2 text-gray-900"
-              onChange={(e) =>
-                setModifyNote((prevState) => ({
-                  ...prevState,
-                  title: e.target.value,
-                }))
-              }
+              onChange={handleInputChange}
+              value={newNote.title}
               placeholder="Titre de la note"
             />
             <label htmlFor="description">
@@ -102,12 +203,8 @@ export const Note = () => {
             <textarea
               name="description"
               className="p-2 text-gray-900"
-              onChange={(e) =>
-                setModifyNote((prevState) => ({
-                  ...prevState,
-                  description: e.target.value,
-                }))
-              }
+              onChange={handleInputChange}
+              value={newNote.description}
               placeholder="Description de la note"
             />
             <label htmlFor="employee">
@@ -116,16 +213,12 @@ export const Note = () => {
             <select
               name="employee"
               className="p-2 text-gray-900"
-              onChange={(e) =>
-                setModifyNote((prevState) => ({
-                  ...prevState,
-                  employee: e.target.value,
-                }))
-              }
+              onChange={handleInputChange}
+              value={newNote.employee}
             >
               <option value="">Sélectionner un employé</option>
               {EmployeeList.map((employee) => (
-                <option key={employee.id} value={employee.id}>
+                <option key={employee._id} value={employee._id}>
                   {employee.name_employee}
                 </option>
               ))}
@@ -134,13 +227,7 @@ export const Note = () => {
             <div className="flex flex-row justify-between">
               <button
                 className="bg-green-400 hover:bg-green-600 p-1"
-                onClick={() => {
-                  setNoteList([
-                    ...NoteList,
-                    { ...selectedModifyNote, id: Date.now() },
-                  ]);
-                  setOpenAdd(false);
-                }}
+                onClick={handleAddNote}
               >
                 Ajouter
               </button>
@@ -184,14 +271,14 @@ export const Note = () => {
               <p className="text-xl">{selectedNote.title}</p>
               <div className="flex flex-row gap-10 justify-between">
                 <button
-                  onClick={() => onFinalDeleteClick(selectedNote.id)}
+                  onClick={() => onFinalDeleteClick(selectedNote._id)}
                   className="p-1 bg-red-400 hover:bg-red-600"
                 >
                   Supprimer
                 </button>
                 <button
-                  onClick={() => setDeleteItemModal(false)}
                   className="p-1 bg-orange-400 hover:bg-orange-600"
+                  onClick={() => setDeleteItemModal(false)}
                 >
                   Annuler
                 </button>
@@ -231,7 +318,7 @@ export const Note = () => {
               >
                 <option value="">Sélectionner un employé</option>
                 {EmployeeList.map((employee) => (
-                  <option key={employee.id} value={employee.id}>
+                  <option key={employee._id} value={employee._id}>
                     {employee.name_employee}
                   </option>
                 ))}
@@ -288,7 +375,7 @@ export const Note = () => {
               {filteredNotes.map((note) => (
                 <div
                   className="flex flex-row justify-between border-y-1 py-2"
-                  key={note.id}
+                  key={note._id}
                 >
                   <p className="w-1/4 justify-center flex">
                     {note.title}

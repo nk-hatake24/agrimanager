@@ -38,7 +38,7 @@ const getAllSuppliers = async (req, res) => {
 
 // *****************update or modify a supplier***********************
 const updateSupplier = async (req, res) => {
-    const { id_supplier } = req.params; // Assumer que l'identifiant du fournisseur est passé comme paramètre URL
+    const { id } = req.params; // Assumer que l'identifiant du fournisseur est passé comme paramètre URL
     const { name_supplier, phone_supplier, email_supplier, address_supplier } = req.body;
   
     try {
@@ -48,7 +48,7 @@ const updateSupplier = async (req, res) => {
       }
   
       const updatedSupplier = await Supplier.findOneAndUpdate(
-        { id_supplier: id_supplier },
+        { _id: id },
         { $set: { name_supplier, phone_supplier, email_supplier, address_supplier }},
         { new: true, runValidators: true }
       );

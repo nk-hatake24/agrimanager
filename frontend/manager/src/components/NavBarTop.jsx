@@ -10,13 +10,7 @@ const NavBarTop = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const navigate = useNavigate();
 
-  const username =localStorage.getItem('username')
-
-  useEffect(() => {
-    // Vérifier si le token est dans le localStorage
-    const token = localStorage.getItem('token');
-    setIsLoggedIn(!!token);
-  }, []);
+  const username = localStorage.getItem('username');
 
   const handleLogout = () => {
     localStorage.removeItem('token');
@@ -25,13 +19,38 @@ const NavBarTop = () => {
     navigate('/login');
   };
 
+  const checkTokenValidity = () => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      // Remplacez cette partie par votre logique de vérification du token
+      const tokenExpiration = JSON.parse(atob(token.split('.')[1])).exp * 1000;
+      if (Date.now() >= tokenExpiration) {
+        handleLogout();
+      }
+    } else {
+      handleLogout();
+    }
+  };
+
+  useEffect(() => {
+    // Vérifier si le token est dans le localStorage
+    const token = localStorage.getItem('token');
+    setIsLoggedIn(!!token);
+
+    // Vérifier la validité du token toutes les minutes
+    const interval = setInterval(checkTokenValidity, 60000);
+
+    // Nettoyer l'intervalle lorsque le composant est démonté
+    return () => clearInterval(interval);
+  }, []);
+
   const handleLogin = () => {
     navigate('/login');
   };
 
   return (
     <div className="flex flex-row h-12 rounded w-full p-2 items-center justify-between">
-      <div> <Switcher /></div>
+      <div><Switcher /></div>
       <div className="relative">
         <button onClick={() => setIsDropdownOpenLog(!isDropdownOpenLog)} className="dark:text-white">
           {isLoggedIn ? `${username}` : 'Login'}

@@ -1,11 +1,13 @@
-import React, { useState } from "react";
-import Dashboard from "../layouts/Dashboard";
-import Modals from "../layouts/Modals";
-import { FaEye, FaPlus, FaTrashAlt } from "react-icons/fa";
-import { suppliers } from "../mock/Mocks1"; // Assumez que vous avez un mock de suppliers similaire à employees
-import { CiSearch } from "react-icons/ci";
-import { HiPencil } from "react-icons/hi2";
-import Resource from "./Resource";
+// components/Supplier.js
+import React, { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import Dashboard from '../layouts/Dashboard';
+import Modals from '../layouts/Modals';
+import { FaEye, FaPlus, FaTrashAlt } from 'react-icons/fa';
+import { CiSearch } from 'react-icons/ci';
+import { HiPencil } from 'react-icons/hi2';
+import { fetchSuppliers } from '../features/supplier/supplierSlice';
+import Resource from './Resource';
 
 export const Supplier = () => {
   const [openAdd, setOpenAdd] = useState(false);
@@ -14,13 +16,29 @@ export const Supplier = () => {
   const [modifyItemModal, setModifyItemModal] = useState(false);
   const [selectedSupplier, setSelectedSupplier] = useState(null);
   const [selectedModifySupplier, setModifySupplier] = useState({
-    name_supplier: "",
-    phone_supplier: "",
-    email_supplier: "",
-    address_supplier: "",
+    name_supplier: '',
+    phone_supplier: '',
+    email_supplier: '',
+    address_supplier: '',
   });
-  const [SupplierList, setSupplierList] = useState(suppliers);
-  const [searchTerm, setSearchTerm] = useState("");
+  const [newSupplier, setNewSupplier] = useState({
+    name_supplier: '',
+    phone_supplier: '',
+    email_supplier: '',
+    address_supplier: '',
+  });
+  const [searchTerm, setSearchTerm] = useState('');
+
+  const dispatch = useDispatch();
+  const supplierList = useSelector((state) => state.supplier.list);
+  const supplierStatus = useSelector((state) => state.supplier.status);
+  const supplierError = useSelector((state) => state.supplier.error);
+
+  useEffect(() => {
+    if (supplierStatus === 'idle') {
+      dispatch(fetchSuppliers());
+    }
+  }, [supplierStatus, dispatch]);
 
   const onSupplierClick = (supplier) => {
     setOpenListItem(true);
@@ -32,31 +50,55 @@ export const Supplier = () => {
     setSelectedSupplier(supplier);
   };
 
-  const onFinalDeleteClick = (supplierId) => {
-    setDeleteItemModal(false);
-    deleteSupplier(supplierId);
-  };
+  const onFinalDeleteClick = async (supplierId) => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      alert('No token found, please login again.');
+      return;
+    }
 
-  const deleteSupplier = (supplierId) => {
-    setDeleteItemModal(false);
-    setSupplierList(
-      SupplierList.filter((supplier) => supplier.id !== supplierId)
-    );
+    try {
+      await axios.delete(`http://localhost:3500/api/supplier/${supplierId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      dispatch(fetchSuppliers());
+      setDeleteItemModal(false);
+    } catch (error) {
+      console.error('Error deleting supplier:', error.response ? error.response.data : error.message);
+      alert(error.response ? error.response.data.message : error.message);
+    }
   };
 
   const onModifySupplier = (supplier) => {
     setModifyItemModal(true);
-    setSelectedSupplier(supplier);
+    setModifySupplier(supplier);
   };
 
-  const handleSaveChanges = () => {
-    const updatedSuppliers = SupplierList.map((supplier) =>
-      supplier.id === selectedModifySupplier.id
-        ? selectedModifySupplier
-        : supplier
-    );
-    setSupplierList(updatedSuppliers);
-    setModifyItemModal(false);
+  const handleSaveChanges = async () => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      alert('No token found, please login again.');
+      return;
+    }
+
+    try {
+      await axios.put(
+        `http://localhost:3500/api/supplier/${selectedModifySupplier._id}`,
+        selectedModifySupplier,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      dispatch(fetchSuppliers());
+      setModifyItemModal(false);
+    } catch (error) {
+      console.error('Error updating supplier:', error);
+      alert(error.response ? error.response.data.message : error.message);
+    }
   };
 
   const handleModify = (e) => {
@@ -71,7 +113,37 @@ export const Supplier = () => {
     setSearchTerm(event.target.value);
   };
 
-  const filteredSuppliers = SupplierList.filter((supplier) =>
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setNewSupplier({
+      ...newSupplier,
+      [name]: value,
+    });
+  };
+
+  const handleAddSupplier = async () => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      alert('No token found, please login again.');
+      return;
+    }
+    console.log(newSupplier);
+
+    try {
+      await axios.post('http://localhost:3500/api/supplier', newSupplier, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      dispatch(fetchSuppliers());
+      setOpenAdd(false);
+    } catch (error) {
+      console.error('Error adding supplier:', error);
+      alert(error.response ? error.response.data.message : error.message);
+    }
+  };
+
+  const filteredSuppliers = supplierList.filter((supplier) =>
     supplier.name_supplier.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
@@ -89,12 +161,8 @@ export const Supplier = () => {
               type="text"
               name="name_supplier"
               className="p-2 text-gray-900"
-              onChange={(e) =>
-                setModifySupplier((prevState) => ({
-                  ...prevState,
-                  name_supplier: e.target.value,
-                }))
-              }
+              onChange={handleInputChange}
+              value={newSupplier.name_supplier}
               placeholder="Nom du fournisseur"
             />
             <label htmlFor="phone_supplier">
@@ -104,12 +172,8 @@ export const Supplier = () => {
               type="text"
               name="phone_supplier"
               className="p-2 text-gray-900"
-              onChange={(e) =>
-                setModifySupplier((prevState) => ({
-                  ...prevState,
-                  phone_supplier: e.target.value,
-                }))
-              }
+              onChange={handleInputChange}
+              value={newSupplier.phone_supplier}
               placeholder="Numéro de téléphone"
             />
             <label htmlFor="email_supplier">
@@ -119,12 +183,8 @@ export const Supplier = () => {
               type="email"
               name="email_supplier"
               className="p-2 text-gray-900"
-              onChange={(e) =>
-                setModifySupplier((prevState) => ({
-                  ...prevState,
-                  email_supplier: e.target.value,
-                }))
-              }
+              onChange={handleInputChange}
+              value={newSupplier.email_supplier}
               placeholder="Email du fournisseur"
             />
             <label htmlFor="address_supplier">
@@ -134,26 +194,13 @@ export const Supplier = () => {
               type="text"
               name="address_supplier"
               className="p-2 text-gray-900"
-              onChange={(e) =>
-                setModifySupplier((prevState) => ({
-                  ...prevState,
-                  address_supplier: e.target.value,
-                }))
-              }
+              onChange={handleInputChange}
+              value={newSupplier.address_supplier}
               placeholder="Adresse du fournisseur"
             />
 
             <div className="flex flex-row justify-between">
-              <button
-                className="bg-green-400 hover:bg-green-600 p-1"
-                onClick={() => {
-                  setSupplierList([
-                    ...SupplierList,
-                    { ...selectedModifySupplier, id: Date.now() },
-                  ]);
-                  setOpenAdd(false);
-                }}
-              >
+              <button className="bg-green-400 hover:bg-green-600 p-1" onClick={handleAddSupplier}>
                 Ajouter
               </button>
               <button
@@ -196,16 +243,10 @@ export const Supplier = () => {
               <p className="text-2xl">Supprimer</p>
               <p className="text-xl">{selectedSupplier.name_supplier}</p>
               <div className="flex flex-row gap-10 justify-between">
-                <button
-                  onClick={() => onFinalDeleteClick(selectedSupplier.id)}
-                  className="p-1 bg-red-400 hover:bg-red-600"
-                >
+                <button onClick={() => onFinalDeleteClick(selectedSupplier._id)} className="p-1 bg-red-400 hover:bg-red-600">
                   Supprimer
                 </button>
-                <button
-                  onClick={() => setDeleteItemModal(false)}
-                  className="p-1 bg-orange-400 hover:bg-orange-600"
-                >
+                <button onClick={() => setDeleteItemModal(false)} className="p-1 bg-orange-400 hover:bg-orange-600">
                   Annuler
                 </button>
               </div>
@@ -213,10 +254,7 @@ export const Supplier = () => {
           )}
         </Modals>
 
-        <Modals
-          open={modifyItemModal}
-          onClose={() => setModifyItemModal(false)}
-        >
+        <Modals open={modifyItemModal} onClose={() => setModifyItemModal(false)}>
           {selectedModifySupplier && (
             <div className="flex flex-col gap-2 min-w-80">
               <h1 className="text-2xl mt-2">Modifier un fournisseur</h1>
@@ -257,16 +295,10 @@ export const Supplier = () => {
                 value={selectedModifySupplier.address_supplier}
               />
               <div className="flex flex-row justify-between">
-                <button
-                  className="bg-green-400 hover:bg-green-600 p-1"
-                  onClick={handleSaveChanges}
-                >
+                <button className="bg-green-400 hover:bg-green-600 p-1" onClick={handleSaveChanges}>
                   Sauvegarder
                 </button>
-                <button
-                  className="bg-red-400 hover:bg-red-600 p-1"
-                  onClick={() => setModifyItemModal(false)}
-                >
+                <button className="bg-red-400 hover:bg-red-600 p-1" onClick={() => setModifyItemModal(false)}>
                   Annuler
                 </button>
               </div>
@@ -276,10 +308,7 @@ export const Supplier = () => {
 
         <div className="h-screen">
           <div className="flex justify-between text-gray-800 dark:text-gray-50 pb-3  flew-row ">
-            <div
-              onClick={() => setOpenAdd(true)}
-              className="flex justify-center gap-2 "
-            >
+            <div onClick={() => setOpenAdd(true)} className="flex justify-center gap-2 ">
               <span className="p-1  hover:bg-green-600 cursor-pointer">
                 <FaPlus />
               </span>
@@ -305,17 +334,9 @@ export const Supplier = () => {
             </div>
             <div className="flex flex-col overflow-y-scroll px-8 md:px-0 overflow-x-clip pb-3  hal  max-w-full">
               {filteredSuppliers.map((supplier) => (
-                <div
-                  className="flex flex-row justify-between border-y-1 py-2"
-                  key={supplier.id}
-                >
-                  <p className="w-1/4 justify-center flex">
-                    {supplier.name_supplier}
-                  </p>
-                  <p className="w-1/4 justify-center flex">
-                    {supplier.phone_supplier}
-                  </p>
-                  
+                <div className="flex flex-row justify-between border-y-1 py-2" key={supplier._id}>
+                  <p className="w-1/4 justify-center flex">{supplier.name_supplier}</p>
+                  <p className="w-1/4 justify-center flex">{supplier.phone_supplier}</p>
                   <div className="w-1/4 justify-center flex flew-row gap-4">
                     <div
                       className="p-1 hover:bg-orange-600 hover:cursor-pointer "
@@ -335,10 +356,7 @@ export const Supplier = () => {
                       <HiPencil />
                     </div>
 
-                    <div
-                      onClick={() => onDeleteClick(supplier)}
-                      className="p hover:cursor-pointer hover:bg-red-600"
-                    >
+                    <div onClick={() => onDeleteClick(supplier)} className="p hover:cursor-pointer hover:bg-red-600">
                       <FaTrashAlt />
                     </div>
                   </div>
