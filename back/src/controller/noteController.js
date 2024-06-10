@@ -18,7 +18,7 @@ const addNote = async (req, res) => {
 
   const getAllNote =  async (req, res) => {
     try {
-      const notes = await Note.find()
+      const notes = await Note.find().populate('employee')
       res.status(200).json(notes);
     } catch (error) {
       res.status(500).json({ error: error.message });

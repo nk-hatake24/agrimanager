@@ -253,7 +253,7 @@ export const Note = () => {
                 Titre: {selectedNote.title}
               </h2>
               <p>Description: {selectedNote.description}</p>
-              <p>Employé: {selectedNote.employee}</p>
+              <p>Employé: {selectedNote.employee.name_employee}</p>
             </div>
           )}
         </Modals>
@@ -384,7 +384,7 @@ export const Note = () => {
                     {note.description}
                   </p>
                   <p className="hidden w-1/4 justify-center md:flex">
-                    {note.employee}
+                    {note.employee.name_employee}
                   </p>
                   <div className="w-1/4 justify-center flex flew-row gap-4">
                     <div

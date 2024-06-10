@@ -1,20 +1,20 @@
-const Transaction = require("../model/transactionsModel");
+const Sell = require("../model/sellModel");
 const Resource = require("../model/resourceModel");
-const Employee = require("../model/employeeModel");
+const Employee = require('../model/employeeModel')
 
-// ******************* addTransaction ***********************
-const addTransaction = async (req, res) => {
+// ******************* addSell ***********************
+const addSell = async (req, res) => {
   const { date, resource, quantity_resource, employee } = req.body;
 
   try {
-    const resourceData = await Resource.findById(resource).populate("resource");
+    const resourceData = await Resource.findById(resource).populate('resource');
     if (!resourceData) {
       return res.status(404).json({ message: "Resource not found" });
     }
 
     const total_price = quantity_resource * resourceData.unit_price;
 
-    const transaction = new Transaction({
+    const transaction = new Sell({
       resource,
       quantity_resource,
       total_price,
@@ -24,27 +24,27 @@ const addTransaction = async (req, res) => {
 
     const savedTransaction = await transaction.save();
     res.status(201).json({
-      message: "Transaction added successfully",
+      message: "Sell added successfully",
       data: savedTransaction,
     });
   } catch (error) {
-    console.error("Error adding transaction:", error);
+    console.error("Error adding sell:", error);
     res.status(500).json({ message: "Internal server error" });
   }
 };
 // ********************** update transaction ********************************
-const updateTransaction = async (req, res) => {
+const updateSell = async (req, res) => {
   const { id } = req.params;
   const { date, resource, quantity_resource, employee } = req.body;
 
   try {
-    const transaction = await Transaction.findOneAndUpdate(
+    const transaction = await Sell.findOneAndUpdate(
       { _id: id },
-      { $set: { date, resource, employee, resource } },
+      { $set: { date,resource, employee, resource }},
       { new: true, runValidators: true }
-    );
+    )
     if (!transaction) {
-      return res.status(404).json({ message: "Transaction not found" });
+      return res.status(404).json({ message: "Sell not found" });
     }
 
     const resource = await Resource.findById(transaction.resource);
@@ -53,17 +53,14 @@ const updateTransaction = async (req, res) => {
         message: "Resource not found associated with the transaction",
       });
     }
-    if (
-      quantity_resource &&
-      quantity_resource !== transaction.quantity_resource
-    ) {
+    if (quantity_resource && quantity_resource !== transaction.quantity_resource) {
       transaction.total_price = quantity_resource * resource.unit_price;
       transaction.quantity_resource = quantity_resource;
     }
 
     const updatedTransaction = await transaction.save();
     res.status(200).json({
-      message: "Transaction updated successfully",
+      message: "Sell updated successfully",
       data: updatedTransaction,
     });
   } catch (error) {
@@ -72,11 +69,9 @@ const updateTransaction = async (req, res) => {
   }
 };
 
-const getAllTransactions = async (req, res) => {
+const getAllSell = async (req, res) => {
   try {
-    const transaction = await Transaction.find()
-      .populate("employee")
-      .populate("resource");
+    const transaction = await Sell.find()
     return res
       .status(200)
       .json({ message: "all the employee search", data: transaction });
@@ -85,4 +80,4 @@ const getAllTransactions = async (req, res) => {
   }
 };
 
-module.exports = { addTransaction, updateTransaction, getAllTransactions };
+module.exports = { addSell, updateSell, getAllSell };

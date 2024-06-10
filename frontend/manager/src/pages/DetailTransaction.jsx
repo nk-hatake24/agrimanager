@@ -43,9 +43,11 @@ export const DetailTransaction = () => {
   const resourceStatus = useSelector((state) => state.resource.status);
   const resourceError = useSelector((state) => state.resource.error);
 
-  const supplierList = useSelector((state) => state.supplier.list);
-  const supplierStatus = useSelector((state) => state.supplier.status);
-  const supplierError = useSelector((state) => state.supplier.error);
+  const employeeList = useSelector((state) => state.employee.list);
+  const employeeStatus = useSelector((state) => state.employee.status);
+  const employeeError = useSelector((state) => state.employee.error);
+
+
 
   useEffect(() => {
     if (transactionStatus === 'idle') {
@@ -54,10 +56,10 @@ export const DetailTransaction = () => {
     if (resourceStatus === 'idle') {
       dispatch(fetchResources());
     }
-    if (supplierStatus === 'idle') {
+    if (employeeStatus === 'idle') {
       dispatch(fetchSuppliers());
     }
-  }, [transactionStatus, resourceStatus, supplierStatus, dispatch]);
+  }, [transactionStatus, resourceStatus, employeeStatus, dispatch]);
 
   const onTransactionClick = (transaction) => {
     setOpenListItem(true);
@@ -163,7 +165,7 @@ export const DetailTransaction = () => {
   };
 
   const filteredTransactions = transactionList.filter((transaction) =>
-    transaction.resource.toLowerCase().includes(searchTerm.toLowerCase())
+    transaction.resource.name_resource.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (
@@ -220,7 +222,7 @@ export const DetailTransaction = () => {
               value={newTransaction.employee}
             >
               <option value="">Sélectionner un employé</option>
-              {supplierList.map((employee) => (
+              {employeeList.map((employee) => (
                 <option key={employee._id} value={employee._id}>
                   {employee.name_employee}
                 </option>
@@ -257,8 +259,8 @@ export const DetailTransaction = () => {
               </h2>
               <p>Quantité: {selectedTransaction.quantity_resource}</p>
               <p>Prix Total: {selectedTransaction.total_price}</p>
-              <p>Ressource: {selectedTransaction.resource}</p>
-              <p>Employé: {selectedTransaction.employee}</p>
+              <p>Ressource: {selectedTransaction.resource.name_resource}</p>
+              <p>Employé: {selectedTransaction.employee.name_employee}</p>
             </div>
           )}
         </Modals>
@@ -342,7 +344,7 @@ export const DetailTransaction = () => {
                 value={selectedModifyTransaction.employee}
               >
                 <option value="">Sélectionner un employé</option>
-                {supplierList.map((employee) => (
+                {employeeList.map((employee) => (
                   <option key={employee._id} value={employee._id}>
                     {employee.name_employee}
                   </option>

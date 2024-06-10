@@ -6,17 +6,17 @@ const PdfGenerator = ({ transactions }) => {
 
     const generatePDF = () => {
         const doc = new jsPDF();
-        const tableColumn = ["date", "Quantité", "Prix Total", "Ressource", "Employé"];
+        const tableColumn = ["date", "quantity_resource", "total_Price", "resource", "employee"];
         const tableRows = [];
         
        
         transactions.forEach(transaction => {
           const transactionData = [
             transaction.date,
-            transaction.Quantité,
-            transaction["Prix Total"],
-            transaction.Ressource,
-            transaction.Employé
+            transaction.quantity_resource,
+            transaction.total_price,
+            transaction.resource.name_resource,
+            transaction.employee.name_employee
           ];
           tableRows.push(transactionData);
         });

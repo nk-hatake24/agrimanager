@@ -4,7 +4,7 @@ const { authenticateJWT, authorizeRoles } = require('../config/auth')
 const {addTransaction, updateTransaction, getAllTransactions} = require('../controller/transactionsController')
 
 route.post('/', authenticateJWT, authorizeRoles("manager", "employee"),addTransaction)
-route.put('/:id_transtion', authenticateJWT, authorizeRoles("manager", "employee"),updateTransaction)
+route.put('/:id', authenticateJWT, authorizeRoles("manager", "employee"),updateTransaction)
 route.get('/', authenticateJWT, authorizeRoles("manager", "employee", "admin"),getAllTransactions)
 
 module.exports = route
