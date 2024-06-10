@@ -9,6 +9,8 @@ const NavBarTop = () => {
   const [isDropdownOpenLog, setIsDropdownOpenLog] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const navigate = useNavigate();
+  const token = localStorage.getItem('token');
+
 
   const username = localStorage.getItem('username');
 
@@ -20,7 +22,6 @@ const NavBarTop = () => {
   };
 
   const checkTokenValidity = () => {
-    const token = localStorage.getItem('token');
     if (token) {
       // Remplacez cette partie par votre logique de vérification du token
       const tokenExpiration = JSON.parse(atob(token.split('.')[1])).exp * 1000;
@@ -36,7 +37,7 @@ const NavBarTop = () => {
     // Vérifier si le token est dans le localStorage
     const token = localStorage.getItem('token');
     setIsLoggedIn(!!token);
-
+    
     // Vérifier la validité du token toutes les minutes
     const interval = setInterval(checkTokenValidity, 60000);
 
@@ -75,7 +76,7 @@ const NavBarTop = () => {
           </div>
         )}
       </div>
-      <div className='block md:hidden'>
+      <div className={token===null?`hidden`: 'block md:hidden'}>
         <button onClick={() => setIsDropdownOpen(!isDropdownOpen)} className="dark:text-white">
           <IoMenu size={24} />
         </button>

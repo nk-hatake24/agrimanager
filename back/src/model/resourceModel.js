@@ -15,7 +15,7 @@ const ResourceSchema = new mongoose.Schema(
       type: String,
       required: [true, "the name of the resource is required"],
     },
-    Supplier: {
+    supplier: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Supplier",
       required: true,

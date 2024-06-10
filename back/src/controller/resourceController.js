@@ -2,7 +2,7 @@ const Resource = require('../model/resourceModel')
 
 const addResource = async (req, res) => {
     try {
-      const { id_resource, quantity_resource, unit_price, name_resource, Supplier } = req.body;
+      const { id_resource, quantity_resource, unit_price, name_resource, supplier } = req.body;
   
       // Créer une nouvelle ressource
       const newResource = new Resource({
@@ -10,7 +10,7 @@ const addResource = async (req, res) => {
         quantity_resource,
         unit_price,
         name_resource,
-        Supplier,
+        supplier,
       });
   
       // Sauvegarder la ressource dans la base de données
@@ -28,6 +28,7 @@ const getAllResources = async (req, res) => {
     try {
       // Récupérer toutes les ressources de la base de données
       const resources = await Resource.find();
+      ;
       // Envoyer les ressources en réponse
       res.status(200).json(resources);
     } catch (error) {
@@ -39,12 +40,12 @@ const getAllResources = async (req, res) => {
   const modifyResource = async (req, res) => {
     try {
       const { id } = req.params;
-      const { id_resource, quantity_resource, unit_price, name_resource, Supplier } = req.body;
+      const { id_resource, quantity_resource, unit_price, name_resource, supplier } = req.body;
   
       // Trouver et mettre à jour la ressource
       const updatedResource = await Resource.findByIdAndUpdate(
         id,
-        { id_resource, quantity_resource, unit_price, name_resource, Supplier },
+        { id_resource, quantity_resource, unit_price, name_resource, supplier },
         { new: true, runValidators: true }
       );
   
