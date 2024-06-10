@@ -82,7 +82,7 @@ const getAllTransactions = async (req, res) => {
       .populate("resource");
     return res
       .status(200)
-      .json({ message: "all the employee search", data: transaction });
+      .json({ message: "all the transaction search", data: transaction });
   } catch (error) {
     return res.status(500).json({ message: error.message });
   }

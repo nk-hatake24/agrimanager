@@ -93,7 +93,7 @@ const SharePdf = ({ transactions }) => {
     formData.append('file', pdfData, 'transactions.pdf');
 
     // Sending the email using EmailJS
-    emailjs.sendForm('YOUR_SERVICE_ID', 'YOUR_TEMPLATE_ID', form.current, 'YOUR_USER_ID')
+    emailjs.sendForm('service_2za17eq', 'YOUR_TEMPLATE_ID', form.current, 'YOUR_USER_ID')
       .then((result) => {
           console.log(result.text);
           alert('Email sent successfully');

@@ -11,7 +11,7 @@ const supplierSchema = new mongoose.Schema(
       type: String,
       required: [true, "the phone number of the supplier is needed"],
     },
-    email_supplier: {
+    email_supplierr: {
       type: String,
       required: [true, "the email of supplier is needed"],
     },

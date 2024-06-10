@@ -1,13 +1,13 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import Dashboard from "../layouts/Dashboard";
 import { fetchEmployees } from "../features/employee/employeSlice";
 import { fetchTransactions as fetchSells } from "../features/sell/sellSlice";
 import { fetchTransactions } from "../features/transaction/transactionSlice";
 import { fetchBudgets } from "../features/budget/budgetSlice";
-
 import { useDispatch, useSelector } from "react-redux";
 import GraphComponent from "../components/GraphComponent";
-import PieChartComponent from "../components/pieChartComponent";
+import PieChartComponent from "../components/pieChartComponent.jsx";
+
 
 export const HomeDashboard1 = () => {
   const dispatch = useDispatch();
@@ -76,31 +76,30 @@ export const HomeDashboard1 = () => {
         <div className=" p-4 rounded-lg shadow-md dark:shadow-gray-700">
           <h2 className="text-sm">Profit</h2>
           <p className="text-3xl">
-            {calculateDifference(sellList, transactionList)}
+            {calculateDifference(sellList, transactionList)} CFA
           </p>
         </div>
 
         <div className="p-4 rounded-lg shadow-md dark:shadow-gray-700">
           <h2 className="text-sm">Budget Total</h2>
-          <p className="text-3xl">{sumBudget(budgetList)}</p>
+          <p className="text-3xl">{sumBudget(budgetList)} CFA</p>
         </div>
 
         <div className=" p-4 rounded-lg shadow-md dark:shadow-gray-700">
           <h2 className="text-sm">Budget Prévensif</h2>
-          <p className="text-3xl">{sumPrevesion(budgetList)}</p>
+          <p className="text-3xl">{sumPrevesion(budgetList)} CFA</p>
         </div>
 
         <div className="col-span-1 md:col-span-1 p-4 rounded-lg shadow-md dark:shadow-gray-700">
           <GraphComponent
             sellList={sellList}
-            transactionList={transactionList}
-          />
+            transactionList={transactionList} />
         </div>
 
-        <div className="col-span-1 md:col-span-1  p-1 rounded-lg shadow-md dark:shadow-gray-700 flex justify-center w-full">
-          <div className="h-80 ">
-            <PieChartComponent budgetData={budgetList} />
-          </div>
+        <div className="col-span-1 md:col-span-1 rounded-lg shadow-md dark:shadow-gray-700 flex justify-center items-center w-full">
+          <div className="max-h-full  max-w-full">
+              <PieChartComponent budgetData={budgetList} />
+            </div>
         </div>
       </div>
     </Dashboard>

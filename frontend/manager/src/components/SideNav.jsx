@@ -32,8 +32,8 @@ const SideNav = () => {
     );
   };
   return (
-    <div className="flex flex-col w-full">
-      <div className="hidden md:flex flex-col min-h-72 gap-2 justify-center bg-gray-200 dark:bg-gray-700">
+    <div className="flex flex-col w-full z-50">
+      <div className="hidden md:flex flex-col min-h-52 gap-2 justify-center bg-gray-200 dark:bg-gray-700">
         <div className="h-30 flex justify-center items-center">
           <div className="photoProfile h-20 w-20 text-white bg-gray-900 rounded-[50%] flex justify-center items-center">
             <IoPersonSharp size={42} />

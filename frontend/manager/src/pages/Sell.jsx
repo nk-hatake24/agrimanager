@@ -11,6 +11,7 @@ import { fetchTransactions } from "../features/sell/sellSlice";
 import Dashboard from "../layouts/Dashboard";
 import PdfGenerator from "../components/PdfGenerator";
 import { Transaction } from "./Transaction";
+import SharePdf from "../components/SharePdf";
 
 export const Sell = () => {
   const currentUser = localStorage.getItem("id");
@@ -343,9 +344,16 @@ export const Sell = () => {
               </span>
               Ajouter
             </div>
-            <div>
-              <PdfGenerator transactions={filteredTransactions} />
+           
+            <div className="flex gap-5 dark:text-gray-50">
+              <div>
+                <PdfGenerator transactions={filteredTransactions} />
+              </div>
+              <div>
+                <SharePdf transactions={filteredTransactions} />
+              </div>
             </div>
+
 
             <div className=" flex flex-row items-center  px-1 gap-1 rounded bg-white dark:bg-gray-600">
               <CiSearch className="dark:text-gray-50 " />

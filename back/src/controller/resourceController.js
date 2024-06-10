@@ -27,7 +27,7 @@ const addResource = async (req, res) => {
 const getAllResources = async (req, res) => {
     try {
       // Récupérer toutes les ressources de la base de données
-      const resources = await Resource.find();
+      const resources = await Resource.find().populate('supplier');
       ;
       // Envoyer les ressources en réponse
       res.status(200).json(resources);

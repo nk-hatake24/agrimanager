@@ -30,7 +30,6 @@ export const Detail = () => {
     supplier: '',
   });
   const [searchTerm, setSearchTerm] = useState('');
-
   const dispatch = useDispatch();
   const resourceList = useSelector((state) => state.resource.list);
   const resourceStatus = useSelector((state) => state.resource.status);
@@ -240,7 +239,7 @@ export const Detail = () => {
               </h2>
               <p>Quantité: {selectedResource.quantity_resource}</p>
               <p>Prix Unitaire: {selectedResource.unit_price}</p>
-              <p>Fournisseur: {selectedResource.supplier}</p>
+              <p>Fournisseur: {selectedResource.supplier.name_supplier}</p>
             </div>
           )}
         </Modals>
