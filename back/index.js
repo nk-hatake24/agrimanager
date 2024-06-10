@@ -14,6 +14,7 @@ const supplierRoute =require('./src/route/supplierRoute')
 const transactionRoute = require('./src/route/transactionRoute')
 const resourceRoute = require('./src/route/resourceRoute')
 const noteRoute = require('./src/route/noteRoute')
+const sellRoute = require('./src/route/sellRoute')
 
 
 const app = express()
@@ -37,6 +38,7 @@ app.use("/api/stock", stockRoute)
 app.use("/api/budget", budgetRoute)
 app.use("/api/employee", employeeRoute);
 app.use("/api/resource", resourceRoute);
+app.use("/api/sell", sellRoute);
 app.use("*", (req,res)=>{
     res.status(404).json({message:'route not found!'})
 })

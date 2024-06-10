@@ -15,6 +15,7 @@ import {Report} from "./pages/Report"
 import { Supplier } from "./pages/Supplier";
 import { Note } from "./pages/Note";
 import {AccountRegister} from './pages/AccountRegister'
+import { Sell } from "./pages/Sell";
 
 function App() {
   const router = createBrowserRouter([
@@ -79,11 +80,16 @@ function App() {
       path: '/note',
       element: <Note />,
     },
+    {
+      path: '/sell',
+      element: <Sell />,
+    },
 
     {
       path: '*',
       element: <NoPages />,
     },
+    
   ]);
 
   return <RouterProvider router={router} />;

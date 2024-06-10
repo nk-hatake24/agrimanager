@@ -5,6 +5,9 @@ import Modals from "../layouts/Modals";
 import { FaEye, FaPlus, FaTrashAlt } from "react-icons/fa";
 import { CiSearch } from "react-icons/ci";
 import { HiPencil } from "react-icons/hi2";
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchNotes } from '../features/note/noteSlice';
+import { fetchEmployees } from '../features/employee/employeSlice';
 
 export const Note = () => {
   const [openAdd, setOpenAdd] = useState(false);
@@ -23,50 +26,25 @@ export const Note = () => {
     description: "",
     employee: "",
   });
-  const [NoteList, setNoteList] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
-  const [EmployeeList, setEmployeeList] = useState([]);
+
+  const dispatch = useDispatch();
+  const noteList = useSelector((state) => state.note.list);
+  const noteStatus = useSelector((state) => state.note.status);
+  const noteError = useSelector((state) => state.note.error);
+  
+  const employeeList = useSelector((state) => state.employee.list);
+  const employeeStatus = useSelector((state) => state.employee.status);
+  const employeeError = useSelector((state) => state.employee.error);
 
   useEffect(() => {
-    const fetchNotes = async () => {
-      try {
-        const token = localStorage.getItem("token");
-        const response = await axios.get("http://localhost:3500/api/note", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        if (Array.isArray(response.data)) {
-          setNoteList(response.data);
-        } else {
-          console.error("API response is not an array:", response.data);
-        }
-      } catch (error) {
-        console.error("Error fetching notes:", error);
-      }
-    };
-
-    const fetchEmployees = async () => {
-      try {
-        const token = localStorage.getItem("token");
-        const response = await axios.get("http://localhost:3500/api/employee", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        if (Array.isArray(response.data.data)) {
-          setEmployeeList(response.data.data);
-        } else {
-          console.error("API response is not an array:", response.data);
-        }
-      } catch (error) {
-        console.error("Error fetching employees:", error);
-      }
-    };
-
-    fetchNotes();
-    fetchEmployees();
-  }, []);
+    if (noteStatus === 'idle') {
+      dispatch(fetchNotes());
+    }
+    if (employeeStatus === 'idle') {
+      dispatch(fetchEmployees());
+    }
+  }, [noteStatus, employeeStatus, dispatch]);
 
   const onNoteClick = (note) => {
     setOpenListItem(true);
@@ -79,9 +57,9 @@ export const Note = () => {
   };
 
   const onFinalDeleteClick = async (noteId) => {
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem('token');
     if (!token) {
-      alert("No token found, please login again.");
+      alert('No token found, please login again.');
       return;
     }
 
@@ -91,10 +69,10 @@ export const Note = () => {
           Authorization: `Bearer ${token}`,
         },
       });
-      setNoteList(NoteList.filter((note) => note._id !== noteId));
+      dispatch(fetchNotes());
       setDeleteItemModal(false);
     } catch (error) {
-      console.error("Error deleting note:", error.response ? error.response.data : error.message);
+      console.error('Error deleting note:', error.response ? error.response.data : error.message);
       alert(error.response ? error.response.data.message : error.message);
     }
   };
@@ -105,14 +83,14 @@ export const Note = () => {
   };
 
   const handleSaveChanges = async () => {
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem('token');
     if (!token) {
-      alert("No token found, please login again.");
+      alert('No token found, please login again.');
       return;
     }
 
     try {
-      const response = await axios.put(
+      await axios.put(
         `http://localhost:3500/api/note/${selectedModifyNote._id}`,
         selectedModifyNote,
         {
@@ -121,13 +99,10 @@ export const Note = () => {
           },
         }
       );
-      const updatedNotes = NoteList.map((note) =>
-        note._id === selectedModifyNote._id ? response.data.data : note
-      );
-      setNoteList(updatedNotes);
+      dispatch(fetchNotes());
       setModifyItemModal(false);
     } catch (error) {
-      console.error("Error updating note:", error);
+      console.error('Error updating note:', error);
       alert(error.response ? error.response.data.message : error.message);
     }
   };
@@ -153,29 +128,29 @@ export const Note = () => {
   };
 
   const handleAddNote = async () => {
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem('token');
     if (!token) {
-      alert("No token found, please login again.");
+      alert('No token found, please login again.');
       return;
     }
     console.log(newNote);
 
     try {
-      const response = await axios.post("http://localhost:3500/api/note", newNote, {
+      await axios.post('http://localhost:3500/api/note', newNote, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
-      setNoteList([...NoteList, response.data.data]);
+      dispatch(fetchNotes());
       setOpenAdd(false);
       setNewNote({ title: "", description: "", employee: "" }); // Clear form fields
     } catch (error) {
-      console.error("Error adding note:", error);
+      console.error('Error adding note:', error);
       alert(error.response ? error.response.data.message : error.message);
     }
   };
 
-  const filteredNotes = NoteList.filter((note) =>
+  const filteredNotes = noteList.filter((note) =>
     note.title.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
@@ -217,7 +192,7 @@ export const Note = () => {
               value={newNote.employee}
             >
               <option value="">Sélectionner un employé</option>
-              {EmployeeList.map((employee) => (
+              {employeeList.map((employee) => (
                 <option key={employee._id} value={employee._id}>
                   {employee.name_employee}
                 </option>
@@ -317,7 +292,7 @@ export const Note = () => {
                 value={selectedModifyNote.employee}
               >
                 <option value="">Sélectionner un employé</option>
-                {EmployeeList.map((employee) => (
+                {employeeList.map((employee) => (
                   <option key={employee._id} value={employee._id}>
                     {employee.name_employee}
                   </option>

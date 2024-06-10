@@ -55,6 +55,7 @@ const Login = () => {
       const response = await axios.post('http://localhost:3500/api/employee/login', loginData);
       localStorage.setItem('token', response.data.token);
       localStorage.setItem('username', response.data.employee.name);
+      localStorage.setItem('id', response.data.employee.id);
       localStorage.setItem('userEmail', response.data.employee.email);
       localStorage.setItem('userFunction', response.data.employee.function);
       setModalMessage(response.data.message);

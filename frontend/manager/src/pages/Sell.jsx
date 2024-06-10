@@ -7,14 +7,12 @@ import { HiPencil } from "react-icons/hi2";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchResources } from "../features/resource/resourceSlice";
 import { fetchSuppliers } from "../features/supplier/supplierSlice";
-import { fetchTransactions } from "../features/transaction/transactionSlice";
+import { fetchTransactions } from "../features/sell/sellSlice";
 import Dashboard from "../layouts/Dashboard";
 import PdfGenerator from "../components/PdfGenerator";
 import { Transaction } from "./Transaction";
-import SharePdf from "../components/SharePdf";
 
-export const DetailTransaction = () => {
-  const currentUser = localStorage.getItem('id')
+export const Sell = () => {
   const [openAdd, setOpenAdd] = useState(false);
   const [openListItem, setOpenListItem] = useState(false);
   const [deleteItemModal, setDeleteItemModal] = useState(false);
@@ -26,21 +24,21 @@ export const DetailTransaction = () => {
     quantity_resource: "",
     total_price: "",
     resource: "",
-    employee: currentUser,
+    employee: "",
   });
   const [newTransaction, setNewTransaction] = useState({
     date: "",
     quantity_resource: "",
     total_price: "",
     resource: "",
-    employee: currentUser,
+    employee: "",
   });
   const [searchTerm, setSearchTerm] = useState("");
 
   const dispatch = useDispatch();
-  const transactionList = useSelector((state) => state.transaction.list);
-  const transactionStatus = useSelector((state) => state.transaction.status);
-  const transactionError = useSelector((state) => state.transaction.error);
+  const transactionList = useSelector((state) => state.sell.list);
+  const transactionStatus = useSelector((state) => state.sell.status);
+  const transactionError = useSelector((state) => state.sell.error);
 
   const resourceList = useSelector((state) => state.resource.list);
   const resourceStatus = useSelector((state) => state.resource.status);
@@ -49,8 +47,6 @@ export const DetailTransaction = () => {
   const employeeList = useSelector((state) => state.employee.list);
   const employeeStatus = useSelector((state) => state.employee.status);
   const employeeError = useSelector((state) => state.employee.error);
-
-
 
   useEffect(() => {
     if (transactionStatus === 'idle') {
@@ -82,7 +78,7 @@ export const DetailTransaction = () => {
     }
 
     try {
-      await axios.delete(`http://localhost:3500/api/transaction/${transactionId}`, {
+      await axios.delete(`http://localhost:3500/api/sell/${transactionId}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -109,7 +105,7 @@ export const DetailTransaction = () => {
 
     try {
       await axios.put(
-        `http://localhost:3500/api/transaction/${selectedModifyTransaction._id}`,
+        `http://localhost:3500/api/sell/${selectedModifyTransaction._id}`,
         selectedModifyTransaction,
         {
           headers: {
@@ -151,10 +147,9 @@ export const DetailTransaction = () => {
       alert('No token found, please login again.');
       return;
     }
-    console.log(newTransaction);
 
     try {
-      await axios.post('http://localhost:3500/api/transaction', newTransaction, {
+      await axios.post('http://localhost:3500/api/sell', newTransaction, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -168,11 +163,12 @@ export const DetailTransaction = () => {
   };
 
   const filteredTransactions = transactionList.filter((transaction) =>
-    transaction.resource.name_resource.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  transaction.resource.name_resource.toLowerCase().includes(searchTerm.toLowerCase())
+);
 
   return (
     <Transaction>
+
       <div className="p-2 md:p-8">
         {/* Modal pour ajouter une transaction */}
         <Modals open={openAdd} onClose={() => setOpenAdd(false)}>
@@ -215,22 +211,22 @@ export const DetailTransaction = () => {
                 </option>
               ))}
             </select>
-            {/* <label htmlFor="employee">
+            <label htmlFor="employee">
               Employé <span className="text-red-500">*</span>
-            </label> */}
-            {/* <select
+            </label>
+            <select
               name="employee"
               className="p-2 text-gray-900"
               onChange={handleInputChange}
               value={newTransaction.employee}
-            > */}
-              {/* <option value="">Sélectionner un employé</option>
+            >
+              <option value="">Sélectionner un employé</option>
               {employeeList.map((employee) => (
                 <option key={employee._id} value={employee._id}>
                   {employee.name_employee}
                 </option>
               ))}
-            </select> */}
+            </select>
 
             <div className="flex flex-row justify-between">
               <button
@@ -287,8 +283,8 @@ export const DetailTransaction = () => {
                   Supprimer
                 </button>
                 <button
-                  onClick={() => setDeleteItemModal(false)}
                   className="p-1 bg-orange-400 hover:bg-orange-600"
+                  onClick={() => setDeleteItemModal(false)}
                 >
                   Annuler
                 </button>
@@ -339,8 +335,8 @@ export const DetailTransaction = () => {
                   </option>
                 ))}
               </select>
-              {/* <label htmlFor="employee">Employé</label> */}
-              {/* <select
+              <label htmlFor="employee">Employé</label>
+              <select
                 name="employee"
                 className="p-2 text-gray-900"
                 onChange={handleModify}
@@ -352,7 +348,7 @@ export const DetailTransaction = () => {
                     {employee.name_employee}
                   </option>
                 ))}
-              </select> */}
+              </select>
               <div className="flex flex-row justify-between">
                 <button className="bg-green-400 hover:bg-green-600 p-1" onClick={handleSaveChanges}>
                   Sauvegarder
@@ -375,9 +371,6 @@ export const DetailTransaction = () => {
             </div>
             <div>
               <PdfGenerator transactions={filteredTransactions} />
-            </div>
-            <div>
-              <SharePdf transactions={filteredTransactions} />
             </div>
 
             <div className=" flex flex-row items-center  px-1 gap-1 rounded bg-white dark:bg-gray-600">
@@ -424,5 +417,6 @@ export const DetailTransaction = () => {
         </div>
       </div>
     </Transaction>
+
   );
 };

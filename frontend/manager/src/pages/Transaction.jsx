@@ -22,8 +22,8 @@ export const Transaction = ({children}) => {
   return (
     <Dashboard>
     <div className="flex flex-row w-full bg-gray-200 dark:bg-gray-700">
-      <CustomNavLink to='detailTransaction' >Detail</CustomNavLink>
-      <CustomNavLink to='report'>Report</CustomNavLink>
+      <CustomNavLink to='/detailTransaction' >achat</CustomNavLink>
+      <CustomNavLink to='/sell'>vente</CustomNavLink>
     </div>
     <div>{children}</div>
     

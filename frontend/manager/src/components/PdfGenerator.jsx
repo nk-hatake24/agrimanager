@@ -1,6 +1,7 @@
 import React from 'react';
 import { jsPDF } from 'jspdf';
 import 'jspdf-autotable'; 
+import { FaDownload } from 'react-icons/fa';
 
 const PdfGenerator = ({ transactions }) => {
 
@@ -28,7 +29,7 @@ const PdfGenerator = ({ transactions }) => {
 
   return (
     <div>
-      <button onClick={generatePDF}>Générer PDF</button>
+      <button onClick={generatePDF}> <FaDownload /> </button>
     </div>
   );
 };

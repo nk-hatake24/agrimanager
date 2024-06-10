@@ -7,7 +7,7 @@ const addTransaction = async (req, res) => {
   const { date, resource, quantity_resource, employee } = req.body;
 
   try {
-    const resourceData = await Resource.findById(resource).populate("resource");
+    const resourceData = await Resource.findById(resource);
     if (!resourceData) {
       return res.status(404).json({ message: "Resource not found" });
     }
@@ -32,6 +32,8 @@ const addTransaction = async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 };
+
+
 // ********************** update transaction ********************************
 const updateTransaction = async (req, res) => {
   const { id } = req.params;
