@@ -1,0 +1,15 @@
+version: '3.9'
+
+services:
+  app:
+    image: mon-application-node
+    build:
+      context: .
+    ports:
+      - "3500:3500"
+    environment:
+      - NODE_ENV=development
+      - PORT=3500
+    volumes:
+      - .:/app
+      - /app/node_modules
