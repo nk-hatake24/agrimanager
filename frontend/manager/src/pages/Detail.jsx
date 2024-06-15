@@ -9,6 +9,8 @@ import { HiPencil } from 'react-icons/hi2';
 import { fetchResources } from '../features/resource/resourceSlice';
 import { fetchSuppliers } from '../features/supplier/supplierSlice';
 import Resource from './Resource';
+import axios from  'axios'
+
 
 export const Detail = () => {
   const [openAdd, setOpenAdd] = useState(false);
