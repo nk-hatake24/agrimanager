@@ -30,6 +30,7 @@ const userSchema = new Schema({
         address: {
           type: String,
         },
+        chat: { type: Schema.Types.ObjectId, ref: 'Chat' },
         conversationHistory: [{ type: Schema.Types.ObjectId, ref: 'Conversation' }]
 });
 

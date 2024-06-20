@@ -15,6 +15,7 @@ const transactionRoute = require('./src/route/transactionRoute')
 const resourceRoute = require('./src/route/resourceRoute')
 const noteRoute = require('./src/route/noteRoute')
 const sellRoute = require('./src/route/sellRoute')
+const accountRoute = require('./src/route/accountRoute')
 
 
 const app = express()
@@ -31,6 +32,7 @@ app
 dbConnection()
 // *****************routes******************
 
+app.use("/api/account", accountRoute)
 app.use("/api/note", noteRoute)
 app.use("/api/transaction", transactionRoute)
 app.use("/api/supplier", supplierRoute)

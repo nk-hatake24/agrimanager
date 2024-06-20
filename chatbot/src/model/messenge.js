@@ -1,6 +1,6 @@
 const messageSchema = new Schema({
-    messageID: { type: Number, required: true, unique: true },
-    senderID: {type: Schema.Types.ObjectId, ref: 'user'},
+    messageID: { type: String, required: true, unique: true },
+    senderID: { type: String, required: true, unique: true },
     timestamp: { type: Date, default: Date.now },
     content: { type: String, required: true }
   });

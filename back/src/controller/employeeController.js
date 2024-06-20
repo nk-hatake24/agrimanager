@@ -98,6 +98,7 @@ const updateEmployee = async (req, res) => {
   } catch (error) {
     console.error("Error updating employee:", error);
     res.status(400).json({ message: error.message });
+    console.log(error)
   }
 };
 

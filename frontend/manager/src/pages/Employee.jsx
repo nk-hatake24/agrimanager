@@ -101,7 +101,8 @@ export const Employee = () => {
       setModifyItemModal(false);
     } catch (error) {
       console.error('Error updating employee:', error);
-      alert(error.response.message);
+      console.log(error.message)
+      alert(error.message);
     }
   };
 

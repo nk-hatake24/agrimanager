@@ -2,45 +2,44 @@ const mongoose = require("mongoose");
 
 const AccountSchema = new mongoose.Schema(
   {
-   
-    name_account: {
-        type: String,
-        required: [true, "the name of account is required"],
-        unique: [true, "the name of account is unique"]
-
-    },
-    email_account:{
-        type: String,
-        required: [true, "the email of the general account most be given"]
-    },
-    budget: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "budget",
-      },
-    employee: {
+    user: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Employee",
-      required: true,
+    },
+
+    name_account: {
+      type: String,
+      required: [true, "the name of account is required"],
+      unique: [true, "the name of account is unique"],
+    },
+    budget: {
+      type: [mongoose.Schema.Types.ObjectId],
+      ref: "Budget",
+    },
+    employee: {
+      type: [mongoose.Schema.Types.ObjectId],
+      ref: "Employee",
+  
     },
     resource: {
-      type: mongoose.Schema.Types.ObjectId,
+      type: [mongoose.Schema.Types.ObjectId],
       ref: "Resource",
-      required: true,
+
     },
     supplier: {
-      type: mongoose.Schema.Types.ObjectId,
+      type: [mongoose.Schema.Types.ObjectId],
       ref: "Supplier",
     },
     transaction: {
-      type: mongoose.Schema.Types.ObjectId,
+      type: [mongoose.Schema.Types.ObjectId],
       ref: "Transaction",
     },
     stock: {
-      type: mongoose.Schema.Types.ObjectId,
+      type: [mongoose.Schema.Types.ObjectId],
       ref: "Stock",
     },
     report: {
-      type: mongoose.Schema.Types.ObjectId,
+      type: [mongoose.Schema.Types.ObjectId],
       ref: "Report",
     },
   },
