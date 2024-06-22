@@ -7,6 +7,7 @@ const{ dbConnection} = require('./src/config/dbConfig')
 
 const userRoute = require('./src/route/userRoute')
 const messageRoute = require('./src/route/messageRoute')
+const conversationRoute = require('./src/route/conversationRoute')
 
 const app = express()
 const port = 3400 || process.env.PORT
@@ -25,6 +26,7 @@ dbConnection()
 
 // **********************{routes}*********************************
 app.use('/api/user', userRoute)
+app.use('/api/conversation', conversationRoute)
 app.use('/api/message', messageRoute)
 app.use('*', (req,res)=>{
     res.status(404).json({message: 'route not found'})
