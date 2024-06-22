@@ -67,7 +67,7 @@ export const HomeDashboard1 = () => {
 
   return (
     <Dashboard>
-      <div className="col-span-1 md:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="h-full col-span-1 md:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="h-full p-4 rounded-lg shadow-md  dark:shadow-gray-700">
           <h2 className="text-sm">Nombre d'employés</h2>
           <p className="text-3xl">{employeeList.length}</p>

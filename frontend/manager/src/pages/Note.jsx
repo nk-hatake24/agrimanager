@@ -359,7 +359,8 @@ export const Note = () => {
                     {note.description}
                   </p>
                   <p className="hidden w-1/4 justify-center md:flex">
-                    {note.employee.name_employee}
+                    {console.log(note.employee)}
+                    {/* {note.employee.name_employee} */}
                   </p>
                   <div className="w-1/4 justify-center flex flew-row gap-4">
                     <div

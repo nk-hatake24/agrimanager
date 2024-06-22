@@ -23,15 +23,20 @@ const Modal = ({ message, onClose }) => {
 
 const Register = () => {
   const navigate = useNavigate();
-  const [modalMessage, setModalMessage] = useState('');
+  const [modalMessage, setModalMessage] = useState("");
   const [showModal, setShowModal] = useState(false);
   const [registerData, setRegisterData] = useState({
     name_employee: "",
-    function_employee: "employee",
+    function_employee: "admin",
     salary: 0,
     address: "",
     email: "",
     password: "",
+  });
+
+  const [registerAccountData, setRegisterAccountData] = useState({
+    name_account: "",
+    user: "",
   });
 
   const handleLoginChange = (e) => {
@@ -42,30 +47,62 @@ const Register = () => {
     });
   };
 
+  const handleAccountChange = (e) => {
+    const { name, value } = e.target;
+    setRegisterAccountData({
+      ...registerAccountData,
+      [name]: value,
+    });
+  };
+
   const handleLoginSubmit = async (e) => {
     e.preventDefault();
+    
     try {
       const response = await axios.post(
         "http://localhost:3500/api/employee/register",
         registerData
       );
+
+      const userId = response.data.data._id;
+
+      setRegisterAccountData(prevState => ({
+        ...prevState,
+        user: userId,
+      }));
+
+      console.log(registerAccountData.user)
+      const responseAccount = await axios.post(
+        "http://localhost:3500/api/account/",
+        {...registerAccountData,
+        user: userId}
+      );
+
+      // console.log(responseAccount);
+
+      console.log(response.data.data._id);
       setModalMessage(response.data.message);
       setShowModal(true);
       setTimeout(() => {
         setShowModal(false);
-        navigate('/login');
+        navigate("/login");
       }, 2000);
     } catch (error) {
-      alert(error.response.data.error);
+      alert(error.response.data.Error);
       console.error("Error:", error);
     }
   };
 
   return (
     <LayoutGeneral>
-      {showModal && <Modal message={modalMessage} onClose={() => setShowModal(false)} />}
+      {showModal && (
+        <Modal message={modalMessage} onClose={() => setShowModal(false)} />
+      )}
       <section className="h-screen overflow-y-scroll flex flex-col justify-center items-center bg-gray-50 dark:bg-gray-900">
-       <div className="absolute top-2 left-2"> <Switcher /></div>
+        <div className="absolute top-2 left-2">
+          {" "}
+          <Switcher />
+        </div>
         <div className="w-full m-5 max-w-md bg-white rounded-lg shadow dark:bg-gray-800">
           <div className="p-6 space-y-4 sm:p-8">
             <div className="flex items-center justify-center mb-6 text-2xl font-semibold text-gray-900 dark:text-white">
@@ -115,7 +152,7 @@ const Register = () => {
                   onChange={handleLoginChange}
                   required
                 />
-                 <label
+                <label
                   htmlFor="salary"
                   className="block my-2 text-sm font-medium text-gray-900 dark:text-white"
                 >
@@ -134,6 +171,25 @@ const Register = () => {
               </div>
               <div>
                 <label
+                  htmlFor="name_account"
+                  className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                >
+                  Your enteprise name
+                </label>
+                <input
+                  type="text"
+                  name="name_account"
+                  id="name_account"
+                  className="w-full p-2.5 bg-gray-50 border border-gray-300 rounded-lg text-gray-900 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                  placeholder="mitcode inc."
+                  value={registerAccountData.name_account}
+                  onChange={handleAccountChange}
+                  required
+                />
+              </div>
+
+              <div>
+                <label
                   htmlFor="address"
                   className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                 >
@@ -150,24 +206,7 @@ const Register = () => {
                   required
                 />
               </div>
-              <div>
-                <label
-                  htmlFor="function_employee"
-                  className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                >
-                  Role
-                </label>
-                <select
-                  className="w-full p-2.5 bg-gray-50 border border-gray-300 rounded-lg text-gray-900 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-                  id="function_employee"
-                  name="function_employee"
-                  value={registerData.function_employee}
-                  onChange={handleLoginChange}
-                >
-                  <option value="manager">Manager</option>
-                  <option value="employee">Employee</option>
-                </select>
-              </div>
+
               <div>
                 <label
                   htmlFor="password"
