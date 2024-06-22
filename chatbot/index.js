@@ -1,6 +1,6 @@
 const express = require('express')
-// const cors = require('cors')
-// const morgan = require('morgan')
+const cors = require('cors')
+const morgan = require('morgan')
 require('dotenv').config()
 const{ dbConnection} = require('./src/config/dbConfig')
 
@@ -13,10 +13,10 @@ const port = 3400 || process.env.PORT
 
 // *******************{middleware}***********************************
 app
-// .use(cors())
-// .options('*', cors())
+.use(cors())
+.options('*', cors())
 .use(express.json())
-// .use(morgan("dev"))
+.use(morgan("dev"))
 
 // *********************{dbConnection}*********************************
 
