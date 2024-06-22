@@ -2,6 +2,7 @@ const axios = require("axios");
 const Message = require("../model/message");
 const Response = require("../model/response");
 const User = require("../model/user");
+const Conversation = require("../model/conversation");
 
 const flowise = async (data) => {
     const authToken = process.env.AUTH_FLOWISE_TOKEN;
@@ -33,9 +34,6 @@ const flowise = async (data) => {
 }
 
 const sendMessage = async (req, res) => {
-  const  data= "hello"
-  const question = await flowise(data)
-  console.log(question)
   
   try {
     const { content, senderID } = req.body;
@@ -55,17 +53,46 @@ const sendMessage = async (req, res) => {
       messageID: messageSaved._id,
     });
 
+
     response.content = await flowise(content);
 
     const responseSaved = await response.save();
     const msg = "message successfully saved";
-    return res.status(201).json({msg, messageSaved, responseSaved });
+    
+    const conversation = new Conversation({
+        userID: senderID,
+        messages: messageSaved._id,
+        responses: responseSaved._id,
+    })
+
+    conversationSaved = await conversation.save()
+
+    return res.status(201).json({msg, messageSaved, responseSaved, conversationSaved });
   } catch (err) {
     const message = "server internal problem";
     return res.status(500).json({ message, err });
   }
 };
 
+
+const getMessages = async(req, res) =>{
+    try{
+        const message = Message.find()
+        return res.status(200).json({message: 'all messeges retrieved sucessfully', message})
+    }catch(err){
+        res.json(err)
+    }
+}
+
+const getResponse = async(req, res) =>{
+    try{
+        const response = Response.find()
+        return res.status(200).json({messages: 'all response retrieved sucessfully', response})
+    }catch(err){
+        res.json(err)
+    }
+}
+
 module.exports = {
-  sendMessage,
+  sendMessage,getMessages,getResponse
 };
