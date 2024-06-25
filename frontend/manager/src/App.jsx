@@ -16,6 +16,7 @@ import { Supplier } from "./pages/Supplier";
 import { Note } from "./pages/Note";
 import {AccountRegister} from './pages/AccountRegister'
 import { Sell } from "./pages/Sell";
+import Chatbot from "./pages/Chatbot";
 
 function App() {
   const router = createBrowserRouter([
@@ -83,6 +84,10 @@ function App() {
     {
       path: '/sell',
       element: <Sell />,
+    },
+    {
+      path: '/chatbot',
+      element: <Chatbot />
     },
 
     {
