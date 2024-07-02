@@ -36,7 +36,7 @@ const flowise = async (data) => {
 const sendMessage = async (req, res) => {
   
   try {
-    const { content, senderID } = req.body;
+    const { content, senderID, conversationID } = req.body;
 
     if (!content || !senderID) {
       const message = "missing data";
@@ -59,13 +59,16 @@ const sendMessage = async (req, res) => {
     const responseSaved = await response.save();
     const msg = "message successfully saved";
     
-    const conversation = new Conversation({
-        userID: senderID,
-        messages: messageSaved._id,
-        responses: responseSaved._id,
-    })
+    let conversation = await Conversation.findOne({ id: conversationID });
 
-    conversationSaved = await conversation.save()
+    if (conversation) {
+      // If conversation exists, update it
+      conversation.messages.push(messageSaved._id);
+      conversation.responses.push(responseSaved._id);
+      await conversation.save();
+    } 
+
+    const conversationSaved = await conversation.save()
 
     return res.status(201).json({msg, messageSaved, responseSaved, conversationSaved });
   } catch (err) {
