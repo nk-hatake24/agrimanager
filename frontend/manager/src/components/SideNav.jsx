@@ -6,6 +6,7 @@ import {
   FaRegStickyNote,
   FaWarehouse,
 } from "react-icons/fa";
+import { LuListTodo } from "react-icons/lu";
 import { MdGroups } from "react-icons/md";
 import { GrResources, GrTransaction } from "react-icons/gr";
 import { NavLink } from "react-router-dom";
@@ -33,12 +34,7 @@ const SideNav = () => {
   };
   return (
     <div className="flex flex-col w-full z-50">
-      <div className="hidden md:flex flex-col min-h-52 gap-2 justify-center bg-gray-200 dark:bg-gray-700">
-        <div className="h-30 flex justify-center items-center">
-          <div className="photoProfile h-20 w-20 text-white bg-gray-900 rounded-[50%] flex justify-center items-center">
-            <IoPersonSharp size={42} />
-          </div>
-        </div>
+      <div className="hidden md:flex flex-col min-h-32 gap-2 justify-center bg-gray-200 dark:bg-gray-700">  
         <div className="flex flex-col">
           <div className="flex justify-center">{username}</div>
           <div className="flex justify-center">{userEmail}</div>
@@ -67,6 +63,10 @@ const SideNav = () => {
         <CustomNavLink to="/note">
           <FaRegStickyNote />
           Notes
+        </CustomNavLink>
+        <CustomNavLink to="/todo">
+          <LuListTodo />
+          Todo
         </CustomNavLink>
       </div>
     </div>

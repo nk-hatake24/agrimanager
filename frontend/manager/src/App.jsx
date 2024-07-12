@@ -17,6 +17,7 @@ import { Note } from "./pages/Note";
 import {AccountRegister} from './pages/AccountRegister'
 import { Sell } from "./pages/Sell";
 import Chatbot from "./pages/Chatbot";
+import { Todo } from "./pages/Todo";
 
 function App() {
   const router = createBrowserRouter([
@@ -84,6 +85,10 @@ function App() {
     {
       path: '/sell',
       element: <Sell />,
+    },
+    {
+      path: '/todo',
+      element: <Todo />
     },
     {
       path: '/chatbot',
