@@ -302,7 +302,7 @@ export const Budget = () => {
               />
             </div>
           </div>
-          <div className=" overflow-clip">
+          <div className="overflow-clip">
             <div className="flex flex-row justify-between w py-2 bg-gray-200 dark:bg-gray-700">
               <p className="w-1/4 justify-center flex"> Période</p>
               <p className="w-1/4 justify-center flex">Prévisions</p>
