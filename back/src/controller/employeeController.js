@@ -145,7 +145,7 @@ const login = async (req, res) => {
       id: employee._id,
       function_employee: employee.function_employee,
     }, process.env.JWT_SECRET_KEY, {
-      expiresIn: "1h",
+      expiresIn: "24h",
     });
 
     res.status(200).json({
