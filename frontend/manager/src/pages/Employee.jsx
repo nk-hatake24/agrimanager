@@ -17,6 +17,7 @@ export const Employee = () => {
   const [selectedEmployee, setSelectedEmployee] = useState(null);
   const [role, setRole] = useState('employee');
   const [loading, setLoading] = useState(false)
+  const [searchTerm, setSearchTerm] = useState('');
   const [selectedModifyEmployee, setModifyEmployee] = useState({
     name_employee: '',
     email: '',
@@ -32,7 +33,6 @@ export const Employee = () => {
     function_employee: role,
     password: '',
   });
-  const [searchTerm, setSearchTerm] = useState('');
 
   const dispatch = useDispatch();
   const employeeList = useSelector((state) => state.employee.list);
@@ -377,13 +377,13 @@ export const Employee = () => {
             </div>
           </div>
           <div className=" overflow-clip">
-            <div className="flex flex-row justify-between w py-2 bg-gray-200 dark:bg-gray-700">
+            <div className="flex flex-row justify-between  py-2 bg-gray-200 dark:bg-gray-700">
               <p className="w-1/4 justify-center flex"> Employé</p>
               <p className="w-1/4 justify-center flex">Fonction</p>
               <p className="hidden w-1/4 justify-center md:flex">Salaire (CFA)</p>
               <p className="w-1/4 justify-center flex"> detail / supprimer</p>
             </div>
-            <div className="flex flex-col overflow-y-scroll overflow-x-clip pb-3 p hal px-8 md:px-0 max-w-full">
+            <div className="flex flex-col overflow-y-scroll overflow-x-clip pb-3  px-8 md:px-0 max-w-full">
             {filteredEmployees.map((index) => (
                 <div className="flex flex-row justify-between border-y-1 py-2" key={index._id}>
                   <p className="w-1/4 justify-center flex">{index.name_employee}</p>
