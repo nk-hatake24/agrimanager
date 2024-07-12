@@ -3,6 +3,7 @@ import axios from "axios";
 import LayoutGeneral from "../layouts/LayoutGeneral";
 import { Link, useNavigate } from "react-router-dom";
 import Switcher from "../components/Switcher";
+import { ImSpinner8 } from "react-icons/im";
 
 const Modal = ({ message, onClose }) => {
   const username = localStorage.getItem('username')
@@ -25,6 +26,7 @@ const Modal = ({ message, onClose }) => {
 
 const Login = () => {
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false)
   const [loginData, setLoginData] = useState({
     email: "",
     password: "",
@@ -52,6 +54,7 @@ const Login = () => {
   const handleLoginSubmit = async (e) => {
     e.preventDefault();
     try {
+      setLoading(true)
       const response = await axios.post('http://localhost:3500/api/employee/login', loginData);
       localStorage.setItem('token', response.data.token);
       localStorage.setItem('username', response.data.employee.name);
@@ -60,12 +63,16 @@ const Login = () => {
       localStorage.setItem('userFunction', response.data.employee.function);
       setModalMessage(response.data.message);
       setShowModal(true);
+      setLoading(false)
       setTimeout(() => {
-        setShowModal(false);
+      setLoading(false)
+        // setShowModal(false);
         navigate('/homedash');
 
       }, 2000);
+      clearInterval()
     } catch (error) {
+      setLoading(false)
       setModalMessage(error.response.data.message);
       setShowModal(true);
     }
@@ -83,11 +90,7 @@ const Login = () => {
             href="#"
             className="flex items-center mb-6 text-2xl font-semibold text-gray-900 dark:text-white"
           >
-            <img
-              className="w-8 h-8 mr-2"
-              src="https://img.freepik.com/free-vector/hand-drawn-nerd-logo-template_23-2149199407.jpg?size=338&ext=jpg&ga=GA1.1.553209589.1715126400&semt=ais_use"
-              alt="logo"
-            />
+           
             AgriManager
           </a>
           <div className="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
@@ -163,9 +166,11 @@ const Login = () => {
                 </div>
                 <button
                   type="submit"
-                  className="w-full text-black border border-gray-700 bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:border-gray-200 dark:bg-primary-600 dark:text-white dark:hover:bg-primary-700 dark:focus:ring-primary-800"
+                  className="w-full text-black border border-gray-700 bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center items-center dark:border-gray-200 dark:bg-primary-600 dark:text-white dark:hover:bg-primary-700 dark:focus:ring-primary-800"
                 >
-                  Sign in
+                  {loading ? (
+                    <ImSpinner8 className="animate-spin" />
+                  ) : 'Sign in'}
                 </button>
               </form>
             </div>

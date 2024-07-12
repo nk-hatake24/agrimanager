@@ -8,7 +8,7 @@ import { BiLogoGmail } from "react-icons/bi";
 
 const Home = () => {
   return (
-    <div className="relative m-0 overflow-x-hidden">
+    <div className="relative m-0  overflow-x-hidden">
       <div className="flex items-center justify-center w-full fixed top-1 left-0 z-50">
       <div className=" bg-gray-50/10 dark:bg-gray-800/10 w-[90%]">
         <NavBarTop />
