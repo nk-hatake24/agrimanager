@@ -8,6 +8,8 @@ import { FaEye, FaPlus, FaTrashAlt } from 'react-icons/fa';
 import { CiSearch } from 'react-icons/ci';
 import { HiPencil } from 'react-icons/hi2';
 import { fetchEmployees } from '../features/employee/employeSlice';
+import Spinner from '../components/Spinnner';
+
 
 export const Employee = () => {
   const [openAdd, setOpenAdd] = useState(false);
@@ -15,8 +17,9 @@ export const Employee = () => {
   const [deleteItemModal, setDeleteItemModal] = useState(false);
   const [modifyItemModal, setModifyItemModal] = useState(false);
   const [selectedEmployee, setSelectedEmployee] = useState(null);
+  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(true);
   const [role, setRole] = useState('employee');
-  const [loading, setLoading] = useState(false)
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedModifyEmployee, setModifyEmployee] = useState({
     name_employee: '',
@@ -42,11 +45,20 @@ export const Employee = () => {
   useEffect(() => {
     if (employeeStatus === 'idle') {
       dispatch(fetchEmployees());
-    }else if(employeeStatus === 'loading'){
-      setLoading(true)
-      const print = 'loading'
     }
   }, [employeeStatus, dispatch]);
+
+  useEffect(() => {
+    if (employeeStatus === 'loading') {
+      setLoading(true);
+    } else {
+      setLoading(false);
+    }
+
+    if (employeeStatus === 'failed') {
+      setError(employeeStatus);
+    }
+  }, [employeeStatus]);
 
   const onProductClick = (employee) => {
     setOpenListItem(true);
@@ -159,6 +171,7 @@ export const Employee = () => {
 
   return (
     <Dashboard>
+      {loading && <Spinner/>}
       <div className="p-2 md:p-8">
         {/* Modal for adding an entry */}
         <Modals open={openAdd} onClose={() => setOpenAdd(false)}>
@@ -357,20 +370,27 @@ export const Employee = () => {
         </Modals>
 
         <div className="h-screen">
-          <div className="flex justify-between pb-3  flew-row ">
-            <div onClick={() => setOpenAdd(true)} className="flex justify-center gap-2">
-              <span className="p-1 bg-green-0  hover:bg-green-600 cursor-pointer">
+        <div className="bold text-center text-xl mb-3">
+            Employee
+          </div>
+
+          <div className="flex items-center justify-between pb-3 text-gray-700 dark:text-text-50 flew-row ">
+            <div
+              onClick={() => setOpenAdd(true)}
+              className="flex p-2 lg:p-3 items-centere cursor-pointer text-gray-50 bg-blue-500 hover:bg-blue-700 align-center  justify-center gap-2"
+            >
+              <span className="">
                 <FaPlus />
               </span>
               Ajouter
             </div>
 
-            <div className=" flex flex-row items-center  px-1 gap-1 rounded bg-white dark:bg-gray-600">
+            <div className=" hidden md:flex items-center  px-1 gap-1 rounded bg-white dark:bg-gray-600">
               <CiSearch className="dark:text-gray-50 " />
               <input
                 type="text"
                 placeholder="search"
-                className="p-1 outline-0 dark:text-gray-50 dark:bg-gray-600"
+                className="p-1  outline-0 dark:text-gray-50 dark:bg-gray-600"
                 value={searchTerm}
                 onChange={handleSearch}
               />
@@ -383,7 +403,7 @@ export const Employee = () => {
               <p className="hidden w-1/4 justify-center md:flex">Salaire (CFA)</p>
               <p className="w-1/4 justify-center flex"> detail / supprimer</p>
             </div>
-            <div className="flex flex-col overflow-y-scroll overflow-x-clip pb-3  px-8 md:px-0 max-w-full">
+            <div className="flex flex-col  overflow-x-clip pb-3  px-8 md:px-0 max-w-full">
             {filteredEmployees.map((index) => (
                 <div className="flex flex-row justify-between border-y-1 py-2" key={index._id}>
                   <p className="w-1/4 justify-center flex">{index.name_employee}</p>

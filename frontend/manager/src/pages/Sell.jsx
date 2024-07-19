@@ -8,10 +8,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchResources } from "../features/resource/resourceSlice";
 import { fetchSuppliers } from "../features/supplier/supplierSlice";
 import { fetchTransactions } from "../features/sell/sellSlice";
-import Dashboard from "../layouts/Dashboard";
 import PdfGenerator from "../components/PdfGenerator";
 import { Transaction } from "./Transaction";
-import SharePdf from "../components/SharePdf";
+import Spinner from "../components/Spinnner";
 
 export const Sell = () => {
   const currentUser = localStorage.getItem("id");
@@ -19,6 +18,8 @@ export const Sell = () => {
   const [openListItem, setOpenListItem] = useState(false);
   const [deleteItemModal, setDeleteItemModal] = useState(false);
   const [modifyItemModal, setModifyItemModal] = useState(false);
+  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(true);
   const [selectedTransaction, setSelectedTransaction] = useState(null);
   const [selectedModifyTransaction, setModifyTransaction] = useState({
     _id: "",
@@ -61,6 +62,18 @@ export const Sell = () => {
       dispatch(fetchSuppliers());
     }
   }, [transactionStatus, resourceStatus, employeeStatus, dispatch]);
+
+  useEffect(() => {
+    if (transactionStatus === "loading") {
+      setLoading(true);
+    } else {
+      setLoading(false);
+    }
+
+    if (transactionStatus === "failed") {
+      setError(transactionStatus);
+    }
+  }, [transactionStatus]);
 
   const onTransactionClick = (transaction) => {
     setOpenListItem(true);
@@ -175,6 +188,7 @@ export const Sell = () => {
 
   return (
     <Transaction>
+      {loading && <Spinner />}
       <div className="p-2 md:p-8">
         {/* Modal pour ajouter une transaction */}
         <Modals open={openAdd} onClose={() => setOpenAdd(false)}>
@@ -217,7 +231,6 @@ export const Sell = () => {
                 </option>
               ))}
             </select>
-           
 
             <div className="flex flex-row justify-between">
               <button
@@ -299,7 +312,7 @@ export const Sell = () => {
                 onChange={handleModify}
                 value={selectedModifyTransaction.date}
               />
-              
+
               <label htmlFor="resource">Ressource</label>
               <select
                 name="resource"
@@ -314,7 +327,7 @@ export const Sell = () => {
                   </option>
                 ))}
               </select>
-             
+
               <div className="flex flex-row justify-between">
                 <button
                   className="bg-green-400 hover:bg-green-600 p-1"
@@ -334,26 +347,25 @@ export const Sell = () => {
         </Modals>
 
         <div className="h-screen">
-          <div className="flex justify-between pb-3 text-gray-700 dark:text-text-50 flew-row ">
+          <div className="bold text-center text-xl mb-3">
+            Transaction ventes
+          </div>
+
+          <div className="flex items-center justify-between pb-3 text-gray-700 dark:text-text-50 flew-row ">
             <div
               onClick={() => setOpenAdd(true)}
-              className="flex justify-center gap-2 dark:text-gray-50"
+              className="flex p-2 lg:p-3 items-centere cursor-pointer text-gray-50 bg-blue-500 hover:bg-blue-700 align-center  justify-center gap-2"
             >
-              <span className="p-1  hover:bg-green-600 cursor-pointer">
+              <span className="">
                 <FaPlus />
               </span>
               Ajouter
             </div>
-           
             <div className="flex gap-5 dark:text-gray-50">
               <div>
                 <PdfGenerator transactions={filteredTransactions} />
               </div>
-              <div>
-                <SharePdf transactions={filteredTransactions} />
-              </div>
             </div>
-
 
             <div className=" flex flex-row items-center  px-1 gap-1 rounded bg-white dark:bg-gray-600">
               <CiSearch className="dark:text-gray-50 " />
@@ -373,7 +385,7 @@ export const Sell = () => {
               <p className="hidden w-1/4 justify-center md:flex">Prix Total</p>
               <p className="w-1/4 justify-center flex"> détail / supprimer</p>
             </div>
-            <div className="flex flex-col overflow-y-scroll overflow-x-clip px-8 md:px-0 pb-3  hal  max-w-full">
+            <div className="flex flex-col  overflow-x-clip px-8 md:px-0 pb-3  hal  max-w-full">
               {filteredTransactions.map((transaction) => (
                 <div
                   className="flex flex-row text-gray-800 dark:text-gray-50 justify-between border-y-1 py-2"

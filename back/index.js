@@ -16,6 +16,8 @@ const resourceRoute = require('./src/route/resourceRoute')
 const noteRoute = require('./src/route/noteRoute')
 const sellRoute = require('./src/route/sellRoute')
 const accountRoute = require('./src/route/accountRoute')
+const productRoute = require('./src/route/productRoute')
+const todoRoute = require('./src/route/TodoRoute')
 
 
 const app = express()
@@ -41,6 +43,10 @@ app.use("/api/budget", budgetRoute)
 app.use("/api/employee", employeeRoute);
 app.use("/api/resource", resourceRoute);
 app.use("/api/sell", sellRoute);
+app.use("/api/product", productRoute)
+app.use("/api/todo", todoRoute)
+
+
 app.use("*", (req,res)=>{
     res.status(404).json({message:'route not found!'})
 })

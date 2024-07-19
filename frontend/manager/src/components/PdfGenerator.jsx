@@ -29,7 +29,7 @@ const PdfGenerator = ({ transactions }) => {
 
   return (
     <div>
-      <button onClick={generatePDF}> <FaDownload /> </button>
+      <button onClick={generatePDF}> <FaDownload size={18}/> </button>
     </div>
   );
 };

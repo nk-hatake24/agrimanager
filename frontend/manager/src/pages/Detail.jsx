@@ -8,8 +8,11 @@ import { CiSearch } from 'react-icons/ci';
 import { HiPencil } from 'react-icons/hi2';
 import { fetchResources } from '../features/resource/resourceSlice';
 import { fetchSuppliers } from '../features/supplier/supplierSlice';
-import Resource from './Resource';
+import Resource from '../layouts/Resource';
 import axios from  'axios'
+import Spinner from '../components/Spinnner';
+import ErrorModal from '../components/ErrorModal';
+import ReussiModal from '../components/ReussiModal'
 
 
 export const Detail = () => {
@@ -18,6 +21,11 @@ export const Detail = () => {
   const [deleteItemModal, setDeleteItemModal] = useState(false);
   const [modifyItemModal, setModifyItemModal] = useState(false);
   const [selectedResource, setSelectedResource] = useState(null);
+  const [success, setSuccess] = useState("");
+  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [isSuccessPopupOpen, setIsSuccessPopupOpen] = useState(false);
+  const [isErrorPopupOpen, setIsErrorPopupOpen] = useState(false);
   const [selectedModifyResource, setModifyResource] = useState({
     _id: '',
     quantity_resource: '',
@@ -50,6 +58,18 @@ export const Detail = () => {
     }
   }, [resourceStatus, supplierStatus, dispatch]);
 
+  useEffect(() => {
+    if (resourceStatus === 'loading') {
+      setLoading(true);
+    } else {
+      setLoading(false);
+    }
+
+    if (resourceStatus === 'failed') {
+      setError(resourceStatus);
+    }
+  }, [resourceStatus]);
+
   const onResourceClick = (resource) => {
     setOpenListItem(true);
     setSelectedResource(resource);
@@ -75,6 +95,8 @@ export const Detail = () => {
       });
       dispatch(fetchResources());
       setDeleteItemModal(false);
+      setSuccess(`resource ${resourceId} supprimer`)
+      setIsSuccessPopupOpen(true)
     } catch (error) {
       console.error('Error deleting resource:', error.response ? error.response.data : error.message);
       alert(error.response ? error.response.data.message : error.message);
@@ -105,9 +127,11 @@ export const Detail = () => {
       );
       dispatch(fetchResources());
       setModifyItemModal(false);
+      setSuccess('resource modifier')
+      setIsSuccessPopupOpen(true)
     } catch (error) {
-      console.error('Error updating resource:', error);
-      alert(error.response ? error.response.data.message : error.message);
+      setError("error to input resource");
+      isErrorPopupOpen(true)
     }
   };
 
@@ -147,9 +171,11 @@ export const Detail = () => {
       });
       dispatch(fetchResources());
       setOpenAdd(false);
+      setSuccess('resource enregistré')
+      setIsSuccessPopupOpen(true)
     } catch (error) {
-      console.error('Error adding resource:', error);
-      alert(error.response ? error.response.data.message : error.message);
+      setError("error to input resource");
+      isErrorPopupOpen(true)
     }
   };
 
@@ -159,6 +185,7 @@ export const Detail = () => {
 
   return (
     <Resource>
+      {loading && <Spinner/>}
       <div className="p-2 md:p-8">
         {/* Modal pour ajouter une ressource */}
         <Modals open={openAdd} onClose={() => setOpenAdd(false)}>
@@ -327,9 +354,13 @@ export const Detail = () => {
         </Modals>
 
         <div className="h-screen">
-          <div className="flex justify-between pb-3  flew-row ">
-            <div onClick={() => setOpenAdd(true)} className="flex justify-center gap-2">
-              <span className="p-1  hover:bg-green-600 cursor-pointer">
+        <div className="bold text-center text-xl mb-3">Resources</div>
+          <div className="flex justify-between pb-3 ">
+          <div
+              onClick={() => setOpenAdd(true)}
+              className="flex p-2 lg:p-3 cursor-pointer text-gray-50 bg-blue-500 hover:bg-blue-700 align-center  justify-center gap-2"
+            >
+              <span className="">
                 <FaPlus />
               </span>
               Ajouter
@@ -353,7 +384,7 @@ export const Detail = () => {
               <p className="hidden w-1/4 justify-center md:flex">Prix Unitaire</p>
               <p className="w-1/4 justify-center flex"> détail / supprimer</p>
             </div>
-            <div className="flex px-8 md:px-0 flex-col overflow-y-scroll overflow-x-clip pb-3  hal  max-w-full">
+            <div className="flex px-8 md:px-0 flex-col  overflow-x-clip pb-3  hal  max-w-full">
               {filteredResources.map((resource) => (
                 <div className="flex flex-row justify-between border-y-1 py-2" key={resource._id}>
                   <p className="w-1/4 justify-center flex">{resource.name_resource}</p>
@@ -384,6 +415,22 @@ export const Detail = () => {
                   </div>
                 </div>
               ))}
+               {isSuccessPopupOpen && (
+                <ReussiModal
+                  open={isSuccessPopupOpen}
+                  onClose={() => setIsSuccessPopupOpen(false)}
+                  message={success}
+                />
+              )}
+
+              {/* Code for the Error Popup */}
+              {isErrorPopupOpen && (
+                <ErrorModal
+                  open={isErrorPopupOpen}
+                  onClose={() => setIsErrorPopupOpen(false)}
+                  message={error}
+                />
+              )}
             </div>
           </div>
         </div>

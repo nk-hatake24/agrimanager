@@ -88,8 +88,8 @@ const Register = () => {
         navigate("/login");
       }, 2000);
     } catch (error) {
-      alert(error.response.data.Error);
-      console.error("Error:", error);
+      alert(error)
+      console.error("Error:", error.);
     }
   };
 

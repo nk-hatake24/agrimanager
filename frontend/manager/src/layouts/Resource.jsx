@@ -1,6 +1,6 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import Dashboard from '../layouts/Dashboard';
+import Dashboard from './Dashboard';
 
 export default function Resource({ children }) {
   const CustomNavLink = ({ to, exact, children }) => {
@@ -21,12 +21,13 @@ export default function Resource({ children }) {
   
   return (
     <Dashboard>
-      <div className="flex flex-row w-full bg-gray-200 dark:bg-gray-700">
+      <div className="flex flex-row w-full mb-3 bg-gray-200 dark:bg-gray-700">
         <CustomNavLink to='/detail' >Detail</CustomNavLink>
         <CustomNavLink to='/supplier'>fournisseur</CustomNavLink>
       </div>
       
-      <div>{children}</div>
+      <div className=''
+      >{children}</div>
       
     </Dashboard>
   );

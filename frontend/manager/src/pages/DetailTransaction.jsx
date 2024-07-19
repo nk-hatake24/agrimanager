@@ -8,10 +8,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchResources } from "../features/resource/resourceSlice";
 import { fetchSuppliers } from "../features/supplier/supplierSlice";
 import { fetchTransactions } from "../features/transaction/transactionSlice";
-import Dashboard from "../layouts/Dashboard";
 import PdfGenerator from "../components/PdfGenerator";
 import { Transaction } from "./Transaction";
-import SharePdf from "../components/SharePdf";
+import Spinner from "../components/Spinnner";
 
 export const DetailTransaction = () => {
   const currentUser = localStorage.getItem("id");
@@ -20,6 +19,11 @@ export const DetailTransaction = () => {
   const [deleteItemModal, setDeleteItemModal] = useState(false);
   const [modifyItemModal, setModifyItemModal] = useState(false);
   const [selectedTransaction, setSelectedTransaction] = useState(null);
+  const [success, setSuccess] = useState("");
+  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [isSuccessPopupOpen, setIsSuccessPopupOpen] = useState(false);
+  const [isErrorPopupOpen, setIsErrorPopupOpen] = useState(false);
   const [selectedModifyTransaction, setModifyTransaction] = useState({
     _id: "",
     date: "",
@@ -46,9 +50,11 @@ export const DetailTransaction = () => {
   const resourceStatus = useSelector((state) => state.resource.status);
   const resourceError = useSelector((state) => state.resource.error);
 
-  const employeeList = useSelector((state) => state.employee.list);
-  const employeeStatus = useSelector((state) => state.employee.status);
-  const employeeError = useSelector((state) => state.employee.error);
+  const supplierList = useSelector((state) => state.supplier.list);
+  const supplierStatus = useSelector((state) => state.supplier.status);
+  const supplierError = useSelector((state) => state.supplier.error);
+
+
 
   useEffect(() => {
     if (transactionStatus === "idle") {
@@ -57,10 +63,22 @@ export const DetailTransaction = () => {
     if (resourceStatus === "idle") {
       dispatch(fetchResources());
     }
-    if (employeeStatus === "idle") {
+    if (supplierStatus === "idle") {
       dispatch(fetchSuppliers());
     }
-  }, [transactionStatus, resourceStatus, employeeStatus, dispatch]);
+  }, [transactionStatus, resourceStatus, supplierStatus, dispatch]);
+
+  useEffect(() => {
+    if (transactionStatus === "loading") {
+      setLoading(true);
+    } else {
+      setLoading(false);
+    }
+
+    if (transactionStatus === "failed") {
+      setError(transactionStatus);
+    }
+  }, [transactionStatus]);
 
   const onTransactionClick = (transaction) => {
     setOpenListItem(true);
@@ -71,6 +89,7 @@ export const DetailTransaction = () => {
     setDeleteItemModal(true);
     setSelectedTransaction(transaction);
   };
+
 
   const onFinalDeleteClick = async (transactionId) => {
     const token = localStorage.getItem("token");
@@ -155,7 +174,7 @@ export const DetailTransaction = () => {
       alert("No token found, please login again.");
       return;
     }
-    console.log(newTransaction);
+  
 
     try {
       await axios.post(
@@ -183,6 +202,7 @@ export const DetailTransaction = () => {
 
   return (
     <Transaction>
+      {loading && <Spinner />}
       <div className="p-2 md:p-8">
         {/* Modal pour ajouter une transaction */}
         <Modals open={openAdd} onClose={() => setOpenAdd(false)}>
@@ -225,22 +245,22 @@ export const DetailTransaction = () => {
                 </option>
               ))}
             </select>
-            <label htmlFor="employee">
-              Employé <span className="text-red-500">*</span>
-            </label>
-            <select
+            {/* <label htmlFor="employee">
+              fournisseur <span className="text-red-500">*</span>
+            </label> */}
+            {/* <select
               name="employee"
               className="p-2 text-gray-900"
               onChange={handleInputChange}
               value={newTransaction.employee}
             >
-              <option value="">Sélectionner un employé</option>
-              {employeeList.map((employee) => (
-                <option key={employee._id} value={employee._id}>
-                  {employee.name_employee}
+              <option value="">Sélectionner un fournisseur</option>
+              {supplierList.map((supplier) => (
+                <option key={supplier._id} value={supplier._id}>
+                  {supplier.name_supplier}
                 </option>
               ))}
-            </select>
+            </select> */}
 
             <div className="flex flex-row justify-between">
               <button
@@ -353,7 +373,7 @@ export const DetailTransaction = () => {
                 value={selectedModifyTransaction.employee}
               >
                 <option value="">Sélectionner un employé</option>
-                {employeeList.map((employee) => (
+                {supplierList.map((employee) => (
                   <option key={employee._id} value={employee._id}>
                     {employee.name_employee}
                   </option>
@@ -378,12 +398,16 @@ export const DetailTransaction = () => {
         </Modals>
 
         <div className="h-screen">
-          <div className="flex justify-between pb-3 text-gray-700 dark:text-text-50 flew-row ">
+          <div className="bold text-center text-xl mb-3">
+            Transaction Achats
+          </div>
+
+          <div className="flex items-center justify-between pb-3 text-gray-700 dark:text-text-50 flew-row ">
             <div
               onClick={() => setOpenAdd(true)}
-              className="flex justify-center gap-2 dark:text-gray-50"
+              className="flex p-2 lg:p-3 items-centere cursor-pointer text-gray-50 bg-blue-500 hover:bg-blue-700 align-center  justify-center gap-2"
             >
-              <span className="p-1  hover:bg-green-600 cursor-pointer">
+              <span className="">
                 <FaPlus />
               </span>
               Ajouter
@@ -393,17 +417,14 @@ export const DetailTransaction = () => {
               <div>
                 <PdfGenerator transactions={filteredTransactions} />
               </div>
-              <div>
-                <SharePdf transactions={filteredTransactions} />
-              </div>
             </div>
 
-            <div className=" flex flex-row items-center  px-1 gap-1 rounded bg-white dark:bg-gray-600">
+            <div className=" hidden md:flex items-center  px-1 gap-1 rounded bg-white dark:bg-gray-600">
               <CiSearch className="dark:text-gray-50 " />
               <input
                 type="text"
                 placeholder="search"
-                className="p-1 outline-0 dark:text-gray-50 dark:bg-gray-600"
+                className="p-1  outline-0 dark:text-gray-50 dark:bg-gray-600"
                 value={searchTerm}
                 onChange={handleSearch}
               />
@@ -416,7 +437,7 @@ export const DetailTransaction = () => {
               <p className="hidden w-1/4 justify-center md:flex">Prix Total</p>
               <p className="w-1/4 justify-center flex"> détail / supprimer</p>
             </div>
-            <div className="flex flex-col overflow-y-scroll overflow-x-clip px-8 md:px-0 pb-3  hal  max-w-full">
+            <div className="flex flex-col  overflow-x-clip px-8 md:px-0 pb-3  hal  max-w-full">
               {filteredTransactions.map((transaction) => (
                 <div
                   className="flex flex-row text-gray-800 dark:text-gray-50 justify-between border-y-1 py-2"

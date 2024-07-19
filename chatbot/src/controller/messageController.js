@@ -19,13 +19,14 @@ const flowise = async (data) => {
         {
           headers: {
             Authorization: `Bearer ${authToken}`,
-            'Content-Type': 'application/json' // Ajout du type de contenu
+            'Content-Type': 'application/json' // Ajout du type d
           },
         }
       );
       
       // axios stocke directement les données de réponse dans response.data
       return response.data.text;
+
     } catch (err) {
       console.log(err);
       // Optionnel : renvoyer l'erreur ou une valeur par défaut
@@ -34,9 +35,17 @@ const flowise = async (data) => {
 }
 
 const sendMessage = async (req, res) => {
+
   
   try {
-    const { content, senderID, conversationID } = req.body;
+    const { content, senderID } = req.body;
+    
+      // const hello  = await flowise('hello');
+      // console.log(hello)
+
+
+
+
 
     if (!content || !senderID) {
       const message = "missing data";
@@ -47,8 +56,12 @@ const sendMessage = async (req, res) => {
       senderID,
     });
     messageSaved = await message.save();
+    console.log(messageSaved)
 
-    const response = new Response({
+
+
+
+    let response = new Response({
       content: "",
       messageID: messageSaved._id,
     });
@@ -59,21 +72,21 @@ const sendMessage = async (req, res) => {
     const responseSaved = await response.save();
     const msg = "message successfully saved";
     
-    let conversation = await Conversation.findOne({ id: conversationID });
+    // let conversation = await Conversation.findOne({ id: conversationID });
 
-    if (conversation) {
-      // If conversation exists, update it
-      conversation.messages.push(messageSaved._id);
-      conversation.responses.push(responseSaved._id);
-      await conversation.save();
-    } 
+    // if (conversation) {
+    //   // If conversation exists, update it
+    //   conversation.messages.push(messageSaved._id);
+    //   conversation.responses.push(responseSaved._id);
+    //   await conversation.save();
+    // } 
 
-    const conversationSaved = await conversation.save()
+    // const conversationSaved = await conversation.save()
 
-    return res.status(201).json({msg, messageSaved, responseSaved, conversationSaved });
+    return res.status(201).json({msg,  messageSaved, responseSaved  });
   } catch (err) {
     const message = "server internal problem";
-    return res.status(500).json({ message, err });
+    return res.status(500).json({  message, err });
   }
 };
 

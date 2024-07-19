@@ -1,17 +1,16 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { Budget } from "./pages/Budget";
-import Resource from "./pages/Resource";
+// import Resource from "./pages/Resource";
 import { Employee } from "./pages/Employee";
 import { HomeDashboard1 } from "./pages/HomeDashboard1";
 import Home from "./pages/Home";
-import { Stock } from "./pages/Stock";
 import { Transaction } from "./pages/Transaction";
 import { NoPages } from "./pages/NoPages";
 import { Detail } from "./pages/Detail";
 import Login from "./pages/Login";
 import Register from "./pages/Register"
 import { DetailTransaction } from "./pages/DetailTransaction";
-import {Report} from "./pages/Report"
+
 import { Supplier } from "./pages/Supplier";
 import { Note } from "./pages/Note";
 import {AccountRegister} from './pages/AccountRegister'
@@ -46,14 +45,8 @@ function App() {
       path: 'detailTransaction',
       element: <DetailTransaction />
     },
-    {
-      path: 'report',
-      element: <Report />
-    },
-    {
-      path: '/resource',
-      element: <Resource />,
-    },
+
+
     {
       path: '/account',
       element: <AccountRegister />,
@@ -62,10 +55,7 @@ function App() {
       path: 'detail',
       element: <Detail />,
     },
-    {
-      path: 'stock',
-      element: <Stock />,
-    },
+ 
     {
       path: '/login',
       element: <Login />,

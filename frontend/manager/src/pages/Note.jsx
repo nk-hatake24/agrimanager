@@ -8,6 +8,7 @@ import { HiPencil } from "react-icons/hi2";
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchNotes } from '../features/note/noteSlice';
 import { fetchEmployees } from '../features/employee/employeSlice';
+import Spinner from "../components/Spinnner";
 
 export const Note = () => {
   const [openAdd, setOpenAdd] = useState(false);
@@ -15,6 +16,8 @@ export const Note = () => {
   const [deleteItemModal, setDeleteItemModal] = useState(false);
   const [modifyItemModal, setModifyItemModal] = useState(false);
   const [selectedNote, setSelectedNote] = useState(null);
+  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(true);
   const [selectedModifyNote, setModifyNote] = useState({
     _id: "",
     title: "",
@@ -45,6 +48,18 @@ export const Note = () => {
       dispatch(fetchEmployees());
     }
   }, [noteStatus, employeeStatus, dispatch]);
+
+  useEffect(() => {
+    if (noteStatus === 'loading') {
+      setLoading(true);
+    } else {
+      setLoading(false);
+    }
+
+    if (noteStatus === 'failed') {
+      setError(noteStatus);
+    }
+  }, [noteStatus]);
 
   const onNoteClick = (note) => {
     setOpenListItem(true);
@@ -156,6 +171,7 @@ export const Note = () => {
 
   return (
     <Dashboard>
+      {loading && <Spinner/>}
       <div className="p-2 md:p-8">
         {/* Modal pour ajouter une note */}
         <Modals open={openAdd} onClose={() => setOpenAdd(false)}>
@@ -317,12 +333,16 @@ export const Note = () => {
         </Modals>
 
         <div className="h-screen">
-          <div className="flex justify-between pb-3  flew-row ">
+        <div className="bold text-center text-xl mb-3">
+            Notes des employee
+          </div>
+
+          <div className="flex items-center justify-between pb-3 text-gray-700 dark:text-text-50 flew-row ">
             <div
               onClick={() => setOpenAdd(true)}
-              className="flex justify-center gap-2"
+              className="flex p-2 lg:p-3 items-centere cursor-pointer text-gray-50 bg-blue-500 hover:bg-blue-700 align-center  justify-center gap-2"
             >
-              <span className="p-1 hover:bg-green-600 cursor-pointer">
+              <span className="">
                 <FaPlus />
               </span>
               Ajouter
@@ -346,7 +366,7 @@ export const Note = () => {
               <p className="hidden w-1/4 justify-center md:flex">Employé</p>
               <p className="w-1/4 justify-center flex"> détail / supprimer</p>
             </div>
-            <div className="flex flex-col overflow-y-scroll overflow-x-clip pb-3 px-8 hal  max-w-full">
+            <div className="flex flex-col  overflow-x-clip pb-3 px-8 hal  max-w-full">
               {filteredNotes.map((note) => (
                 <div
                   className="flex flex-row justify-between border-y-1 py-2"

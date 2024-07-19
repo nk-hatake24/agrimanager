@@ -5,6 +5,7 @@ import { IoSend } from "react-icons/io5";
 import { RxOpenInNewWindow } from "react-icons/rx";
 import { TfiNewWindow } from "react-icons/tfi";
 import { ImSpinner8 } from "react-icons/im";
+import { NavBottom } from "../components/NavBottom";
 
 const Chatbot = () => {
   const [input, setInput] = useState({
@@ -46,6 +47,7 @@ const Chatbot = () => {
       };
       setMessages([...messages, newMessage, responseMessage]);
       setLoading(false);
+      console.log(responseInput)
     } catch (err) {
       console.log(err);
       setLoading(false);
@@ -70,10 +72,10 @@ const Chatbot = () => {
       >
         <div className="siderBar_header flex lg:justify-evenly p-4">
           <div
-            className= {`sideBarBtn transition-transform duration-500 ease-in-out cursor-pointer ${!sideBarOpen?' z-50 md:float md:top-3 md:left-2 ': ''}`}
+            className= {`sideBarBtn transition-transform duration-500 ease-in-out cursor-pointer ${!sideBarOpen?' z-40 md:float md:top-3 md:left-2 ': ''}`}
             onClick={() => setSideBarOpen(!sideBarOpen)}
           >
-            {sideBarOpen ? <RxOpenInNewWindow size={24} /> : <TfiNewWindow size={24} className="z-50"/>}
+            {sideBarOpen ? <RxOpenInNewWindow size={24} /> : <TfiNewWindow size={24} className="z-40"/>}
           </div>
           <div className="conversation_container"></div>
         </div>
@@ -86,7 +88,7 @@ const Chatbot = () => {
         <div className=" main_nav z-20 border p-4 flex justify-end items-center">
           <Switcher />
         </div>
-        <div className="main h-full w-full p-2 flex flex-col">
+        <div className="main h-full w-full p-2  flex flex-col">
           <div className="w-full h-[80%] overflow-clip">
             <div className="chat flex-grow justify-end overflow-y-auto p-4">
               {messages.map((msg, index) => (
@@ -106,7 +108,7 @@ const Chatbot = () => {
               onSubmit={handleLoginSubmit}
               className="absolute bottom-4 w-[65%]"
             >
-              <div className="p-2 rounded-3xl flex bg-white dark:bg-gray-800 shadow-md">
+              <div className="p-2 mb-20 rounded-3xl flex bg-white dark:bg-gray-800 shadow-md">
                 <textarea
                   name="content"
                   value={input.content}
@@ -132,6 +134,7 @@ const Chatbot = () => {
           </div>
         </div>
       </div>
+      <NavBottom/>
     </div>
   );
 };

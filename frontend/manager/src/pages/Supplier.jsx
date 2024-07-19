@@ -7,7 +7,8 @@ import { FaEye, FaPlus, FaTrashAlt } from 'react-icons/fa';
 import { CiSearch } from 'react-icons/ci';
 import { HiPencil } from 'react-icons/hi2';
 import { fetchSuppliers } from '../features/supplier/supplierSlice';
-import Resource from './Resource';
+import Resource from '../layouts/Resource';
+import Spinner from '../components/Spinnner';
 
 export const Supplier = () => {
   const [openAdd, setOpenAdd] = useState(false);
@@ -15,6 +16,8 @@ export const Supplier = () => {
   const [deleteItemModal, setDeleteItemModal] = useState(false);
   const [modifyItemModal, setModifyItemModal] = useState(false);
   const [selectedSupplier, setSelectedSupplier] = useState(null);
+  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(true)
   const [selectedModifySupplier, setModifySupplier] = useState({
     name_supplier: '',
     phone_supplier: '',
@@ -39,6 +42,19 @@ export const Supplier = () => {
       dispatch(fetchSuppliers());
     }
   }, [supplierStatus, dispatch]);
+
+
+  useEffect(() => {
+    if (supplierStatus === 'loading') {
+      setLoading(true);
+    } else {
+      setLoading(false);
+    }
+
+    if (supplierStatus === 'failed') {
+      setError(supplierStatus);
+    }
+  }, [supplierStatus]);
 
   const onSupplierClick = (supplier) => {
     setOpenListItem(true);
@@ -149,6 +165,7 @@ export const Supplier = () => {
 
   return (
     <Resource>
+      {loading && <Spinner/>}
       <div className="p-2 md:p-8">
         {/* Modal pour ajouter un fournisseur */}
         <Modals open={openAdd} onClose={() => setOpenAdd(false)}>
@@ -307,9 +324,16 @@ export const Supplier = () => {
         </Modals>
 
         <div className="h-screen">
-          <div className="flex justify-between text-gray-800 dark:text-gray-50 pb-3  flew-row ">
-            <div onClick={() => setOpenAdd(true)} className="flex justify-center gap-2 ">
-              <span className="p-1  hover:bg-green-600 cursor-pointer">
+        <div className="bold text-center text-xl mb-3">
+            Fournisseurs
+          </div>
+
+          <div className="flex items-center justify-between pb-3 text-gray-700 dark:text-text-50 flew-row ">
+            <div
+              onClick={() => setOpenAdd(true)}
+              className="flex p-2 lg:p-3 items-centere cursor-pointer text-gray-50 bg-blue-500 hover:bg-blue-700 align-center  justify-center gap-2"
+            >
+              <span className="">
                 <FaPlus />
               </span>
               Ajouter
@@ -332,10 +356,10 @@ export const Supplier = () => {
               <p className="w-1/4 justify-center flex">Téléphone</p>
               <p className="w-1/4 justify-center flex"> détail / supprimer</p>
             </div>
-            <div className="flex flex-col overflow-y-scroll px-8 md:px-0 overflow-x-clip pb-3  hal  max-w-full">
+            <div className="flex flex-col px-8 md:px-0 overflow-x-clip pb-3  hal  max-w-full">
               {filteredSuppliers.map((supplier) => (
                 <div className="flex flex-row justify-between border-y-1 py-2" key={supplier._id}>
-                  <p className="w-1/4 justify-center flex">{supplier.name_supplier}</p>
+                  <p className="w-1/4 text-center flex">{supplier.name_supplier}</p>
                   <p className="w-1/4 justify-center flex">{supplier.phone_supplier}</p>
                   <div className="w-1/4 justify-center flex flew-row gap-4">
                     <div
