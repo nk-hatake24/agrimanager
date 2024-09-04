@@ -397,7 +397,7 @@ export const DetailTransaction = () => {
           )}
         </Modals>
 
-        <div className="h-screen">
+        <div className="min-h-screen">
           <div className="bold text-center text-xl mb-3">
             Transaction Achats
           </div>

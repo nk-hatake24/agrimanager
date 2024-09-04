@@ -66,7 +66,7 @@ const Chatbot = () => {
   return (
     <div className="h-screen w-screen overflow-clip bg-gray-50 flex text-gray-900 dark:text-gray-50 dark:bg-gray-950">
       <div
-        className={`sidBar border transition-transform duration-1000 ease-out-in transform ${
+        className={`sidBar  transition-transform duration-1000 ease-out-in transform ${
           sideBarOpen ? 'translate-x-0 w-1/6' : '-translate-x-full w-0'
         }`}
       >
@@ -81,24 +81,28 @@ const Chatbot = () => {
         </div>
       </div>
       <div
-        className={` main_container z-10 h-full transition-all duration-500 ease-in-out ${
+        className={` main_container shadow shadow-gray-600 z-10 h-full transition-all duration-500 ease-in-out ${
           sideBarOpen ? 'w-5/6' : 'w-screen'
         }`}
       >
-        <div className=" main_nav z-20 border p-4 flex justify-end items-center">
+        <div className=" main_nav z-20  p-4 flex justify-end items-center">
           <Switcher />
         </div>
         <div className="main h-full w-full p-2  flex flex-col">
-          <div className="w-full h-[80%] overflow-clip">
-            <div className="chat flex-grow justify-end overflow-y-auto p-4">
+          <div className="w-full max-w-4xl mx-auto h-[70%] overflow-hidden ">
+            <div className={`chat flex flex-col min-w-full min-h-full justify-end overflow-y- p-4 `}>
               {messages.map((msg, index) => (
-                <div
-                  key={index}
-                  className={`p-2 my-2 rounded-lg max-w-xl ${
-                    msg.sender === "user" ? "bg-gray-700" : "bg-gray-900"
+                <div key={index} className={`flex  ${
+                  msg.sender === "user" ?  "justify-end" : ""
+                }`}>
+                  <div
+                 
+                  className={`p-2 my-2 rounded-lg max-w-xl  ${
+                    msg.sender === "user" ? "bg-gray-700   justify-end" : "bg-gray-900"
                   }`}
                 >
                   {msg.content}
+                </div>
                 </div>
               ))}
             </div>
@@ -108,7 +112,7 @@ const Chatbot = () => {
               onSubmit={handleLoginSubmit}
               className="absolute bottom-4 w-[65%]"
             >
-              <div className="p-2 mb-20 rounded-3xl flex bg-white dark:bg-gray-800 shadow-md">
+              <div className="p-2 mb-5 rounded-3xl flex bg-white dark:bg-gray-800 shadow-md">
                 <textarea
                   name="content"
                   value={input.content}
@@ -134,7 +138,7 @@ const Chatbot = () => {
           </div>
         </div>
       </div>
-      <NavBottom/>
+      <NavBottom position={'top-4'}/>
     </div>
   );
 };

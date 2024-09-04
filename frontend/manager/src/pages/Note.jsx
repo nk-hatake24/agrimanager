@@ -332,9 +332,9 @@ export const Note = () => {
           )}
         </Modals>
 
-        <div className="h-screen">
+        <div className="min-h-screen">
         <div className="bold text-center text-xl mb-3">
-            Notes des employee
+            Notes
           </div>
 
           <div className="flex items-center justify-between pb-3 text-gray-700 dark:text-text-50 flew-row ">
@@ -361,10 +361,10 @@ export const Note = () => {
           </div>
           <div className=" overflow-clip">
             <div className="flex flex-row justify-between w py-2 bg-gray-200 dark:bg-gray-700">
-              <p className="w-1/4 justify-center flex"> Titre</p>
-              <p className="w-1/4 justify-center flex">Description</p>
-              <p className="hidden w-1/4 justify-center md:flex">Employé</p>
-              <p className="w-1/4 justify-center flex"> détail / supprimer</p>
+              <p className="w-1/5 justify-center flex"> Titre</p>
+              <p className="w-3/5 justify-center flex">Description</p>
+              {/* <p className="hidden w-1/5 justify-center md:flex">Employé</p> */}
+              <p className="w-1/5 justify-center flex"> détail / supprimer</p>
             </div>
             <div className="flex flex-col  overflow-x-clip pb-3 px-8 hal  max-w-full">
               {filteredNotes.map((note) => (
@@ -372,17 +372,17 @@ export const Note = () => {
                   className="flex flex-row justify-between border-y-1 py-2"
                   key={note._id}
                 >
-                  <p className="w-1/4 justify-center flex">
+                  <p className="w-1/5 text-start  flex">
                     {note.title}
                   </p>
-                  <p className="w-1/4 justify-center flex">
+                  <p className="w-3/5 text-start pl-3  flex">
                     {note.description}
                   </p>
-                  <p className="hidden w-1/4 justify-center md:flex">
-                    {console.log(note.employee)}
-                    {/* {note.employee.name_employee} */}
-                  </p>
-                  <div className="w-1/4 justify-center flex flew-row gap-4">
+                  {/* <p className="hidden w-1/5 text-start md:flex">
+                    
+                     {note.employee} 
+                  </p> */}
+                  <div className="w-1/5 justify-center flex flew-row gap-4">
                     <div
                       className="p-1 hover:bg-orange-600 hover:cursor-pointer "
                       onClick={() => {

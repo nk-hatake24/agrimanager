@@ -89,7 +89,7 @@ const Register = () => {
       }, 2000);
     } catch (error) {
       alert(error)
-      console.error("Error:", error.);
+      console.error("Error:", error);
     }
   };
 
@@ -98,7 +98,7 @@ const Register = () => {
       {showModal && (
         <Modal message={modalMessage} onClose={() => setShowModal(false)} />
       )}
-      <section className="h-screen overflow-y-scroll flex flex-col justify-center items-center bg-gray-50 dark:bg-gray-900">
+      <section className="min-h-screen overflow-y-scroll flex flex-col justify-center items-center bg-gray-50 dark:bg-gray-900">
         <div className="absolute top-2 left-2">
           {" "}
           <Switcher />

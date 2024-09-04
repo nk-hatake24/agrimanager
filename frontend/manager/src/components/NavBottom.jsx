@@ -1,7 +1,9 @@
 import React from 'react';
+import { FaRobot } from 'react-icons/fa';
+import {GiThreeLeaves} from 'react-icons/gi'
 import { NavLink } from 'react-router-dom';
 
-export const NavBottom = () => {
+export const NavBottom = ({position}) => {
     const CustomNavLink = ({ to, exact, children }) => {
         return (
             <NavLink
@@ -21,9 +23,9 @@ export const NavBottom = () => {
     };
 
     return (
-        <div className='z-50 absolute bottom-4 gap-3 flex justify-center w-screen'>
-            <CustomNavLink to={'/chatBot'}>tala</CustomNavLink>
-            <CustomNavLink to={'/homedash'}>tamo</CustomNavLink>
+        <div className={`z-50  absolute ${position} gap-3 flex justify-center w-screen`}>
+            <CustomNavLink to={'/chatBot'}><FaRobot size={18}/></CustomNavLink>
+            <CustomNavLink to={'/homedash'}><GiThreeLeaves size={18}/></CustomNavLink>
         </div>
     );
 };

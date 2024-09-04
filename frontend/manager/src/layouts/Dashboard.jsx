@@ -19,9 +19,11 @@ const Dashboard = ({children}) => {
                   {children}
                 </section>
             </div>
-            <NavBottom/>
+           
 
         </div>
+       <NavBottom position={'bottom-4'}/>
+
     </LayoutGeneral>
   )
 }

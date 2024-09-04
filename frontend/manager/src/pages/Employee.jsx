@@ -369,7 +369,7 @@ export const Employee = () => {
           )}
         </Modals>
 
-        <div className="h-screen">
+        <div className="min-h-screen">
         <div className="bold text-center text-xl mb-3">
             Employee
           </div>

@@ -329,7 +329,7 @@ export const Budget = () => {
           )}
         </Modals>
 
-        <div className="h-screen">
+        <div className="min-h-screen">
           <div className="bold text-center text-xl mb-3">Budget</div>
           <div className="flex justify-between pb-3">
             <div

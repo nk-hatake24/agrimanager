@@ -43,7 +43,7 @@ export const AccountRegister = () => {
 
   return (
     <LayoutGeneral>
-      <section className="h-screen flex flex-col justify-center items-center bg-gray-50 dark:bg-gray-900">
+      <section className="min-h-screen flex flex-col justify-center items-center bg-gray-50 dark:bg-gray-900">
         <div className="absolute top-2 left-2"> <Switcher /></div>
         <div className="w-full m-5 max-w-md bg-white rounded-lg shadow dark:bg-gray-800">
           <div className="p-6 space-y-4 sm:p-8">

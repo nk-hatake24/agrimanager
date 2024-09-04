@@ -1,0 +1,77 @@
+ ## Projet de Gestion d'un Domaine Agropastoral
+
+## Prérequis
+
+Assurez-vous d'avoir les éléments suivants installés sur votre machine :
+- Node.js
+- npm (Node Package Manager)
+
+## Lancer le Projet
+
+Suivez les étapes ci-dessous pour lancer les différentes parties du projet :
+
+### 1. FlowiseAI
+
+1. Ouvrez votre terminal (cmd).
+2. Accédez au répertoire `flowiseAi` :
+
+    ```sh
+    cd path/to/flowiseAi
+    ```
+
+3. Exécutez la commande suivante pour démarrer FlowiseAI :
+
+    ```sh
+    npx start flowise
+    ```
+
+### 2. Backend du Dashboard
+
+1. Ouvrez un nouveau terminal.
+2. Accédez au répertoire du backend du dashboard :
+
+    ```sh
+    cd path/to/dashboard-backend
+    ```
+
+3. Exécutez la commande suivante pour démarrer le backend du dashboard :
+
+    ```sh
+    npm run dev
+    ```
+
+### 3. Backend du Chatbot
+
+1. Ouvrez un autre terminal.
+2. Accédez au répertoire du backend du chatbot :
+
+    ```sh
+    cd path/to/chatbot-backend
+    ```
+
+3. Exécutez la commande suivante pour démarrer le backend du chatbot :
+
+    ```sh
+    npm run dev
+    ```
+
+### 4. Frontend du Manager
+
+1. Ouvrez un autre terminal.
+2. Accédez au répertoire `front/manager` :
+
+    ```sh
+    cd path/to/front/manager
+    ```
+
+3. Exécutez la commande suivante pour démarrer le frontend du manager :
+
+    ```sh
+    npm run dev
+    ```
+
+## Remarques
+
+- Assurez-vous que tous les services sont démarrés correctement avant d'utiliser l'application.
+
+
