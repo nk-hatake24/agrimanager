@@ -21,7 +21,7 @@ const todoRoute = require('./src/route/TodoRoute')
 
 
 const app = express()
-const port = 3500
+const port = 3501 || process.env.PORT
 
 // ********middlewares
 app
